@@ -27,7 +27,7 @@ namespace ShiftScheduleData.DataAccess.FileDao
             }
         }
 
-        protected StreamReader GetStreamReader(string file)
+        protected TextReader GetTextReader(string file)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace ShiftScheduleData.DataAccess.FileDao
             }
         }
 
-        protected StreamWriter GetStreamWriter(string file)
+        protected TextWriter GetTextWriter(string file)
         {
             try
             {

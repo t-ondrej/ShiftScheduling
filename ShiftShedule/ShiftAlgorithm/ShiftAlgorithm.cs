@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ShiftScheduleData.Entities;
 
-namespace ShiftShedule.ShiftAlgorithm
+namespace ShiftSheduleAlgorithm.ShiftAlgorithm
 {
     internal static class ShiftAlgorithm
     {

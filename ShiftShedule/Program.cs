@@ -1,4 +1,4 @@
-﻿namespace ShiftShedule
+﻿namespace ShiftSheduleAlgorithm
 {
     internal class Program
     {

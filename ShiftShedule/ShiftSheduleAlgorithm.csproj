@@ -7,8 +7,8 @@
     <ProjectGuid>{FA2421DE-8B19-4BD8-A5B0-E8A44F9C6318}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ShiftShedule</RootNamespace>
-    <AssemblyName>ShiftShedule</AssemblyName>
+    <RootNamespace>ShiftSheduleAlgorithm</RootNamespace>
+    <AssemblyName>ShiftSheduleAlgorithm</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
