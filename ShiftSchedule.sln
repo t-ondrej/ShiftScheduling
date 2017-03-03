@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftSheduleAlgorithm", "ShiftShedule\ShiftSheduleAlgorithm.csproj", "{FA2421DE-8B19-4BD8-A5B0-E8A44F9C6318}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftScheduleAlgorithm", "ShiftScheduleAlgorithm\ShiftScheduleAlgorithm.csproj", "{FA2421DE-8B19-4BD8-A5B0-E8A44F9C6318}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftScheduleData", "ShiftScheduleData\ShiftScheduleData.csproj", "{39E0BADB-AB56-4913-BC09-EC023651BF8A}"
 EndProject

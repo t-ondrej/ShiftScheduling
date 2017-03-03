@@ -1,7 +1,6 @@
-﻿using System;
-using ShiftScheduleData.Entities;
+﻿using ShiftScheduleData.Entities;
 
-namespace ShiftSheduleAlgorithm.ShiftAlgorithm
+namespace ShiftScheduleAlgorithm.ShiftAlgorithm
 {
     internal class Validator
     {
@@ -17,7 +16,7 @@ namespace ShiftSheduleAlgorithm.ShiftAlgorithm
 
         public bool Validate()
         {
-            throw new NotImplementedException();
+            return true;
         }
     }
 }
