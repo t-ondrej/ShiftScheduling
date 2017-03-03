@@ -47,11 +47,13 @@
     <Compile Include="DataAccess\FileDao\FilePersonDao.cs" />
     <Compile Include="DataAccess\FileDao\FileRequirementsDao.cs" />
     <Compile Include="DataAccess\FileDao\FileResultingScheduleDao.cs" />
+    <Compile Include="DataAccess\FileDao\FolderConstants.cs" />
     <Compile Include="DataAccess\FileDao\ScheduleParser.cs" />
     <Compile Include="DataAccess\IPersonDao.cs" />
     <Compile Include="DataAccess\IRequirementsDao.cs" />
     <Compile Include="DataAccess\IResultingScheduleDao.cs" />
-    <Compile Include="DataAccess\Utilities.cs" />
+    <Compile Include="Helpers\Utilities.cs" />
+    <Compile Include="Helpers\Printers.cs" />
     <Compile Include="Helpers\Interval.cs" />
     <Compile Include="Helpers\Intervals.cs" />
     <Compile Include="Entities\Person.cs" />
@@ -63,13 +65,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Data\Set1\1.csv" />
-    <None Include="Data\Set1\2.csv" />
-    <None Include="Data\Set1\3.csv" />
-    <None Include="Data\Set1\4.csv" />
-    <None Include="Data\Set1\requirements.csv" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Content Include="Data\Set1\1.txt" />
+    <Content Include="Data\Set1\2.txt" />
+    <Content Include="Data\Set1\3.txt" />
+    <Content Include="Data\Set1\4.txt" />
+    <Content Include="Data\Set1\Output\1.txt" />
+    <Content Include="Data\Set1\Output\2.txt" />
+    <Content Include="Data\Set1\Output\3.txt" />
+    <Content Include="Data\Set1\Output\4.txt" />
+    <Content Include="Data\Set1\Output\requirements.txt" />
+    <Content Include="Data\Set1\Output\resultingSchedule.txt" />
+    <Content Include="Data\Set1\requirements.txt" />
+    <Content Include="Data\Set1\resultingSchedule.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

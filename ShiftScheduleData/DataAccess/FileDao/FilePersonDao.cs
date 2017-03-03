@@ -7,8 +7,6 @@ namespace ShiftScheduleData.DataAccess.FileDao
 {
     public class FilePersonDao : FileClient, IPersonDao
     {
-        private const string RequirementsFileName = "requirements";
-
         public FilePersonDao(string folderPath) : base(folderPath)
         {
         }
@@ -21,25 +19,22 @@ namespace ShiftScheduleData.DataAccess.FileDao
             {
                 var fileName = Path.GetFileNameWithoutExtension(file);
 
-                if (fileName == RequirementsFileName)
-                    continue;
-
                 int id;
 
                 if (!int.TryParse(fileName, out id))
-                    throw new Exception("Incorrect file in the folder: " + FolderPath);
+                    continue;
 
-                using (var streamReader = GetStreamReader(file))
+                using (var textReader = GetTextReader(file))
                 {
                     try
                     {
-                        var line = streamReader.ReadLine();
+                        var line = textReader.ReadLine();
 
                         if (line == null)
                             throw new Exception("No content in the file.");
 
                         var maxHours = int.Parse(line);
-                        var schedule = ScheduleParser.Get(streamReader);
+                        var schedule = ScheduleParser.Get(textReader);
                         persons.Add(new Person(id, schedule, maxHours));
                     }
                     catch
@@ -54,7 +49,21 @@ namespace ShiftScheduleData.DataAccess.FileDao
 
         public void SavePerson(Person person)
         {
-            throw new NotImplementedException();
+            string fileName = $"{person.Id}.{FolderConstants.FileExtensions}";
+            var path = Path.Combine(FolderPath, fileName);
+
+            using (var textWriter = GetTextWriter(path))
+            {
+                try
+                {
+                    textWriter.WriteLine(person.MaxHoursPerMonth);
+                    ScheduleParser.Put(textWriter, person.MonthlySchedule);
+                }
+                catch
+                {
+                    throw new Exception("Unable to save person to the file: " + path);
+                }
+            }
         }
     }
 }

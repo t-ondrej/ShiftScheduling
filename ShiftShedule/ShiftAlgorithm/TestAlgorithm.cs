@@ -1,7 +1,7 @@
 ﻿using System;
 using ShiftScheduleData.Entities;
 
-namespace ShiftShedule.ShiftAlgorithm
+namespace ShiftSheduleAlgorithm.ShiftAlgorithm
 {
     internal class TestAlgorithm : ShiftAlgorithm.IAlgorithm
     {
