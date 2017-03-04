@@ -1,4 +1,4 @@
-﻿namespace ShiftScheduleAlgorithm.ShiftAlgorithm
+﻿namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 {
     internal class Properties
     {

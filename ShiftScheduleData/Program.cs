@@ -9,8 +9,8 @@ namespace ShiftScheduleData
 {
     class Program
     {
-        private const string ReadSetName = "Data/Set1";
-        private const string PutSetName = "Data/Set1/Output";
+        private const string ReadSetName = "TestData";
+        private const string PutSetName = "TestData/Output";
 
         private static void Main()
         {
@@ -28,7 +28,7 @@ namespace ShiftScheduleData
             var requirementsDaoPut = new FileRequirementsDao(Utilities.GetPathFromRelativeProjectPath(PutSetName));
             var requirements = requirementsDaoRead.GetRequirements();
 
-            Printers.PrintRequirements(requirements, Console.Out);
+            EntitiesPrinter.PrintRequirements(requirements, Console.Out);
             requirementsDaoPut.SaveRequirements(requirements);
         }
 
@@ -40,7 +40,7 @@ namespace ShiftScheduleData
 
             foreach (var person in persons)
             {
-                Printers.PrintPerson(person, Console.Out);
+                EntitiesPrinter.PrintPerson(person, Console.Out);
                 Console.WriteLine();
             }
 
@@ -63,7 +63,7 @@ namespace ShiftScheduleData
             var resultingSchedulePut = new FileResultingScheduleDao(Utilities.GetPathFromRelativeProjectPath(PutSetName));
             resultingSchedulePut.SaveResultingSchedule(reloadedSchedule);
 
-            Printers.PrintResultingschedule(resultingSchedule, Console.Out);
+            EntitiesPrinter.PrintResultingschedule(resultingSchedule, Console.Out);
         }
     }
 }

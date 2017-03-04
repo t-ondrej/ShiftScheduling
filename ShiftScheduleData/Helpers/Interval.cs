@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace ShiftScheduleData.Helpers
 {
-    public class Interval
+    public class Interval : IEnumerable<int>
     {
         public int Start { get; }
 
         public int End { get; }
+
+        public int Count => End - Start + 1;
 
         public Interval(int start, int end)
         {
@@ -18,6 +21,11 @@ namespace ShiftScheduleData.Helpers
         public bool Overlaps(Interval interval)
         {
             return AreOverlapping(this, interval);
+        }
+
+        public bool Contains(int i)
+        {
+            return Start <= i && i <= End;
         }
 
         public static bool AreOverlapping(Interval interval1, Interval interval2)
@@ -37,6 +45,49 @@ namespace ShiftScheduleData.Helpers
             unchecked
             {
                 return (Start * 397) ^ End;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IEnumerator<int> GetEnumerator()
+        {
+            return new IntervalEnumerator(Start, End);
+        }
+
+        private sealed class IntervalEnumerator : IEnumerator<int>
+        {
+            public int Current { get; private set; }
+
+            private readonly int _start;
+
+            private readonly int _end;
+
+            public IntervalEnumerator(int start, int end)
+            {
+                Current = start - 1;
+                _start = start;
+                _end = end;
+            }
+
+            object IEnumerator.Current => Current;
+
+            public bool MoveNext()
+            {
+                Current++;
+                return Current <= _end;
+            }
+
+            public void Reset()
+            {
+                Current = _start - 1;
+            }
+
+            public void Dispose()
+            {
             }
         }
 

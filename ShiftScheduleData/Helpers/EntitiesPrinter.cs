@@ -4,7 +4,7 @@ using ShiftScheduleData.Entities;
 
 namespace ShiftScheduleData.Helpers
 {
-    public static class Printers
+    public static class EntitiesPrinter
     {
         public static void PrintPerson(Person person, TextWriter textWriter)
         {
@@ -15,6 +15,8 @@ namespace ShiftScheduleData.Helpers
                 var intervals = dailySchedule.Value.IntervalsList.Select(Utilities.IntervalToString);
                 textWriter.WriteLine($"day={dailySchedule.Key} hours=[{string.Join(",", intervals)}]");
             }
+
+            textWriter.WriteLine();
         }
 
         public static void PrintRequirements(Requirements requirements, TextWriter textWriter)
@@ -25,6 +27,8 @@ namespace ShiftScheduleData.Helpers
                 var requirementString = string.Join(" ", requirementStrings);
                 textWriter.WriteLine($"day={dailyRequirement.Key} {requirementString}");
             }
+
+            textWriter.WriteLine();
         }
 
         public static void PrintResultingschedule(ResultingSchedule resultingSchedule, TextWriter textWriter)
@@ -32,15 +36,19 @@ namespace ShiftScheduleData.Helpers
             foreach (var scheduleForPerson in resultingSchedule.SchedulesForPeople)
             {
                 textWriter.WriteLine($"person={scheduleForPerson.Key.Id}");
-
-                foreach (var dailySchedule in scheduleForPerson.Value.DailySchedules)
-                {
-                    var intervals = dailySchedule.Value.IntervalsList.Select(Utilities.IntervalToString);
-                    textWriter.WriteLine($"day={dailySchedule.Key} hours=[{string.Join(",", intervals)}]");
-                }
-
-                textWriter.WriteLine();
+                PrintSchedule(scheduleForPerson.Value, textWriter);
             }
+        }
+
+        public static void PrintSchedule(Schedule schedule, TextWriter textWriter)
+        {
+            foreach (var dailySchedule in schedule.DailySchedules)
+            {
+                var intervals = dailySchedule.Value.IntervalsList.Select(Utilities.IntervalToString);
+                textWriter.WriteLine($"day={dailySchedule.Key} hours=[{string.Join(",", intervals)}]");
+            }
+
+            textWriter.WriteLine();
         }
     }
 }

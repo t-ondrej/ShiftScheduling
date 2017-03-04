@@ -1,6 +1,6 @@
 ﻿using ShiftScheduleData.Entities;
 
-namespace ShiftScheduleAlgorithm.ShiftAlgorithm
+namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 {
     internal class Validator
     {
