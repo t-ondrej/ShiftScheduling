@@ -4,6 +4,7 @@ using System.Linq;
 using ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers;
 using ShiftScheduleData.Entities;
 using ShiftScheduleData.Helpers;
+using ShiftScheduleUtilities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 {

@@ -52,7 +52,6 @@
     <Compile Include="DataAccess\IPersonDao.cs" />
     <Compile Include="DataAccess\IRequirementsDao.cs" />
     <Compile Include="DataAccess\IResultingScheduleDao.cs" />
-    <Compile Include="Helpers\Utilities.cs" />
     <Compile Include="Helpers\EntitiesPrinter.cs" />
     <Compile Include="Helpers\Interval.cs" />
     <Compile Include="Helpers\Intervals.cs" />
@@ -77,6 +76,12 @@
     <Content Include="TestData\Output\resultingSchedule.txt" />
     <Content Include="TestData\requirements.txt" />
     <Content Include="TestData\resultingSchedule.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ShiftScheduleUtilities\ShiftScheduleUtilities.csproj">
+      <Project>{D9753E1B-7DE9-4B03-83E2-2971E9EAE96B}</Project>
+      <Name>ShiftScheduleUtilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

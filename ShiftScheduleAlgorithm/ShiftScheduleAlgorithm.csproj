@@ -65,6 +65,10 @@
       <Project>{39e0badb-ab56-4913-bc09-ec023651bf8a}</Project>
       <Name>ShiftScheduleData</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ShiftScheduleUtilities\ShiftScheduleUtilities.csproj">
+      <Project>{D9753E1B-7DE9-4B03-83E2-2971E9EAE96B}</Project>
+      <Name>ShiftScheduleUtilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="DataSets\Set1\1.txt" />

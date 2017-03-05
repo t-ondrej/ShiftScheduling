@@ -12,7 +12,7 @@ namespace ShiftScheduleData.Helpers
 
             foreach (var dailySchedule in person.MonthlySchedule.DailySchedules)
             {
-                var intervals = dailySchedule.Value.IntervalsList.Select(Utilities.IntervalToString);
+                var intervals = dailySchedule.Value.IntervalsList.Select(i => i.ToString());
                 textWriter.WriteLine($"day={dailySchedule.Key} hours=[{string.Join(",", intervals)}]");
             }
 
@@ -44,7 +44,7 @@ namespace ShiftScheduleData.Helpers
         {
             foreach (var dailySchedule in schedule.DailySchedules)
             {
-                var intervals = dailySchedule.Value.IntervalsList.Select(Utilities.IntervalToString);
+                var intervals = dailySchedule.Value.IntervalsList.Select(i => i.ToString());
                 textWriter.WriteLine($"day={dailySchedule.Key} hours=[{string.Join(",", intervals)}]");
             }
 

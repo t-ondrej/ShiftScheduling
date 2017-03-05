@@ -17,7 +17,7 @@ namespace ShiftScheduleData.DataAccess.FileDao
             {
                 var splited = line.Split(' ');
                 var dayId = int.Parse(splited[0]);
-                var intervals = splited[1].Split(',').Select(Utilities.ParseInterval).ToList();
+                var intervals = splited[1].Split(',').Select(Interval.FromString).ToList();
                 dictonary.Add(dayId, new Intervals(intervals));
             }
 
@@ -30,7 +30,7 @@ namespace ShiftScheduleData.DataAccess.FileDao
             {
                 var dayId = dailySchedule.Key;
                 var intervals = dailySchedule.Value.IntervalsList;
-                var intervalStrings = intervals.Select(Utilities.IntervalToString);
+                var intervalStrings = intervals.Select(i => i.ToString());
                 textWriter.WriteLine($"{dayId} {string.Join(",", intervalStrings)}");
             }
         }

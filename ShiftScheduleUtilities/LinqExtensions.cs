@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ShiftScheduleAlgorithm
+namespace ShiftScheduleUtilities
 {
     public static class LinqExtensions
     {

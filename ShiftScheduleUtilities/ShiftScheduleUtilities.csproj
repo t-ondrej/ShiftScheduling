@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{218949C2-D718-4E8C-B702-3B32109539CC}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{D9753E1B-7DE9-4B03-83E2-2971E9EAE96B}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ShiftScheduleGenerator</RootNamespace>
-    <AssemblyName>ShiftScheduleGenerator</AssemblyName>
+    <RootNamespace>ShiftScheduleUtilities</RootNamespace>
+    <AssemblyName>ShiftScheduleUtilities</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,8 +32,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,23 +47,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generator.cs" />
-    <Compile Include="GeneratorConfiguration.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="LinqExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PathUtilities.cs" />
+    <Compile Include="ConfigurationReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ShiftScheduleData\ShiftScheduleData.csproj">
-      <Project>{39e0badb-ab56-4913-bc09-ec023651bf8a}</Project>
-      <Name>ShiftScheduleData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ShiftScheduleUtilities\ShiftScheduleUtilities.csproj">
-      <Project>{D9753E1B-7DE9-4B03-83E2-2971E9EAE96B}</Project>
-      <Name>ShiftScheduleUtilities</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
