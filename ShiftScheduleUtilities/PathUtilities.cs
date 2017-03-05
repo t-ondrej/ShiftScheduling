@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace ShiftScheduleData.Helpers
+namespace ShiftScheduleUtilities
 {
-    public static class Utilities
+    public static class PathUtilities
     {
         public static string GetPathFromRelativeProjectPath(string relativePath)
         {
@@ -20,19 +20,6 @@ namespace ShiftScheduleData.Helpers
             var solutionPath = Path.GetFullPath(Path.Combine(baseDirectoy, "..\\..\\..\\"));
             var projectDirectory = Path.Combine(solutionPath, projectName);
             return Path.Combine(projectDirectory, relativePath);
-        }
-
-        public static Interval ParseInterval(string s)
-        {
-            var values = s.Split('-');
-            var start = int.Parse(values[0]);
-            var end = int.Parse(values[1]);
-            return new Interval(start, end);
-        }
-
-        public static string IntervalToString(Interval interval)
-        {
-            return $"{interval.Start}-{interval.End}";
         }
     }
 }

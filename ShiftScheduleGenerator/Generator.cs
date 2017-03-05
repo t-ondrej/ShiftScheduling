@@ -6,7 +6,7 @@ using ShiftScheduleData.DataAccess.FileDao;
 
 namespace ShiftScheduleGenerator
 {
-    class Generator
+    internal class Generator
     {
 
         private const int WorkingHoursStart = 7;

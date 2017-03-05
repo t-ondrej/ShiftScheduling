@@ -3,11 +3,11 @@ using System.Linq;
 using ShiftScheduleData.DataAccess.FileDao;
 using ShiftScheduleData.Entities;
 using ShiftScheduleData.Helpers;
-// ReSharper disable PossibleMultipleEnumeration
+using static ShiftScheduleUtilities.PathUtilities;
 
 namespace ShiftScheduleData
 {
-    class Program
+    internal class Program
     {
         private const string ReadSetName = "TestData";
         private const string PutSetName = "TestData/Output";
@@ -24,8 +24,8 @@ namespace ShiftScheduleData
 
         private static void RequirementsDaoTest()
         {
-            var requirementsDaoRead = new FileRequirementsDao(Utilities.GetPathFromRelativeProjectPath(ReadSetName));
-            var requirementsDaoPut = new FileRequirementsDao(Utilities.GetPathFromRelativeProjectPath(PutSetName));
+            var requirementsDaoRead = new FileRequirementsDao(GetPathFromRelativeProjectPath(ReadSetName));
+            var requirementsDaoPut = new FileRequirementsDao(GetPathFromRelativeProjectPath(PutSetName));
             var requirements = requirementsDaoRead.GetRequirements();
 
             EntitiesPrinter.PrintRequirements(requirements, Console.Out);
@@ -34,9 +34,9 @@ namespace ShiftScheduleData
 
         private static void PersonDaoTest()
         {
-            var personDaoRead = new FilePersonDao(Utilities.GetPathFromRelativeProjectPath(ReadSetName));
-            var personDaoPut = new FilePersonDao(Utilities.GetPathFromRelativeProjectPath(PutSetName));
-            var persons = personDaoRead.GetAllPersons();
+            var personDaoRead = new FilePersonDao(GetPathFromRelativeProjectPath(ReadSetName));
+            var personDaoPut = new FilePersonDao(GetPathFromRelativeProjectPath(PutSetName));
+            var persons = personDaoRead.GetAllPersons().ToList();
 
             foreach (var person in persons)
             {
@@ -52,15 +52,15 @@ namespace ShiftScheduleData
 
         private static void ResultingScheduleDaoTest()
         {
-            var personDaoRead = new FilePersonDao(Utilities.GetPathFromRelativeProjectPath(ReadSetName));
-            var persons = personDaoRead.GetAllPersons();
+            var personDaoRead = new FilePersonDao(GetPathFromRelativeProjectPath(ReadSetName));
+            var persons = personDaoRead.GetAllPersons().ToList();
             var dictionary = persons.ToDictionary(p => p, p => p.MonthlySchedule);
             var resultingSchedule = new ResultingSchedule(dictionary);
-            var resultingScheduleDao = new FileResultingScheduleDao(Utilities.GetPathFromRelativeProjectPath(ReadSetName));
+            var resultingScheduleDao = new FileResultingScheduleDao(GetPathFromRelativeProjectPath(ReadSetName));
             resultingScheduleDao.SaveResultingSchedule(resultingSchedule);
 
             var reloadedSchedule = resultingScheduleDao.GetResultingSchedule(persons);
-            var resultingSchedulePut = new FileResultingScheduleDao(Utilities.GetPathFromRelativeProjectPath(PutSetName));
+            var resultingSchedulePut = new FileResultingScheduleDao(GetPathFromRelativeProjectPath(PutSetName));
             resultingSchedulePut.SaveResultingSchedule(reloadedSchedule);
 
             EntitiesPrinter.PrintResultingschedule(resultingSchedule, Console.Out);

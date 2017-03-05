@@ -106,5 +106,18 @@ namespace ShiftScheduleData.Helpers
                 return x.End.CompareTo(y.End);
             }
         }
+
+        public override string ToString()
+        {
+            return $"{Start}-{End}";
+        }
+
+        public static Interval FromString(string s)
+        {
+            var values = s.Split('-');
+            var start = int.Parse(values[0]);
+            var end = int.Parse(values[1]);
+            return new Interval(start, end);
+        }
     }
 }
