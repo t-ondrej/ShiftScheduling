@@ -5,7 +5,7 @@
         private static void Main(string[] args)
         {
             Generator generator = new Generator();
-            generator.GenerateData(10, "TestData");
+            generator.GenerateData("TestData");
         }
     }
 }
