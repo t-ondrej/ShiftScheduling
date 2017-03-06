@@ -64,7 +64,7 @@ namespace ShiftScheduleData.DataAccess.FileDao
 
                     for (var i = 0; i <= maxHour; i++)
                     {
-                        stringBuilder.Append(hourToWorkers.ContainsKey(dayId) ? $"{hourToWorkers[i]}," : "0,");
+                        stringBuilder.Append(hourToWorkers.ContainsKey(i) ? $"{hourToWorkers[i]}," : "0,");
                     }
 
                     var hoursString = stringBuilder.ToString().Substring(0, stringBuilder.Length - 1);

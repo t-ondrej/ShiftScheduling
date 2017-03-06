@@ -48,6 +48,8 @@
     <Compile Include="GeneratorConfiguration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequirementsGenerator.cs" />
+    <Compile Include="ScheduleGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

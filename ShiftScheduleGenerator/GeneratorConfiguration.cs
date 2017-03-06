@@ -3,20 +3,20 @@ namespace ShiftScheduleGenerator
 {
     internal static class GeneratorConfiguration
     {
-        internal const int ScheduleDaysCount = 30;
+        public const int ScheduleDaysCount = 5;
 
-        internal const int WorkingTimeStart = 7;
+        public const int WorkingTimeLength = 10;
 
-        internal const int WorkingTimeEnd = 19;
+        public const int WorkingTimePerMonthMax = 3;
 
-        internal const int WorkingTimePerMonthMax = 80;
+        public const int EmployeeCount = 4;
 
-        internal const int EmployeeCount = 30;
+        public const int IntervalLengthMin = 1;
 
-        internal const int IntervalLengthMin = 2;
+        public const int IntervalsDistanceMin = 1;
 
-        internal const int IntervalsDistanceMin = 1;
+        public const int IntervalsPerDayMax = 2;
 
-        internal const int IntervalsPerDayMax = 2;
+        public const string FolderName = "TestData";
     }
 }
