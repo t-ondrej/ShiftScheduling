@@ -12,13 +12,13 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
             public Requirements Requirements { get; }
 
-            public Properties Properties { get; }
+            public AlgorithmConfiguration AlgorithmConfiguration { get; }
 
-            public Input(IEnumerable<Person> persons, Requirements requirements, Properties properties)
+            public Input(IEnumerable<Person> persons, Requirements requirements, AlgorithmConfiguration algorithmConfiguration)
             {
                 Persons = persons;
                 Requirements = requirements;
-                Properties = properties;
+                AlgorithmConfiguration = algorithmConfiguration;
             }
         }
 

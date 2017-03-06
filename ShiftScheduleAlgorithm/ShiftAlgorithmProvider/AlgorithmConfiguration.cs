@@ -1,6 +1,6 @@
 ﻿namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 {
-    internal class Properties
+    internal class AlgorithmConfiguration
     {
         public int MaxDailyWork { get; set; } = 12;
 

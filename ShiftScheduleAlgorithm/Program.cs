@@ -19,7 +19,7 @@ namespace ShiftScheduleAlgorithm
 
             var requirements = requirementsDao.GetRequirements();
             var persons = personsDao.GetAllPersons();
-            var properties = new Properties();
+            var properties = new AlgorithmConfiguration();
 
             var input = new ShiftAlgorithm.Input(persons, requirements, properties);
             var resultingSchedule = ShiftAlgorithm.ExecuteAlgorithm(input, ShiftAlgorithm.Strategy.Test);
