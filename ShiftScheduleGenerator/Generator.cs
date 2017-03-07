@@ -1,29 +1,47 @@
-﻿using ShiftScheduleData.DataAccess.FileDao;
-using ShiftScheduleData.Helpers;
-using ShiftScheduleData.Entities;
-using static ShiftScheduleGenerator.GeneratorConfiguration;
+﻿using System.IO;
+using ShiftScheduleData.DataAccess.FileDao;
 
 namespace ShiftScheduleGenerator
 {
     internal class Generator
     {
-        internal static void GenerateData()
+        public GeneratorConfiguration Configuration { get; }
+
+        private readonly PersonsGenerator _scheduleGenerator;
+
+        private readonly RequirementsGenerator _requirementsGenerator;
+
+        private readonly string _workingFolder;
+
+        public Generator(GeneratorConfiguration configuration, string workingFolder)
         {
-            var fileRequirementsDao = new FileRequirementsDao($"..\\..\\{FolderName}");
-            var filePersonDao = new FilePersonDao($"..\\..\\{FolderName}");
+            _workingFolder = workingFolder;
+            Configuration = configuration;
+            _scheduleGenerator = new PersonsGenerator(Configuration);
+            _requirementsGenerator = new RequirementsGenerator(Configuration);
+        }
 
-            var scheduleGenerator = new ScheduleGenerator();
-            var requirementsGenerator = new RequirementsGenerator();
-
-            var persons = scheduleGenerator.GeneratePersons();
-            var requirements = requirementsGenerator.GenerateRequirements(persons);
-
-            foreach (var person in persons)
+        public void GenerateData()
+        {
+            for (var i = 1; i <= Configuration.NumberOfSets; i++)
             {
-                filePersonDao.SavePerson(person);
-            }
+                var folderName = $"{FolderConstants.SetFolderName}_{i}";
+                var folderPath = Path.Combine(_workingFolder, folderName);
+                Directory.CreateDirectory(folderPath);
+                var filePersonDao = new FilePersonDao(folderPath);
+                var fileRequirementsDao = new FileRequirementsDao(folderPath);
 
-            fileRequirementsDao.SaveRequirements(requirements);
-        } 
+                var persons = _scheduleGenerator.GeneratePersons();
+                var requirements = _requirementsGenerator.GenerateRequirements(persons);
+
+                foreach (var person in persons)
+                {
+                    filePersonDao.SavePerson(person);
+                }
+
+                fileRequirementsDao.SaveRequirements(requirements);
+                Directory.CreateDirectory(Path.Combine(folderPath, FolderConstants.OutputFolderName));
+            }
+        }
     }
 }

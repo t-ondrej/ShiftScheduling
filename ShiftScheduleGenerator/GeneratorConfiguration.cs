@@ -1,22 +1,28 @@
-﻿
-namespace ShiftScheduleGenerator
+﻿namespace ShiftScheduleGenerator
 {
-    internal static class GeneratorConfiguration
+    internal class GeneratorConfiguration
     {
-        public const int ScheduleDaysCount = 5;
+        public int ScheduleDaysCount { get; }
 
-        public const int WorkingTimeLength = 10;
+        public int WorkingTimeLength { get; }
 
-        public const int WorkingTimePerMonthMax = 3;
+        public int WorkingTimePerMonthMax { get; }
 
-        public const int EmployeeCount = 4;
+        public int EmployeeCount { get; }
 
-        public const int IntervalLengthMin = 1;
+        public string FolderName { get; }
 
-        public const int IntervalsDistanceMin = 1;
+        public int NumberOfSets { get; }
 
-        public const int IntervalsPerDayMax = 2;
-
-        public const string FolderName = "TestData";
+        public GeneratorConfiguration(int scheduleDaysCount, int workingTimeLength, int workingTimePerMonthMax,
+            int employeeCount, string folderName, int numberOfSets)
+        {
+            ScheduleDaysCount = scheduleDaysCount;
+            WorkingTimeLength = workingTimeLength;
+            WorkingTimePerMonthMax = workingTimePerMonthMax;
+            EmployeeCount = employeeCount;
+            FolderName = folderName;
+            NumberOfSets = numberOfSets;
+        }
     }
 }
