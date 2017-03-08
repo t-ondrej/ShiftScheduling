@@ -1,21 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using ShiftScheduleData.DataAccess.FileDao;
 using ShiftScheduleData.Entities;
 using ShiftScheduleData.Helpers;
-using static ShiftScheduleGenerator.GeneratorConfiguration;
 
 namespace ShiftScheduleGenerator
 {
-    internal class ScheduleGenerator
+    internal class PersonsGenerator
     {
         private static readonly Random Random = new Random();
 
-        internal List<Person> GeneratePersons()
+        private const double DayAssignmentProbability = 0.5;
+
+        private const int IntervalsPerDayMax = 5;
+
+        public GeneratorConfiguration Configuration { get; }
+
+        public PersonsGenerator(GeneratorConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public List<Person> GeneratePersons()
         {
             var persons = new List<Person>();
 
-            for (var i = 0; i < EmployeeCount; i++)
+            for (var i = 0; i < Configuration.EmployeeCount; i++)
             {
                 var person = CreatePerson(i);
                 persons.Add(person);
@@ -27,7 +36,7 @@ namespace ShiftScheduleGenerator
         private Person CreatePerson(int id)
         {
             var dailySchedules = GenerateDailySchedules();
-            var maxHoursPerMonth = WorkingTimePerMonthMax;
+            var maxHoursPerMonth = Configuration.WorkingTimePerMonthMax;
 
             return new Person(id, dailySchedules, maxHoursPerMonth);
         }
@@ -55,8 +64,7 @@ namespace ShiftScheduleGenerator
             if (intervalCount == 0)
                 return intervals;
 
-            var spaceForIntervalMin = IntervalLengthMin + IntervalsDistanceMin;
-            var end = WorkingTimeLength - (spaceForIntervalMin * (intervalCount - 1));
+            var end = Configuration.WorkingTimeLength - 2 * (intervalCount - 1);
 
             start = Random.Next(start, end);
             end = Random.Next(start, end);
@@ -64,7 +72,7 @@ namespace ShiftScheduleGenerator
             var interval = new Interval(start, end);
 
             intervals.Add(interval);
-            intervals.AddRange(GenerateIntervals(intervalCount - 1, end + IntervalsDistanceMin + 1));
+            intervals.AddRange(GenerateIntervals(intervalCount - 1, end + 2));
 
             return intervals;
         }
@@ -73,9 +81,9 @@ namespace ShiftScheduleGenerator
         {
             var days = new List<int>();
 
-            for (var i = 0; i < ScheduleDaysCount; i++)
+            for (var i = 0; i < Configuration.ScheduleDaysCount; i++)
             {
-                if (Random.NextDouble() < 0.5)
+                if (Random.NextDouble() < DayAssignmentProbability)
                 {
                     days.Add(i);
                 }

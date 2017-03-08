@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ShiftScheduleData.DataAccess.FileDao;
 using ShiftScheduleData.Entities;
 using ShiftScheduleData.Helpers;
-using static ShiftScheduleGenerator.GeneratorConfiguration;
 
 namespace ShiftScheduleGenerator
 {
@@ -12,13 +10,20 @@ namespace ShiftScheduleGenerator
     {
         private static readonly Random Random = new Random();
 
-        internal MonthlyRequirements GenerateRequirements(List<Person> persons)
+        public GeneratorConfiguration Configuration { get; }
+
+        public RequirementsGenerator(GeneratorConfiguration configuration)
         {
-            var monthRequirements = new int[ScheduleDaysCount, WorkingTimeLength];
+            Configuration = configuration;
+        }
+
+        public Requirements GenerateRequirements(List<Person> persons)
+        {
+            var monthRequirements = new int[Configuration.ScheduleDaysCount, Configuration.WorkingTimeLength];
 
             foreach (var person in persons)
             {
-                IDictionary<int, Intervals> schedule = new Dictionary<int, Intervals>(person.MonthlyMonthlySchedule.DailySchedules);
+                var schedule = new Dictionary<int, Intervals>(person.MonthlySchedule.DailySchedules);
                 var sumHours = 0;
 
                 var daysList = schedule.Keys.ToList();
@@ -35,7 +40,7 @@ namespace ShiftScheduleGenerator
                     {
                         var intervalLength = interval.End - interval.Start;
 
-                        if (sumHours + intervalLength <= WorkingTimePerMonthMax)
+                        if (sumHours + intervalLength <= Configuration.WorkingTimePerMonthMax)
                         {
                             for (var j = interval.Start; j <= interval.End; j++)
                             {
@@ -53,9 +58,9 @@ namespace ShiftScheduleGenerator
             return new MonthlyRequirements(ArrayToRequirements(monthRequirements));
         }
 
-        private IDictionary<int, MonthlyRequirements.DailyRequirement> ArrayToRequirements(int[,] array)
+        private static IDictionary<int, Requirements.DailyRequirement> ArrayToRequirements(int[,] array)
         {
-            IDictionary<int, MonthlyRequirements.DailyRequirement> requirement = new Dictionary<int, MonthlyRequirements.DailyRequirement>();
+            var requirement = new Dictionary<int, Requirements.DailyRequirement>();
 
             for (var i = 0; i < array.GetLength(0); i++)
             {
@@ -64,7 +69,7 @@ namespace ShiftScheduleGenerator
                     continue;
                 }
 
-                IDictionary<int, int> dailyRequirement = new Dictionary<int, int>();
+                var dailyRequirement = new Dictionary<int, int>();
 
                 for (var j = 0; j < array.GetLength(1); j++)
                 {
@@ -80,7 +85,7 @@ namespace ShiftScheduleGenerator
             return requirement;
         }
 
-        private bool IsArrayOfZeros(int[,] array, int index)
+        private static bool IsArrayOfZeros(int[,] array, int index)
         {
             for (var i = 0; i < array.GetLength(1); i++)
             {

@@ -54,7 +54,6 @@
     <Compile Include="ShiftAlgorithmProvider\Validator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="LinqExtensions.cs" />
     <Compile Include="ShiftAlgorithmProvider\ValidatorHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
