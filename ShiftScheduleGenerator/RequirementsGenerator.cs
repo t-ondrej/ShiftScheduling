@@ -8,6 +8,11 @@ namespace ShiftScheduleGenerator
 {
     internal class RequirementsGenerator
     {
+        private enum Difficulties
+        {
+            Easy, Medium, Unsolveable
+        }
+
         private static readonly Random Random = new Random();
 
         public GeneratorConfiguration Configuration { get; }
@@ -20,6 +25,7 @@ namespace ShiftScheduleGenerator
         public MonthlyRequirements GenerateRequirements(List<Person> persons)
         {
             var monthRequirements = new int[Configuration.ScheduleDaysCount, Configuration.WorkingTimeLength];
+            var difficulty = GetRandomDifficulty();
 
             foreach (var person in persons)
             {
@@ -38,9 +44,8 @@ namespace ShiftScheduleGenerator
 
                     foreach (var interval in intervals)
                     {
-                        var intervalLength = interval.End - interval.Start;
 
-                        if (sumHours + intervalLength <= Configuration.WorkingTimePerMonthMax)
+                        if (sumHours + interval.Count <= Configuration.WorkingTimePerMonthMax)
                         {
                             for (var j = interval.Start; j <= interval.End; j++)
                             {
@@ -55,7 +60,14 @@ namespace ShiftScheduleGenerator
                 }
             }
 
-            return new MonthlyRequirements(ArrayToRequirements(monthRequirements));
+            var requirements = new MonthlyRequirements(ArrayToRequirements(monthRequirements));
+
+            if (difficulty != Difficulties.Medium)
+            {
+                ChangeRequirementsDifficulty(requirements, difficulty);
+            }
+
+            return requirements;
         }
 
         private static IDictionary<int, MonthlyRequirements.DailyRequirement> ArrayToRequirements(int[,] array)
@@ -85,6 +97,34 @@ namespace ShiftScheduleGenerator
             return requirement;
         }
 
+
+        private void ChangeRequirementsDifficulty(MonthlyRequirements requirements, Difficulties difficulty)
+        {
+            var ChangeRequirementProbability = 0.35;
+
+            var days = requirements.DaysToRequirements.Keys;
+            foreach (var day in days)
+            {
+                var hours = requirements.DaysToRequirements[day].HourToWorkers.Keys;
+                foreach (var hour in hours)
+                {
+                    if (Random.NextDouble() < ChangeRequirementProbability)
+                        requirements.DaysToRequirements[day].HourToWorkers[hour] +=
+                            difficulty == Difficulties.Unsolveable ? 1 : -1;
+                }
+            }
+        }
+
+        private static Difficulties GetRandomDifficulty()
+        {
+            var difficultyIndex = Random.Next(1, 4);
+
+            if (difficultyIndex == 1)
+                return Difficulties.Easy;
+
+            return difficultyIndex == 2 ? Difficulties.Medium : Difficulties.Unsolveable;
+        }
+
         private static bool IsArrayOfZeros(int[,] array, int index)
         {
             for (var i = 0; i < array.GetLength(1); i++)
@@ -93,7 +133,7 @@ namespace ShiftScheduleGenerator
                 {
                     return false;
                 }
-            }               
+            }
 
             return true;
         }
