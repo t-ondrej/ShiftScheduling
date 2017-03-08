@@ -5,9 +5,9 @@ namespace ShiftScheduleData.Entities
 {
     public class ResultingSchedule
     {
-        public IDictionary<Person, Schedule> SchedulesForPeople { get; }
+        public IDictionary<Person, MonthlySchedule> SchedulesForPeople { get; }
 
-        public ResultingSchedule(IDictionary<Person, Schedule> schedulesForPeople)
+        public ResultingSchedule(IDictionary<Person, MonthlySchedule> schedulesForPeople)
         {
             SchedulesForPeople = schedulesForPeople;
         }

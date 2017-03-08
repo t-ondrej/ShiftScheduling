@@ -56,9 +56,9 @@
     <Compile Include="Helpers\Interval.cs" />
     <Compile Include="Helpers\Intervals.cs" />
     <Compile Include="Entities\Person.cs" />
-    <Compile Include="Entities\Requirements.cs" />
+    <Compile Include="Entities\MonthlyRequirements.cs" />
     <Compile Include="Entities\ResultingSchedule.cs" />
-    <Compile Include="Helpers\Schedule.cs" />
+    <Compile Include="Helpers\MonthlySchedule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

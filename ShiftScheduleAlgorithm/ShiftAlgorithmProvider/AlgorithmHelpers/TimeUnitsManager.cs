@@ -30,7 +30,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers
 
             SchedulableWork = ScheduledPersons.SelectMany
             (
-                person => person.Person.MonthlySchedule.DailySchedules.SelectMany
+                person => person.Person.MonthlyMonthlySchedule.DailySchedules.SelectMany
                 (
                     pair => pair.Value.IntervalsList.Select
                     (
@@ -39,7 +39,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers
                 )
             ).ToList();
 
-            foreach (var dayId in AlgorithmInput.Requirements.DayToRequirement.Keys)
+            foreach (var dayId in AlgorithmInput.MonthlyRequirements.DaysToRequirements.Keys)
             {
                 _daysToUnits.Add(dayId, new Dictionary<int, TimeUnit>());
             }
@@ -50,7 +50,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers
 
                 if (!_daysToUnits.ContainsKey(dayId))
                 {
-                    // TODO: Someone has scheduled work for a day that has no requirements. We should log it
+                    // TODO: Someone has scheduled work for a day that has no monthlyRequirements. We should log it
                     continue;
                 }
 
@@ -58,11 +58,11 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers
 
                 foreach (var unitOfDay in schedulableWork.Interval)
                 {
-                    var dailyRequirement = AlgorithmInput.Requirements.DayToRequirement[dayId].HourToWorkers;
+                    var dailyRequirement = AlgorithmInput.MonthlyRequirements.DaysToRequirements[dayId].HourToWorkers;
 
                     if (!dailyRequirement.ContainsKey(unitOfDay))
                     {
-                        // TODO: Someone has scheduled work for a time unit that has no requirements. We should log it
+                        // TODO: Someone has scheduled work for a time unit that has no monthlyRequirements. We should log it
                         continue;
                     }
 

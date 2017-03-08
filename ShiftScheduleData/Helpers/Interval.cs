@@ -112,6 +112,11 @@ namespace ShiftScheduleData.Helpers
             return $"{Start}-{End}";
         }
 
+        public bool IsSubinterval(Interval parentInterval)
+        {
+            return parentInterval.Start <= Start && End <= parentInterval.End;
+        }
+
         public static Interval FromString(string s)
         {
             var values = s.Split('-');

@@ -4,8 +4,8 @@ namespace ShiftScheduleData.DataAccess
 {
     public interface IRequirementsDao
     {
-        Requirements GetRequirements();
+        MonthlyRequirements GetRequirements();
 
-        void SaveRequirements(Requirements requirements);
+        void SaveRequirements(MonthlyRequirements monthlyRequirements);
     }
 }

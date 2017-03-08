@@ -7,14 +7,14 @@ namespace ShiftScheduleData.Entities
     {
         public int Id { get; }
 
-        public Schedule MonthlySchedule { get; }
+        public MonthlySchedule MonthlyMonthlySchedule { get; }
 
         public int MaxHoursPerMonth { get; }
 
-        public Person(int id, Schedule monthlySchedule, int maxHoursPerMonth)
+        public Person(int id, MonthlySchedule monthlyMonthlySchedule, int maxHoursPerMonth)
         {
             Id = id;
-            MonthlySchedule = monthlySchedule;
+            MonthlyMonthlySchedule = monthlyMonthlySchedule;
             MaxHoursPerMonth = maxHoursPerMonth;
         }
 

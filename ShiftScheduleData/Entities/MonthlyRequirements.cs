@@ -2,13 +2,13 @@
 
 namespace ShiftScheduleData.Entities
 {
-    public class Requirements
+    public class MonthlyRequirements
     {
-        public IDictionary<int, DailyRequirement> DayToRequirement { get; }
+        public IDictionary<int, DailyRequirement> DaysToRequirements { get; }
 
-        public Requirements(IDictionary<int, DailyRequirement> dayToRequirement)
+        public MonthlyRequirements(IDictionary<int, DailyRequirement> daysToRequirements)
         {
-            DayToRequirement = dayToRequirement;
+            DaysToRequirements = daysToRequirements;
         }
 
         public class DailyRequirement

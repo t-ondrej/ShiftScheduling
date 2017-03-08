@@ -75,7 +75,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
         private static ResultingSchedule CreateResultingSchedule(TimeUnitsManager timeUnits)
         {
-            var dictionary = new Dictionary<Person, Schedule>();
+            var dictionary = new Dictionary<Person, MonthlySchedule>();
 
             foreach (var schedulableWork in timeUnits.SchedulableWork.Where(work => work.Scheduled))
             {
@@ -84,7 +84,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
                 if (!dictionary.ContainsKey(person))
                 {
-                    dictionary.Add(person, new Schedule(new Dictionary<int, Intervals>()));
+                    dictionary.Add(person, new MonthlySchedule(new Dictionary<int, Intervals>()));
                 }
 
                 var dailySchedules = dictionary[person].DailySchedules;

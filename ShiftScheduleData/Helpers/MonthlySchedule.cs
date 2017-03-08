@@ -2,11 +2,11 @@
 
 namespace ShiftScheduleData.Helpers
 {
-    public class Schedule
+    public class MonthlySchedule
     {
         public IDictionary<int, Intervals> DailySchedules { get; }
 
-        public Schedule(IDictionary<int, Intervals> dailySchedules)
+        public MonthlySchedule(IDictionary<int, Intervals> dailySchedules)
         {
             DailySchedules = dailySchedules;
         }

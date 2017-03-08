@@ -32,7 +32,7 @@ namespace ShiftScheduleGenerator
             return new Person(id, dailySchedules, maxHoursPerMonth);
         }
 
-        private Schedule GenerateDailySchedules()
+        private MonthlySchedule GenerateDailySchedules()
         {
             var dailySchedules = new Dictionary<int, Intervals>();
             var days = GenerateDays();
@@ -45,7 +45,7 @@ namespace ShiftScheduleGenerator
                 dailySchedules.Add(day, new Intervals(intervals));
             }
 
-            return new Schedule(dailySchedules);
+            return new MonthlySchedule(dailySchedules);
         }
 
         private List<Interval> GenerateIntervals(int intervalCount, int start)

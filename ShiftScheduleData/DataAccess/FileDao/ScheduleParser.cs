@@ -7,7 +7,7 @@ namespace ShiftScheduleData.DataAccess.FileDao
 {
     internal static class ScheduleParser
     {
-        public static Schedule Get(TextReader textReader)
+        public static MonthlySchedule Get(TextReader textReader)
         {
             var dictonary = new Dictionary<int, Intervals>();
 
@@ -21,12 +21,12 @@ namespace ShiftScheduleData.DataAccess.FileDao
                 dictonary.Add(dayId, new Intervals(intervals));
             }
 
-            return new Schedule(dictonary);
+            return new MonthlySchedule(dictonary);
         }
 
-        public static void Put(TextWriter textWriter, Schedule schedule)
+        public static void Put(TextWriter textWriter, MonthlySchedule monthlySchedule)
         {
-            foreach (var dailySchedule in schedule.DailySchedules)
+            foreach (var dailySchedule in monthlySchedule.DailySchedules)
             {
                 var dayId = dailySchedule.Key;
                 var intervals = dailySchedule.Value.IntervalsList;

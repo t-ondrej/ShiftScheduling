@@ -17,13 +17,13 @@ namespace ShiftScheduleData.DataAccess.FileDao
             _requirementFilePath = Path.Combine(folderPath, fileName);
         }
 
-        public Requirements GetRequirements()
+        public MonthlyRequirements GetRequirements()
         {
             using (var textReader = GetTextReader(_requirementFilePath))
             {
                 try
                 {
-                    var dictionary = new Dictionary<int, Requirements.DailyRequirement>();
+                    var dictionary = new Dictionary<int, MonthlyRequirements.DailyRequirement>();
                     string line;
 
                     while ((line = textReader.ReadLine()) != null)
@@ -39,23 +39,23 @@ namespace ShiftScheduleData.DataAccess.FileDao
                             dailyDictionary.Add(index, value);
                         }
 
-                        dictionary.Add(dayId, new Requirements.DailyRequirement(dailyDictionary));
+                        dictionary.Add(dayId, new MonthlyRequirements.DailyRequirement(dailyDictionary));
                     }
 
-                    return new Requirements(dictionary);
+                    return new MonthlyRequirements(dictionary);
                 }
                 catch
                 {
-                    throw new Exception("Couldn't parse requirements from the file: " + _requirementFilePath);
+                    throw new Exception("Couldn't parse monthlyRequirements from the file: " + _requirementFilePath);
                 }
             }
         }
 
-        public void SaveRequirements(Requirements requirements)
+        public void SaveRequirements(MonthlyRequirements monthlyRequirements)
         {
             using (var textWriter = GetTextWriter(_requirementFilePath))
             {
-                foreach (var dailyRequirement in requirements.DayToRequirement)
+                foreach (var dailyRequirement in monthlyRequirements.DaysToRequirements)
                 {
                     var dayId = dailyRequirement.Key;
                     var hourToWorkers = dailyRequirement.Value.HourToWorkers;

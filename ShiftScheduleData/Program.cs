@@ -16,9 +16,9 @@ namespace ShiftScheduleData
         {
             Console.WriteLine("Person dao test:\n");
             PersonDaoTest();
-            Console.WriteLine("Requirements dao test:\n");
+            Console.WriteLine("MonthlyRequirements dao test:\n");
             RequirementsDaoTest();
-            Console.WriteLine("\nResulting schedule dao test:\n");
+            Console.WriteLine("\nResulting monthlySchedule dao test:\n");
             ResultingScheduleDaoTest();
         }
 
@@ -54,7 +54,7 @@ namespace ShiftScheduleData
         {
             var personDaoRead = new FilePersonDao(GetPathFromRelativeProjectPath(ReadSetName));
             var persons = personDaoRead.GetAllPersons().ToList();
-            var dictionary = persons.ToDictionary(p => p, p => p.MonthlySchedule);
+            var dictionary = persons.ToDictionary(p => p, p => p.MonthlyMonthlySchedule);
             var resultingSchedule = new ResultingSchedule(dictionary);
             var resultingScheduleDao = new FileResultingScheduleDao(GetPathFromRelativeProjectPath(ReadSetName));
             resultingScheduleDao.SaveResultingSchedule(resultingSchedule);

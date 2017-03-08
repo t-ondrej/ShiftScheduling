@@ -147,7 +147,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
         public override string GetReportMessage()
         {
             return $"Person {Person.Id} works out of his AlgorithmOutput on day {Day} " +
-                   $"in interval ({Interval.Start}, {Interval.End})";
+                   $"in hour ({Interval.Start}, {Interval.End})";
         }
     }
 
@@ -156,18 +156,18 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
         public override ReportSeriousness Seriousness { get; }
 
         public int Day { get; }
-        public Interval Interval { get; }
+        public int Hour { get; }
 
-        public RequirementsAreNotMet(int day, Interval interval)
+        public RequirementsAreNotMet(int day, int hour)
         {
             Seriousness = ReportSeriousness.Error;
             Day = day;
-            Interval = interval;
+            Hour = hour;
         }
 
         public override string GetReportMessage()
         {
-            return $"Insufficient workers for day {Day} at Interval ({Interval.Start} - {Interval.End})";
+            return $"Insufficient workers for day {Day} at hour {Hour}";
         }
     }
 
@@ -214,7 +214,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
         public override string GetReportMessage()
         {
             return $"Intervals ({First.Start}, {First.End}) and ({Second.Start}, {Second.End}) " +
-                   $"can be concatenated into a single interval";
+                   $"can be concatenated into a single hour";
         }
     }
 }

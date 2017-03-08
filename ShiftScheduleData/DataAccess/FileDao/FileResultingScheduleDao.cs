@@ -21,7 +21,7 @@ namespace ShiftScheduleData.DataAccess.FileDao
             using (var textReader = GetTextReader(_resultingScheduleFilePath))
             {
                 var personIdToPerson = persons.ToDictionary(p => p.Id, p => p);
-                var dictionary = new Dictionary<Person, Schedule>();
+                var dictionary = new Dictionary<Person, MonthlySchedule>();
                 string line;
 
                 while ((line = textReader.ReadLine()) != null)

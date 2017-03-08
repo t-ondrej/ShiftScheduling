@@ -12,13 +12,13 @@ namespace ShiftScheduleGenerator
     {
         private static readonly Random Random = new Random();
 
-        internal Requirements GenerateRequirements(List<Person> persons)
+        internal MonthlyRequirements GenerateRequirements(List<Person> persons)
         {
             var monthRequirements = new int[ScheduleDaysCount, WorkingTimeLength];
 
             foreach (var person in persons)
             {
-                IDictionary<int, Intervals> schedule = new Dictionary<int, Intervals>(person.MonthlySchedule.DailySchedules);
+                IDictionary<int, Intervals> schedule = new Dictionary<int, Intervals>(person.MonthlyMonthlySchedule.DailySchedules);
                 var sumHours = 0;
 
                 var daysList = schedule.Keys.ToList();
@@ -50,12 +50,12 @@ namespace ShiftScheduleGenerator
                 }
             }
 
-            return new Requirements(ArrayToRequirements(monthRequirements));
+            return new MonthlyRequirements(ArrayToRequirements(monthRequirements));
         }
 
-        private IDictionary<int, Requirements.DailyRequirement> ArrayToRequirements(int[,] array)
+        private IDictionary<int, MonthlyRequirements.DailyRequirement> ArrayToRequirements(int[,] array)
         {
-            IDictionary<int, Requirements.DailyRequirement> requirement = new Dictionary<int, Requirements.DailyRequirement>();
+            IDictionary<int, MonthlyRequirements.DailyRequirement> requirement = new Dictionary<int, MonthlyRequirements.DailyRequirement>();
 
             for (var i = 0; i < array.GetLength(0); i++)
             {
@@ -74,7 +74,7 @@ namespace ShiftScheduleGenerator
                     }
                 }
 
-                requirement.Add(i, new Requirements.DailyRequirement(dailyRequirement));
+                requirement.Add(i, new MonthlyRequirements.DailyRequirement(dailyRequirement));
             }
 
             return requirement;

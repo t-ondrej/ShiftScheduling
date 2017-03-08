@@ -10,14 +10,14 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
         {
             public IEnumerable<Person> Persons { get; }
 
-            public Requirements Requirements { get; }
+            public MonthlyRequirements MonthlyRequirements { get; }
 
             public AlgorithmConfiguration AlgorithmConfiguration { get; }
 
-            public Input(IEnumerable<Person> persons, Requirements requirements, AlgorithmConfiguration algorithmConfiguration)
+            public Input(IEnumerable<Person> persons, MonthlyRequirements monthlyRequirements, AlgorithmConfiguration algorithmConfiguration)
             {
                 Persons = persons;
-                Requirements = requirements;
+                MonthlyRequirements = monthlyRequirements;
                 AlgorithmConfiguration = algorithmConfiguration;
             }
         }

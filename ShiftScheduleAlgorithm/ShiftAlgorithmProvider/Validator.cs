@@ -5,7 +5,8 @@ using ShiftScheduleData.Entities;
 using ShiftScheduleData.Helpers;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
-{
+{   
+    // TODO: Unit testing
     internal class Validator
     {
         public ShiftAlgorithm.Input AlgorithmInput { get; }
@@ -53,10 +54,10 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
         {
             foreach (var personSchedule in AlgorithmOutput.SchedulesForPeople)
             {
-                var person = personSchedule.Key;
-                var schedule = personSchedule.Value;
+                Person person = personSchedule.Key;
+                MonthlySchedule monthlySchedule = personSchedule.Value;
 
-                foreach (var scheduleDailySchedule in schedule.DailySchedules)
+                foreach (var scheduleDailySchedule in monthlySchedule.DailySchedules)
                 {
                     if (scheduleDailySchedule.Value.GetLengthInTime() >
                         AlgorithmInput.AlgorithmConfiguration.MaxDailyWork)
@@ -68,6 +69,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
             }
         }
 
+        // TODO: ask about how this system works
         private void CheckWorkerPauseLengthNotMet()
         {
             throw new NotImplementedException();
@@ -77,75 +79,115 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
         {
             foreach (var personSchedule in AlgorithmOutput.SchedulesForPeople)
             {
-                var person = personSchedule.Key;
-                var schedule = personSchedule.Value;
+                Person person = personSchedule.Key;
+                MonthlySchedule monthlySchedule = personSchedule.Value;
 
-                foreach (var scheduleDailySchedule in schedule.DailySchedules)
+                foreach (var scheduleDailySchedule in monthlySchedule.DailySchedules)
                 {
-                    var foundConsecutiveInterval = false;
-                    var firstIntervalStart = -1;
-                    var previousIntervalEnd = -1;
+                    Intervals sortedIntervals = Intervals.MergeAndSort(scheduleDailySchedule.Value);
 
-                    foreach (var interval in scheduleDailySchedule.Value)
+                    if (
+                        sortedIntervals.Any(
+                            interval => interval.Count > AlgorithmInput.AlgorithmConfiguration.MaxConsecutiveWorkHours))
                     {
-                        if (interval.Count > AlgorithmInput.AlgorithmConfiguration.MaxConsecutiveWorkHours)
-                        {
-                            _resultAlgorithmReport.MaxConsecutiveWorkHours.Add(
-                                new MaxConsecutiveWorkHoursNotMet(person, scheduleDailySchedule.Key));
-                            break;
-                        }
-
-                        if (!foundConsecutiveInterval)
-                        {
-                            firstIntervalStart = interval.Start;
-                            previousIntervalEnd = interval.End;
-                        }
-
-                        if (interval.Start == previousIntervalEnd + 1)
-                        {
-                            foundConsecutiveInterval = true;
-                            previousIntervalEnd = interval.End;
-
-                            if (previousIntervalEnd - firstIntervalStart + 1 <=
-                                AlgorithmInput.AlgorithmConfiguration.MaxConsecutiveWorkHours) continue;
-
-                            _resultAlgorithmReport.MaxConsecutiveWorkHours.Add(
-                                new MaxConsecutiveWorkHoursNotMet(person, scheduleDailySchedule.Key));
-
-                            break;
-                        }
-                        foundConsecutiveInterval = false;
+                        _resultAlgorithmReport.MaxConsecutiveWorkHours.Add(
+                            new MaxConsecutiveWorkHoursNotMet(person, scheduleDailySchedule.Key));
                     }
                 }
             }
         }
 
+        // TODO: make it more effective (merge compare?), this is a stupid version, and finish it
         private void CheckPersonScheduleRequirementsNotMet()
         {
-            throw new NotImplementedException();
+            foreach (var personToMonthlySchedule in AlgorithmOutput.SchedulesForPeople)
+            {
+                Person person = personToMonthlySchedule.Key;
+                MonthlySchedule monthlySchedule = personToMonthlySchedule.Value;
+
+                foreach (var personDailyScheduleOutput in monthlySchedule.DailySchedules)
+                {
+                    var day = personDailyScheduleOutput.Key;
+
+                    Intervals scheduledIntervals = Intervals.MergeAndSort(personDailyScheduleOutput.Value);
+                    Intervals personDailyScheduleRequirement = Intervals.MergeAndSort(
+                        person.MonthlyMonthlySchedule.DailySchedules[day]);
+
+                    foreach (Interval interval in scheduledIntervals)
+                    {
+                        if (!personDailyScheduleRequirement.ContainsSubInterval(interval))
+                        {
+                            _resultAlgorithmReport.PersonScheduleRequirements.Add(
+                                new PersonScheduleRequirementsNotMet(person, day, interval));
+                        }
+                    }
+                }
+            }
         }
 
         private void CheckRequirementsAreNotMet()
         {
-            throw new NotImplementedException();
+            var tempRequirements = new MonthlyRequirements(AlgorithmInput.MonthlyRequirements.DaysToRequirements);
+
+            foreach (var personAndMonthlySchedule in AlgorithmOutput.SchedulesForPeople)
+            {
+                // which person it is is irrelevant for this
+                MonthlySchedule personMonthlySchedule = personAndMonthlySchedule.Value;
+
+                foreach (var dayAndDailySchedule in personMonthlySchedule.DailySchedules)
+                {
+                    Intervals intervals = dayAndDailySchedule.Value;
+
+                    foreach (var interval in intervals)
+                    {
+                        for (var i = interval.Start; i <= interval.End; i++)
+                        {
+                            // substracts a worker from monthlyRequirements for each hour in the interval
+                            tempRequirements.DaysToRequirements[i].HourToWorkers[i]--;
+                        }
+                    }
+                }
+            }
+
+            // check whether there's enough workers for each hour
+            // if there is enough workers, more or equal workers were substracted from hourly monthlyRequirements 
+            foreach (var dayAndRequirement in tempRequirements.DaysToRequirements)
+            {
+                var day = dayAndRequirement.Key;
+                var dailyRequirement = dayAndRequirement.Value;
+
+                foreach (var hourAndWorkers in dailyRequirement.HourToWorkers)
+                {
+                    var hour = hourAndWorkers.Value;
+                    var workersCount = hourAndWorkers.Key;
+
+                    if (workersCount > 0)
+                    {
+                        _resultAlgorithmReport.Requirements.Add(new RequirementsAreNotMet(day, hour));
+                    }
+                }
+            }
         }
 
-        // TODO: sort intervals by time
         private void CheckOverlappingIntervals()
         {
             foreach (var personSchedule in AlgorithmOutput.SchedulesForPeople)
             {
-                var person = personSchedule.Key;
-                var schedule = personSchedule.Value;
+                Person person = personSchedule.Key;
+                MonthlySchedule monthlySchedule = personSchedule.Value;
 
-                foreach (var scheduleDailySchedule in schedule.DailySchedules)
+                foreach (var scheduleDailySchedule in monthlySchedule.DailySchedules)
                 {
+                    var sortedIntervals = new Intervals(scheduleDailySchedule.Value.IntervalsList);
+                    // no need for a merge
+                    sortedIntervals.SortByStart();
+
                     var previousInterval = new Interval(-1, -1);
                     var overlappingIntervals = new HashSet<Interval>();
 
-                    foreach (var interval in scheduleDailySchedule.Value)
+                    foreach (var interval in sortedIntervals)
                     {
-                        if (interval.Start <= previousInterval.End)
+                        if (interval.Overlaps(previousInterval))
                         {
                             overlappingIntervals.Add(previousInterval);
                             overlappingIntervals.Add(interval);
