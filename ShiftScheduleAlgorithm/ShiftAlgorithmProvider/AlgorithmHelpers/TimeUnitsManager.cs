@@ -30,7 +30,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers
 
             SchedulableWork = ScheduledPersons.SelectMany
             (
-                person => person.Person.MonthlyMonthlySchedule.DailySchedules.SelectMany
+                person => person.Person.MonthlySchedule.DailySchedules.SelectMany
                 (
                     pair => pair.Value.IntervalsList.Select
                     (

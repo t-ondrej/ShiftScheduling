@@ -10,7 +10,7 @@ namespace ShiftScheduleData.Helpers
         {
             textWriter.WriteLine($"id={person.Id} maxHours={person.MaxHoursPerMonth}");
 
-            foreach (var dailySchedule in person.MonthlyMonthlySchedule.DailySchedules)
+            foreach (var dailySchedule in person.MonthlySchedule.DailySchedules)
             {
                 var intervals = dailySchedule.Value.IntervalsList.Select(i => i.ToString());
                 textWriter.WriteLine($"day={dailySchedule.Key} hours=[{string.Join(",", intervals)}]");

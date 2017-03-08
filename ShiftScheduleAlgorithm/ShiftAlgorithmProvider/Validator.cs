@@ -111,7 +111,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
                     Intervals scheduledIntervals = Intervals.MergeAndSort(personDailyScheduleOutput.Value);
                     Intervals personDailyScheduleRequirement = Intervals.MergeAndSort(
-                        person.MonthlyMonthlySchedule.DailySchedules[day]);
+                        person.MonthlySchedule.DailySchedules[day]);
 
                     foreach (Interval interval in scheduledIntervals)
                     {

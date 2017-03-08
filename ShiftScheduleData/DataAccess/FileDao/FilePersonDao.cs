@@ -57,7 +57,7 @@ namespace ShiftScheduleData.DataAccess.FileDao
                 try
                 {
                     textWriter.WriteLine(person.MaxHoursPerMonth);
-                    ScheduleParser.Put(textWriter, person.MonthlyMonthlySchedule);
+                    ScheduleParser.Put(textWriter, person.MonthlySchedule);
                 }
                 catch
                 {

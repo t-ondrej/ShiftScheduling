@@ -54,7 +54,7 @@ namespace ShiftScheduleData
         {
             var personDaoRead = new FilePersonDao(GetPathFromRelativeProjectPath(ReadSetName));
             var persons = personDaoRead.GetAllPersons().ToList();
-            var dictionary = persons.ToDictionary(p => p, p => p.MonthlyMonthlySchedule);
+            var dictionary = persons.ToDictionary(p => p, p => p.MonthlySchedule);
             var resultingSchedule = new ResultingSchedule(dictionary);
             var resultingScheduleDao = new FileResultingScheduleDao(GetPathFromRelativeProjectPath(ReadSetName));
             resultingScheduleDao.SaveResultingSchedule(resultingSchedule);

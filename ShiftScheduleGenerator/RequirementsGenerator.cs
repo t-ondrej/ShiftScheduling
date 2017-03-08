@@ -17,7 +17,7 @@ namespace ShiftScheduleGenerator
             Configuration = configuration;
         }
 
-        public Requirements GenerateRequirements(List<Person> persons)
+        public MonthlyRequirements GenerateRequirements(List<Person> persons)
         {
             var monthRequirements = new int[Configuration.ScheduleDaysCount, Configuration.WorkingTimeLength];
 
@@ -58,9 +58,9 @@ namespace ShiftScheduleGenerator
             return new MonthlyRequirements(ArrayToRequirements(monthRequirements));
         }
 
-        private static IDictionary<int, Requirements.DailyRequirement> ArrayToRequirements(int[,] array)
+        private static IDictionary<int, MonthlyRequirements.DailyRequirement> ArrayToRequirements(int[,] array)
         {
-            var requirement = new Dictionary<int, Requirements.DailyRequirement>();
+            var requirement = new Dictionary<int, MonthlyRequirements.DailyRequirement>();
 
             for (var i = 0; i < array.GetLength(0); i++)
             {
