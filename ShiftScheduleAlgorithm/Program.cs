@@ -2,7 +2,7 @@
 using System.IO;
 using ShiftScheduleAlgorithm.ShiftAlgorithmProvider;
 using ShiftScheduleData.DataAccess.FileDao;
-using ShiftScheduleData.Helpers;
+using ShiftScheduleData.Entities.Helpers;
 using ShiftScheduleUtilities;
 
 namespace ShiftScheduleAlgorithm

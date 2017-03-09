@@ -1,24 +1,23 @@
 ﻿using System;
-using ShiftScheduleData.Helpers;
 
 namespace ShiftScheduleData.Entities
 {
-    public class Person : IEquatable<Person>
+    public class PersonOld : IEquatable<PersonOld>
     {
         public int Id { get; }
 
-        public MonthlySchedule MonthlySchedule { get; }
+        public Schedule Schedule { get; }
 
         public int MaxHoursPerMonth { get; }
 
-        public Person(int id, MonthlySchedule monthlySchedule, int maxHoursPerMonth)
+        public PersonOld(int id, Schedule schedule, int maxHoursPerMonth)
         {
             Id = id;
-            MonthlySchedule = monthlySchedule;
+            Schedule = schedule;
             MaxHoursPerMonth = maxHoursPerMonth;
         }
 
-        public bool Equals(Person other)
+        public bool Equals(PersonOld other)
         {
             // generated
             return !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || Id == other.Id);
@@ -28,7 +27,7 @@ namespace ShiftScheduleData.Entities
         {
             // generated
             return !ReferenceEquals(null, obj) && (
-                       ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((Person) obj));
+                       ReferenceEquals(this, obj) || obj.GetType() == GetType() && Equals((PersonOld) obj));
         }
 
         public override int GetHashCode()

@@ -11,9 +11,9 @@ namespace ShiftScheduleData.DataAccess.FileDao
         {
         }
 
-        public IEnumerable<Person> GetAllPersons()
+        public IEnumerable<PersonOld> GetAllPersons()
         {
-            var persons = new List<Person>();
+            var persons = new List<PersonOld>();
 
             foreach (var file in GetFiles())
             {
@@ -35,7 +35,7 @@ namespace ShiftScheduleData.DataAccess.FileDao
 
                         var maxHours = int.Parse(line);
                         var schedule = ScheduleParser.Get(textReader);
-                        persons.Add(new Person(id, schedule, maxHours));
+                        persons.Add(new PersonOld(id, schedule, maxHours));
                     }
                     catch
                     {
@@ -47,21 +47,21 @@ namespace ShiftScheduleData.DataAccess.FileDao
             return persons;
         }
 
-        public void SavePerson(Person person)
+        public void SavePerson(PersonOld personOld)
         {
-            string fileName = $"{person.Id}.{FolderConstants.FileExtensions}";
+            string fileName = $"{personOld.Id}.{FolderConstants.FileExtensions}";
             var path = Path.Combine(FolderPath, fileName);
 
             using (var textWriter = GetTextWriter(path))
             {
                 try
                 {
-                    textWriter.WriteLine(person.MaxHoursPerMonth);
-                    ScheduleParser.Put(textWriter, person.MonthlySchedule);
+                    textWriter.WriteLine(personOld.MaxHoursPerMonth);
+                    ScheduleParser.Put(textWriter, personOld.Schedule);
                 }
                 catch
                 {
-                    throw new Exception("Unable to save person to the file: " + path);
+                    throw new Exception("Unable to save personOld to the file: " + path);
                 }
             }
         }

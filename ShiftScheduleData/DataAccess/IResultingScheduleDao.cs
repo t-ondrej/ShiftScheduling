@@ -5,8 +5,8 @@ namespace ShiftScheduleData.DataAccess
 {
     public interface IResultingScheduleDao
     {
-        ResultingSchedule GetResultingSchedule(IEnumerable<Person> persons );
+        ResultingScheduleOld GetResultingSchedule(IEnumerable<PersonOld> persons );
 
-        void SaveResultingSchedule(ResultingSchedule resultingSchedule);
+        void SaveResultingSchedule(ResultingScheduleOld resultingScheduleOld);
     }
 }

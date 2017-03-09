@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ShiftScheduleData.Helpers;
+using ShiftScheduleData.Entities.NewEntities.Helpers;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers
 {
@@ -30,7 +30,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers
 
             SchedulableWork = ScheduledPersons.SelectMany
             (
-                person => person.Person.MonthlySchedule.DailySchedules.SelectMany
+                person => person.PersonOld.Schedule.DailySchedules.SelectMany
                 (
                     pair => pair.Value.IntervalsList.Select
                     (
@@ -81,7 +81,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers
                         unitIdToUnit.Add(unitOfDay, timeUnit);
                     }
 
-                    timeUnit.IdToPotentionalWork.Add(schedulableWork.ScheduledPerson.Person.Id, schedulableWork);
+                    timeUnit.IdToPotentionalWork.Add(schedulableWork.ScheduledPerson.PersonOld.Id, schedulableWork);
                 }
             }
         }

@@ -5,8 +5,8 @@ namespace ShiftScheduleData.DataAccess
 {
     public interface IPersonDao
     {
-        IEnumerable<Person> GetAllPersons();
+        IEnumerable<PersonOld> GetAllPersons();
 
-        void SavePerson(Person person);
+        void SavePerson(PersonOld personOld);
     }
 }

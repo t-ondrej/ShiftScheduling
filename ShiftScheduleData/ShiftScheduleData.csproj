@@ -53,12 +53,18 @@
     <Compile Include="DataAccess\IRequirementsDao.cs" />
     <Compile Include="DataAccess\IResultingScheduleDao.cs" />
     <Compile Include="Entities\Helpers\EntitiesPrinter.cs" />
-    <Compile Include="Entities\Helpers\Interval.cs" />
-    <Compile Include="Entities\Helpers\Intervals.cs" />
-    <Compile Include="Entities\Person.cs" />
+    <Compile Include="Entities\NewEntities\Helpers\Intervals.cs" />
+    <Compile Include="Entities\NewEntities\RequirementsFulfillingStats.cs" />
+    <Compile Include="Entities\Schedule.cs" />
+    <Compile Include="Entities\NewEntities\Helpers\Interval.cs" />
+    <Compile Include="Entities\Helpers\IntervalsOld.cs" />
+    <Compile Include="Entities\NewEntities\Requirements.cs" />
+    <Compile Include="Entities\NewEntities\Person.cs" />
+    <Compile Include="Entities\ShiftSchedule.cs" />
+    <Compile Include="Entities\PersonOld.cs" />
     <Compile Include="Entities\MonthlyRequirements.cs" />
-    <Compile Include="Entities\ResultingSchedule.cs" />
-    <Compile Include="Entities\Helpers\MonthlySchedule.cs" />
+    <Compile Include="Entities\ResultingScheduleOld.cs" />
+    <Compile Include="Entities\NewEntities\ResultingSchedule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

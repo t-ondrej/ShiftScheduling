@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ShiftScheduleData.Entities.NewEntities.Helpers;
 
-namespace ShiftScheduleData.Helpers
+namespace ShiftScheduleData.Entities.Helpers
 {
-    public class Intervals : IEnumerable<Interval>
+    public class IntervalsOld : IEnumerable<Interval>
     {
         public List<Interval> IntervalsList { get; }
 
-        public Intervals(List<Interval> intervals)
+        public IntervalsOld(List<Interval> intervals)
         {
             IntervalsList = intervals;
         }
@@ -39,17 +40,17 @@ namespace ShiftScheduleData.Helpers
         }
 
         /**
-         * Assumes sorted and merged intervals for speed purposes
+         * Assumes sorted and merged intervalsOld for speed purposes
         */
         public bool ContainsSubInterval(Interval subInterval)
         {
             return IntervalsList.Any(subInterval.IsSubinterval);
         }
 
-        public static Intervals MergeAndSort(Intervals intervals)
+        public static IntervalsOld MergeAndSort(IntervalsOld intervalsOld)
         {
-            var resultIntervals = new Intervals(intervals.IntervalsList);
-            var tempIntervals = new Intervals(intervals.IntervalsList);
+            var resultIntervals = new IntervalsOld(intervalsOld.IntervalsList);
+            var tempIntervals = new IntervalsOld(intervalsOld.IntervalsList);
             var previousInterval = new Interval(-1, -1);
 
             tempIntervals.SortByStart();

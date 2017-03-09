@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace ShiftScheduleData.Helpers
+namespace ShiftScheduleData.Entities.NewEntities.Helpers
 {
     public class Interval : IEnumerable<int>
     {
@@ -91,6 +91,24 @@ namespace ShiftScheduleData.Helpers
             }
         }
 
+        public bool IsSubinterval(Interval parentInterval)
+        {
+            return parentInterval.Start <= Start && End <= parentInterval.End;
+        }
+
+        public override string ToString()
+        {
+            return $"{Start}-{End}";
+        }
+
+        public static Interval FromString(string s)
+        {
+            var values = s.Split('-');
+            var start = int.Parse(values[0]);
+            var end = int.Parse(values[1]);
+            return new Interval(start, end);
+        }
+
         public sealed class StartComparator : IComparer<Interval>
         {
             public int Compare(Interval x, Interval y)
@@ -105,24 +123,6 @@ namespace ShiftScheduleData.Helpers
             {
                 return x.End.CompareTo(y.End);
             }
-        }
-
-        public override string ToString()
-        {
-            return $"{Start}-{End}";
-        }
-
-        public bool IsSubinterval(Interval parentInterval)
-        {
-            return parentInterval.Start <= Start && End <= parentInterval.End;
-        }
-
-        public static Interval FromString(string s)
-        {
-            var values = s.Split('-');
-            var start = int.Parse(values[0]);
-            var end = int.Parse(values[1]);
-            return new Interval(start, end);
         }
     }
 }

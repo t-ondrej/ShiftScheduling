@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ShiftScheduleData.Entities;
-using ShiftScheduleData.Helpers;
+using ShiftScheduleData.Entities.Helpers;
 
 namespace ShiftScheduleGenerator
 {
@@ -22,14 +22,14 @@ namespace ShiftScheduleGenerator
             Configuration = configuration;
         }
 
-        public MonthlyRequirements GenerateRequirements(List<Person> persons)
+        public MonthlyRequirements GenerateRequirements(List<PersonOld> persons)
         {
             var monthRequirements = new int[Configuration.ScheduleDaysCount, Configuration.WorkingTimeLength];
             var difficulty = GetRandomDifficulty();
 
             foreach (var person in persons)
             {
-                var schedule = new Dictionary<int, Intervals>(person.MonthlySchedule.DailySchedules);
+                var schedule = new Dictionary<int, IntervalsOld>(person.Schedule.DailySchedules);
                 var sumHours = 0;
 
                 var daysList = schedule.Keys.ToList();

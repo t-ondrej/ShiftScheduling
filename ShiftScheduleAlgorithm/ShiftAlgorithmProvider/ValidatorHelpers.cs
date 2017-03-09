@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ShiftScheduleData.Entities;
-using ShiftScheduleData.Helpers;
+using ShiftScheduleData.Entities.Helpers;
+using ShiftScheduleData.Entities.NewEntities.Helpers;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 {
@@ -53,17 +53,17 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
     {
         public override ReportSeriousness Seriousness { get; }
 
-        public Person Person { get; }
+        public PersonOld PersonOld { get; }
 
-        public MaxMonthlyWorkNotMet(Person person)
+        public MaxMonthlyWorkNotMet(PersonOld personOld)
         {
             Seriousness = ReportSeriousness.Error;
-            Person = person;
+            PersonOld = personOld;
         }
 
         public override string GetReportMessage()
         {
-            return $"Person {Person.Id} works more than he can without in a month";
+            return $"PersonOld {PersonOld.Id} works more than he can without in a month";
         }
     }
 
@@ -71,19 +71,19 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
     {
         public override ReportSeriousness Seriousness { get; }
 
-        public Person Person { get; }
+        public PersonOld PersonOld { get; }
         public int Day { get; }
 
-        public MaxDailyWorkNotMet(Person person, int day)
+        public MaxDailyWorkNotMet(PersonOld personOld, int day)
         {
             Seriousness = ReportSeriousness.Error;
-            Person = person;
+            PersonOld = personOld;
             Day = day;
         }
 
         public override string GetReportMessage()
         {
-            return $"Person {Person.Id} works more than he can without a pause on day {Day}";
+            return $"PersonOld {PersonOld.Id} works more than he can without a pause on day {Day}";
         }
     }
 
@@ -91,19 +91,19 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
     {
         public override ReportSeriousness Seriousness { get; }
 
-        public Person Person { get; }
+        public PersonOld PersonOld { get; }
         public int Day { get; }
 
-        public WorkerPauseLengthNotMet(Person person, int day)
+        public WorkerPauseLengthNotMet(PersonOld personOld, int day)
         {
             Seriousness = ReportSeriousness.Error;
-            Person = person;
+            PersonOld = personOld;
             Day = day;
         }
 
         public override string GetReportMessage()
         {
-            return $"Person {Person.Id} works more than he can without a pause on day {Day}";
+            return $"PersonOld {PersonOld.Id} works more than he can without a pause on day {Day}";
         }
     }
 
@@ -111,19 +111,19 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
     {
         public override ReportSeriousness Seriousness { get; }
 
-        public Person Person { get; }
+        public PersonOld PersonOld { get; }
         public int Day { get; }
 
-        public MaxConsecutiveWorkHoursNotMet(Person person, int day)
+        public MaxConsecutiveWorkHoursNotMet(PersonOld personOld, int day)
         {
             Seriousness = ReportSeriousness.Error;
-            Person = person;
+            PersonOld = personOld;
             Day = day;
         }
 
         public override string GetReportMessage()
         {
-            return $"Person {Person.Id} works more than maximum consecutive working " +
+            return $"PersonOld {PersonOld.Id} works more than maximum consecutive working " +
                    $"hours on day {Day}";
         }
     }
@@ -132,21 +132,21 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
     {
         public override ReportSeriousness Seriousness { get; }
 
-        public Person Person { get; }
+        public PersonOld PersonOld { get; }
         public int Day { get; }
         public Interval Interval { get; }
 
-        public PersonScheduleRequirementsNotMet(Person person, int day, Interval interval)
+        public PersonScheduleRequirementsNotMet(PersonOld personOld, int day, Interval interval)
         {
             Seriousness = ReportSeriousness.Error;
-            Person = person;
+            PersonOld = personOld;
             Day = day;
             Interval = interval;
         }
 
         public override string GetReportMessage()
         {
-            return $"Person {Person.Id} works out of his AlgorithmOutput on day {Day} " +
+            return $"PersonOld {PersonOld.Id} works out of his AlgorithmOutput on day {Day} " +
                    $"in hour ({Interval.Start}, {Interval.End})";
         }
     }
@@ -175,19 +175,19 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
     {
         public override ReportSeriousness Seriousness { get; }
 
-        public Intervals Intervals { get; }
+        public IntervalsOld IntervalsOld { get; }
         public int Day { get; }
 
-        public OverlappingIntervals(Intervals intervals, int day)
+        public OverlappingIntervals(IntervalsOld intervalsOld, int day)
         {
             Seriousness = ReportSeriousness.Error;
-            Intervals = intervals;
+            IntervalsOld = intervalsOld;
             Day = day;
         }
 
         public override string GetReportMessage()
         {
-            var message = Intervals.Aggregate("Intervals ",
+            var message = IntervalsOld.Aggregate("IntervalsOld ",
                 (current, interval) => current + $"({interval.Start}, {interval.End}) ");
 
             return $"{message}overlap on day {Day}";
@@ -195,7 +195,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
     }
 
     /**
-        For now won't be used, TODO: Rethink validation of inputs for intervals (2-3) (4-5) and such
+        For now won't be used, TODO: Rethink validation of inputs for intervalsOld (2-3) (4-5) and such
          */
     public class ConsecutiveIntervals : Report
     {
@@ -213,7 +213,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
         public override string GetReportMessage()
         {
-            return $"Intervals ({First.Start}, {First.End}) and ({Second.Start}, {Second.End}) " +
+            return $"IntervalsOld ({First.Start}, {First.End}) and ({Second.Start}, {Second.End}) " +
                    $"can be concatenated into a single hour";
         }
     }

@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using ShiftScheduleData.Helpers;
+using ShiftScheduleData.Entities.Helpers;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers
 {
@@ -7,12 +7,12 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers
     {
         public static void PrintScheduledPerson(ScheduledPerson scheduledPerson, TextWriter textWriter)
         {
-            EntitiesPrinter.PrintPerson(scheduledPerson.Person, textWriter);
+            EntitiesPrinter.PrintPerson(scheduledPerson.PersonOld, textWriter);
         }
 
         public static void PrintScheduledWork(SchedulableWork schedulableWork, TextWriter textWriter)
         {
-            textWriter.WriteLine($"person={schedulableWork.ScheduledPerson.Person.Id} " +
+            textWriter.WriteLine($"personOld={schedulableWork.ScheduledPerson.PersonOld.Id} " +
                                  $"day={schedulableWork.DayId} " +
                                  $"interval={schedulableWork.Interval.Start}-{schedulableWork.Interval.End}");
         }

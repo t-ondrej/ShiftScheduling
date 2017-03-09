@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ShiftScheduleData.Entities;
-using ShiftScheduleData.Helpers;
+using ShiftScheduleData.Entities.Helpers;
+using ShiftScheduleData.Entities.NewEntities.Helpers;
 
 namespace ShiftScheduleGenerator
 {
@@ -20,9 +21,9 @@ namespace ShiftScheduleGenerator
             Configuration = configuration;
         }
 
-        public List<Person> GeneratePersons()
+        public List<PersonOld> GeneratePersons()
         {
-            var persons = new List<Person>();
+            var persons = new List<PersonOld>();
 
             for (var i = 0; i < Configuration.EmployeeCount; i++)
             {
@@ -33,17 +34,17 @@ namespace ShiftScheduleGenerator
             return persons;
         }
 
-        private Person CreatePerson(int id)
+        private PersonOld CreatePerson(int id)
         {
             var dailySchedules = GenerateDailySchedules();
             var maxHoursPerMonth = Configuration.WorkingTimePerMonthMax;
 
-            return new Person(id, dailySchedules, maxHoursPerMonth);
+            return new PersonOld(id, dailySchedules, maxHoursPerMonth);
         }
 
-        private MonthlySchedule GenerateDailySchedules()
+        private Schedule GenerateDailySchedules()
         {
-            var dailySchedules = new Dictionary<int, Intervals>();
+            var dailySchedules = new Dictionary<int, IntervalsOld>();
             var days = GenerateDays();
 
             foreach (var day in days)
@@ -51,10 +52,10 @@ namespace ShiftScheduleGenerator
                 var intervalCount = Random.Next(1, IntervalsPerDayMax + 1);
                 var intervals = GenerateIntervals(intervalCount, 0);
 
-                dailySchedules.Add(day, new Intervals(intervals));
+                dailySchedules.Add(day, new IntervalsOld(intervals));
             }
 
-            return new MonthlySchedule(dailySchedules);
+            return new Schedule(dailySchedules);
         }
 
         private List<Interval> GenerateIntervals(int intervalCount, int start)

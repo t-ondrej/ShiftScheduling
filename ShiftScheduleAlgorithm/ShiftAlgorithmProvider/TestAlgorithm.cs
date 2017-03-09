@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers;
 using ShiftScheduleData.Entities;
-using ShiftScheduleData.Helpers;
+using ShiftScheduleData.Entities.Helpers;
+using ShiftScheduleData.Entities.NewEntities.Helpers;
 using ShiftScheduleUtilities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
@@ -21,7 +22,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
         {
         }
 
-        public override ResultingSchedule CreateScheduleForPeople()
+        public override ResultingScheduleOld CreateScheduleForPeople()
         {
             var timeUnitsManager = new TimeUnitsManager(AlgorithmInput);
 
@@ -73,18 +74,18 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
             return CreateResultingSchedule(timeUnitsManager);
         }
 
-        private static ResultingSchedule CreateResultingSchedule(TimeUnitsManager timeUnits)
+        private static ResultingScheduleOld CreateResultingSchedule(TimeUnitsManager timeUnits)
         {
-            var dictionary = new Dictionary<Person, MonthlySchedule>();
+            var dictionary = new Dictionary<PersonOld, Schedule>();
 
             foreach (var schedulableWork in timeUnits.SchedulableWork.Where(work => work.Scheduled))
             {
                 var scheduledPerson = schedulableWork.ScheduledPerson;
-                var person = scheduledPerson.Person;
+                var person = scheduledPerson.PersonOld;
 
                 if (!dictionary.ContainsKey(person))
                 {
-                    dictionary.Add(person, new MonthlySchedule(new Dictionary<int, Intervals>()));
+                    dictionary.Add(person, new Schedule(new Dictionary<int, IntervalsOld>()));
                 }
 
                 var dailySchedules = dictionary[person].DailySchedules;
@@ -92,13 +93,13 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
                 if (!dailySchedules.ContainsKey(dayId))
                 {
-                    dailySchedules.Add(dayId, new Intervals(new List<Interval>()));
+                    dailySchedules.Add(dayId, new IntervalsOld(new List<Interval>()));
                 }
 
                 dailySchedules[dayId].IntervalsList.Add(schedulableWork.Interval);
             }
 
-            return new ResultingSchedule(dictionary);
+            return new ResultingScheduleOld(dictionary);
         }
     }
 }

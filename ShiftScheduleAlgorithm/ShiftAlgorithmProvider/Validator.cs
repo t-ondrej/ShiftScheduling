@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ShiftScheduleData.Entities;
-using ShiftScheduleData.Helpers;
+using ShiftScheduleData.Entities.Helpers;
+using ShiftScheduleData.Entities.NewEntities.Helpers;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 {   
@@ -11,11 +12,11 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
     {
         public ShiftAlgorithm.Input AlgorithmInput { get; }
 
-        public ResultingSchedule AlgorithmOutput { get; }
+        public ResultingScheduleOld AlgorithmOutput { get; }
 
         private readonly AlgorithmReport _resultAlgorithmReport;
 
-        public Validator(ShiftAlgorithm.Input algorithmInput, ResultingSchedule algorithmOutput)
+        public Validator(ShiftAlgorithm.Input algorithmInput, ResultingScheduleOld algorithmOutput)
         {
             AlgorithmInput = algorithmInput;
             AlgorithmOutput = algorithmOutput;
@@ -54,16 +55,16 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
         {
             foreach (var personSchedule in AlgorithmOutput.SchedulesForPeople)
             {
-                Person person = personSchedule.Key;
-                MonthlySchedule monthlySchedule = personSchedule.Value;
+                PersonOld personOld = personSchedule.Key;
+                Schedule schedule = personSchedule.Value;
 
-                foreach (var scheduleDailySchedule in monthlySchedule.DailySchedules)
+                foreach (var scheduleDailySchedule in schedule.DailySchedules)
                 {
                     if (scheduleDailySchedule.Value.GetLengthInTime() >
                         AlgorithmInput.AlgorithmConfiguration.MaxDailyWork)
                     {
                         _resultAlgorithmReport.MaxDailyWork.Add(
-                            new MaxDailyWorkNotMet(person, scheduleDailySchedule.Key));
+                            new MaxDailyWorkNotMet(personOld, scheduleDailySchedule.Key));
                     }
                 }
             }
@@ -79,19 +80,19 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
         {
             foreach (var personSchedule in AlgorithmOutput.SchedulesForPeople)
             {
-                Person person = personSchedule.Key;
-                MonthlySchedule monthlySchedule = personSchedule.Value;
+                PersonOld personOld = personSchedule.Key;
+                Schedule schedule = personSchedule.Value;
 
-                foreach (var scheduleDailySchedule in monthlySchedule.DailySchedules)
+                foreach (var scheduleDailySchedule in schedule.DailySchedules)
                 {
-                    Intervals sortedIntervals = Intervals.MergeAndSort(scheduleDailySchedule.Value);
+                    IntervalsOld sortedIntervalsOld = IntervalsOld.MergeAndSort(scheduleDailySchedule.Value);
 
                     if (
-                        sortedIntervals.Any(
+                        sortedIntervalsOld.Any(
                             interval => interval.Count > AlgorithmInput.AlgorithmConfiguration.MaxConsecutiveWorkHours))
                     {
                         _resultAlgorithmReport.MaxConsecutiveWorkHours.Add(
-                            new MaxConsecutiveWorkHoursNotMet(person, scheduleDailySchedule.Key));
+                            new MaxConsecutiveWorkHoursNotMet(personOld, scheduleDailySchedule.Key));
                     }
                 }
             }
@@ -102,23 +103,23 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
         {
             foreach (var personToMonthlySchedule in AlgorithmOutput.SchedulesForPeople)
             {
-                Person person = personToMonthlySchedule.Key;
-                MonthlySchedule monthlySchedule = personToMonthlySchedule.Value;
+                PersonOld personOld = personToMonthlySchedule.Key;
+                Schedule schedule = personToMonthlySchedule.Value;
 
-                foreach (var personDailyScheduleOutput in monthlySchedule.DailySchedules)
+                foreach (var personDailyScheduleOutput in schedule.DailySchedules)
                 {
                     var day = personDailyScheduleOutput.Key;
 
-                    Intervals scheduledIntervals = Intervals.MergeAndSort(personDailyScheduleOutput.Value);
-                    Intervals personDailyScheduleRequirement = Intervals.MergeAndSort(
-                        person.MonthlySchedule.DailySchedules[day]);
+                    IntervalsOld scheduledIntervalsOld = IntervalsOld.MergeAndSort(personDailyScheduleOutput.Value);
+                    IntervalsOld personDailyScheduleRequirement = IntervalsOld.MergeAndSort(
+                        personOld.Schedule.DailySchedules[day]);
 
-                    foreach (Interval interval in scheduledIntervals)
+                    foreach (Interval interval in scheduledIntervalsOld)
                     {
                         if (!personDailyScheduleRequirement.ContainsSubInterval(interval))
                         {
                             _resultAlgorithmReport.PersonScheduleRequirements.Add(
-                                new PersonScheduleRequirementsNotMet(person, day, interval));
+                                new PersonScheduleRequirementsNotMet(personOld, day, interval));
                         }
                     }
                 }
@@ -131,14 +132,14 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
             foreach (var personAndMonthlySchedule in AlgorithmOutput.SchedulesForPeople)
             {
-                // which person it is is irrelevant for this
-                MonthlySchedule personMonthlySchedule = personAndMonthlySchedule.Value;
+                // which personOld it is is irrelevant for this
+                Schedule personSchedule = personAndMonthlySchedule.Value;
 
-                foreach (var dayAndDailySchedule in personMonthlySchedule.DailySchedules)
+                foreach (var dayAndDailySchedule in personSchedule.DailySchedules)
                 {
-                    Intervals intervals = dayAndDailySchedule.Value;
+                    IntervalsOld intervalsOld = dayAndDailySchedule.Value;
 
-                    foreach (var interval in intervals)
+                    foreach (var interval in intervalsOld)
                     {
                         for (var i = interval.Start; i <= interval.End; i++)
                         {
@@ -173,12 +174,12 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
         {
             foreach (var personSchedule in AlgorithmOutput.SchedulesForPeople)
             {
-                Person person = personSchedule.Key;
-                MonthlySchedule monthlySchedule = personSchedule.Value;
+                PersonOld personOld = personSchedule.Key;
+                Schedule schedule = personSchedule.Value;
 
-                foreach (var scheduleDailySchedule in monthlySchedule.DailySchedules)
+                foreach (var scheduleDailySchedule in schedule.DailySchedules)
                 {
-                    var sortedIntervals = new Intervals(scheduleDailySchedule.Value.IntervalsList);
+                    var sortedIntervals = new IntervalsOld(scheduleDailySchedule.Value.IntervalsList);
                     // no need for a merge
                     sortedIntervals.SortByStart();
 
@@ -195,7 +196,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
                         else
                         {
                             _resultAlgorithmReport.OverlappingIntervals.Add(
-                                new OverlappingIntervals(new Intervals(overlappingIntervals.ToList()),
+                                new OverlappingIntervals(new IntervalsOld(overlappingIntervals.ToList()),
                                     scheduleDailySchedule.Key));
                             overlappingIntervals = new HashSet<Interval>();
                         }

@@ -2,7 +2,7 @@
 using System.Linq;
 using ShiftScheduleData.DataAccess.FileDao;
 using ShiftScheduleData.Entities;
-using ShiftScheduleData.Helpers;
+using ShiftScheduleData.Entities.Helpers;
 using static ShiftScheduleUtilities.PathUtilities;
 
 namespace ShiftScheduleData
@@ -14,11 +14,11 @@ namespace ShiftScheduleData
 
         private static void Main()
         {
-            Console.WriteLine("Person dao test:\n");
+            Console.WriteLine("PersonOld dao test:\n");
             PersonDaoTest();
             Console.WriteLine("MonthlyRequirements dao test:\n");
             RequirementsDaoTest();
-            Console.WriteLine("\nResulting monthlySchedule dao test:\n");
+            Console.WriteLine("\nResulting schedule dao test:\n");
             ResultingScheduleDaoTest();
         }
 
@@ -54,8 +54,8 @@ namespace ShiftScheduleData
         {
             var personDaoRead = new FilePersonDao(GetPathFromRelativeProjectPath(ReadSetName));
             var persons = personDaoRead.GetAllPersons().ToList();
-            var dictionary = persons.ToDictionary(p => p, p => p.MonthlySchedule);
-            var resultingSchedule = new ResultingSchedule(dictionary);
+            var dictionary = persons.ToDictionary(p => p, p => p.Schedule);
+            var resultingSchedule = new ResultingScheduleOld(dictionary);
             var resultingScheduleDao = new FileResultingScheduleDao(GetPathFromRelativeProjectPath(ReadSetName));
             resultingScheduleDao.SaveResultingSchedule(resultingSchedule);
 

@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ShiftScheduleData.Helpers;
+using ShiftScheduleData.Entities;
+using ShiftScheduleData.Entities.Helpers;
+using ShiftScheduleData.Entities.NewEntities.Helpers;
 
 namespace ShiftScheduleData.DataAccess.FileDao
 {
     internal static class ScheduleParser
     {
-        public static MonthlySchedule Get(TextReader textReader)
+        public static Schedule Get(TextReader textReader)
         {
-            var dictonary = new Dictionary<int, Intervals>();
+            var dictonary = new Dictionary<int, IntervalsOld>();
 
             string line;
 
@@ -18,15 +20,15 @@ namespace ShiftScheduleData.DataAccess.FileDao
                 var splited = line.Split(' ');
                 var dayId = int.Parse(splited[0]);
                 var intervals = splited[1].Split(',').Select(Interval.FromString).ToList();
-                dictonary.Add(dayId, new Intervals(intervals));
+                dictonary.Add(dayId, new IntervalsOld(intervals));
             }
 
-            return new MonthlySchedule(dictonary);
+            return new Schedule(dictonary);
         }
 
-        public static void Put(TextWriter textWriter, MonthlySchedule monthlySchedule)
+        public static void Put(TextWriter textWriter, Schedule schedule)
         {
-            foreach (var dailySchedule in monthlySchedule.DailySchedules)
+            foreach (var dailySchedule in schedule.DailySchedules)
             {
                 var dayId = dailySchedule.Key;
                 var intervals = dailySchedule.Value.IntervalsList;

@@ -8,13 +8,13 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
     {
         public sealed class Input
         {
-            public IEnumerable<Person> Persons { get; }
+            public IEnumerable<PersonOld> Persons { get; }
 
             public MonthlyRequirements MonthlyRequirements { get; }
 
             public AlgorithmConfiguration AlgorithmConfiguration { get; }
 
-            public Input(IEnumerable<Person> persons, MonthlyRequirements monthlyRequirements, AlgorithmConfiguration algorithmConfiguration)
+            public Input(IEnumerable<PersonOld> persons, MonthlyRequirements monthlyRequirements, AlgorithmConfiguration algorithmConfiguration)
             {
                 Persons = persons;
                 MonthlyRequirements = monthlyRequirements;
@@ -31,7 +31,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
                 AlgorithmInput = algorithmInput;
             }
 
-            public abstract ResultingSchedule CreateScheduleForPeople();
+            public abstract ResultingScheduleOld CreateScheduleForPeople();
         }
 
         public enum Strategy
@@ -39,7 +39,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
             Test
         }
 
-        public static ResultingSchedule ExecuteAlgorithm(Input algorithmInput, Strategy strategy)
+        public static ResultingScheduleOld ExecuteAlgorithm(Input algorithmInput, Strategy strategy)
         {
             Algorithm algorithm;
 

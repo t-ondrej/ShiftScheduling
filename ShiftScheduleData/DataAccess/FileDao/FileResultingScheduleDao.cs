@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using ShiftScheduleData.Entities;
-using ShiftScheduleData.Helpers;
 
 namespace ShiftScheduleData.DataAccess.FileDao
 {
@@ -16,12 +15,12 @@ namespace ShiftScheduleData.DataAccess.FileDao
             _resultingScheduleFilePath = Path.Combine(folderPath, fileName);
         }
 
-        public ResultingSchedule GetResultingSchedule(IEnumerable<Person> persons)
+        public ResultingScheduleOld GetResultingSchedule(IEnumerable<PersonOld> persons)
         {
             using (var textReader = GetTextReader(_resultingScheduleFilePath))
             {
                 var personIdToPerson = persons.ToDictionary(p => p.Id, p => p);
-                var dictionary = new Dictionary<Person, MonthlySchedule>();
+                var dictionary = new Dictionary<PersonOld, Schedule>();
                 string line;
 
                 while ((line = textReader.ReadLine()) != null)
@@ -32,15 +31,15 @@ namespace ShiftScheduleData.DataAccess.FileDao
                     dictionary.Add(person, schedule);
                 }
 
-                return new ResultingSchedule(dictionary);
+                return new ResultingScheduleOld(dictionary);
             }
         }
 
-        public void SaveResultingSchedule(ResultingSchedule resultingSchedule)
+        public void SaveResultingSchedule(ResultingScheduleOld resultingScheduleOld)
         {
             using (var textWriter = GetTextWriter(_resultingScheduleFilePath))
             {
-                foreach (var personSchedule in resultingSchedule.SchedulesForPeople)
+                foreach (var personSchedule in resultingScheduleOld.SchedulesForPeople)
                 {
                     textWriter.WriteLine(personSchedule.Key.Id);
                     ScheduleParser.Put(textWriter, personSchedule.Value);
