@@ -14,9 +14,9 @@ namespace ShiftScheduleData.Entities.NewEntities
 
         public class DailySchedule
         {
-            public IDictionary<Person, IEnumerable<ShiftInterval>> DailySchedules { get; }
+            public IDictionary<Person, Intervals<ShiftInterval>> DailySchedules { get; }
 
-            public DailySchedule(IDictionary<Person, IEnumerable<ShiftInterval>> dailySchedules)
+            public DailySchedule(IDictionary<Person, Intervals<ShiftInterval>> dailySchedules)
             {
                 DailySchedules = dailySchedules;
             }
