@@ -55,7 +55,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShiftAlgorithmProvider\ValidatorHelpers.cs" />
-    <Compile Include="Validation\ValidationOutput.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

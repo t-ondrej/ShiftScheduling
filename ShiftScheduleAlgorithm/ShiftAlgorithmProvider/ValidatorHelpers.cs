@@ -35,14 +35,14 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
             _reportsDictionary = new Dictionary<Type, IList<Report>>();
         }
 
-        public IList<T> GetReports<T>() where T : Report
+        public IEnumerable<T> GetReports<T>() where T : Report
         {
             var type = typeof(T);
 
             if (!_reportsDictionary.ContainsKey(type))
                 return null;
 
-            return (IList<T>) _reportsDictionary[type];
+            return _reportsDictionary[type].Cast<T>();
         }
 
         public void AddReport(Report report)
