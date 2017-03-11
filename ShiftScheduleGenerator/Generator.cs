@@ -41,7 +41,7 @@ namespace ShiftScheduleGenerator
                 }
 
                 //fileRequirementsDao.SaveRequirements(requirements);
-                Directory.CreateDirectory(Path.Combine(folderPath, FolderConstants.OutputFolderName));
+                Directory.CreateDirectory(_dataAccessClient.OutputFolder);
             }
         }
     }

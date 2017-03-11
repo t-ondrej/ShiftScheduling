@@ -7,9 +7,12 @@ namespace ShiftScheduleDataAccess
     {
         public string WorkingFolder { get; }
 
+        public string OutputFolder { get; }
+
         public DataAccessClient(string workingFolder)
         {
             WorkingFolder = workingFolder;
+            OutputFolder = Path.Combine(WorkingFolder, FolderConstants.OutputFolderName);
         }
 
         public IPersonDao GetPersonDao()
@@ -29,8 +32,7 @@ namespace ShiftScheduleDataAccess
 
         public IResultingScheduleDao GetResultingScheduleDao()
         {
-            var resultPath = Path.Combine(WorkingFolder, FolderConstants.OutputFolderName);
-            return new FileResultingScheduleDao(resultPath);
+            return new FileResultingScheduleDao(OutputFolder);
         }
     }
 }
