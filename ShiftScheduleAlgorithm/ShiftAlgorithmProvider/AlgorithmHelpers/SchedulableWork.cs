@@ -1,4 +1,4 @@
-﻿using ShiftScheduleData.Entities.NewEntities.Helpers;
+﻿using ShiftScheduleLibrary.Utilities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers
 {

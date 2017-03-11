@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using ShiftScheduleData.Entities.Helpers;
+using ShiftScheduleDataAccess.OldEntities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers
 {

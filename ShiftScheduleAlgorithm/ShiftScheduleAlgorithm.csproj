@@ -60,9 +60,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ShiftScheduleData\ShiftScheduleData.csproj">
+    <ProjectReference Include="..\ShiftScheduleDataAccess\ShiftScheduleDataAccess.csproj">
       <Project>{39e0badb-ab56-4913-bc09-ec023651bf8a}</Project>
       <Name>ShiftScheduleData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShiftScheduleLibrary\ShiftScheduleLibrary.csproj">
+      <Project>{5633CE9F-38CD-4BB1-903B-2B19631672CC}</Project>
+      <Name>ShiftScheduleLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\ShiftScheduleUtilities\ShiftScheduleUtilities.csproj">
       <Project>{D9753E1B-7DE9-4B03-83E2-2971E9EAE96B}</Project>

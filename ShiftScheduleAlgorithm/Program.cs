@@ -1,8 +1,7 @@
 ﻿using System;
 using System.IO;
 using ShiftScheduleAlgorithm.ShiftAlgorithmProvider;
-using ShiftScheduleData.DataAccess.FileDao;
-using ShiftScheduleData.Entities.Helpers;
+using ShiftScheduleDataAccess.OldEntities;
 using ShiftScheduleUtilities;
 
 namespace ShiftScheduleAlgorithm
@@ -13,9 +12,9 @@ namespace ShiftScheduleAlgorithm
         {
             const string name = "DataSets/Set1";
             var path = PathUtilities.GetPathFromRelativeProjectPath(name);
-            var requirementsDao = new FileRequirementsDao(path);
-            var personsDao = new FilePersonDao(path);
-            var resultingScheduleDao = new FileResultingScheduleDao(Path.Combine(path, "Output"));
+            var requirementsDao = new FileRequirementsDaoOld(path);
+            var personsDao = new FilePersonDaoOld(path);
+            var resultingScheduleDao = new FileResultingScheduleDaoOld(Path.Combine(path, "Output"));
 
             var requirements = requirementsDao.GetRequirements();
             var persons = personsDao.GetAllPersons();

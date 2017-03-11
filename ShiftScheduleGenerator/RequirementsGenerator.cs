@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ShiftScheduleData.Entities;
-using ShiftScheduleData.Entities.Helpers;
+using ShiftScheduleDataAccess.OldEntities;
+using ShiftScheduleLibrary.Utilities;
 
 namespace ShiftScheduleGenerator
 {
@@ -22,14 +22,14 @@ namespace ShiftScheduleGenerator
             Configuration = configuration;
         }
 
-        public MonthlyRequirements GenerateRequirements(List<PersonOld> persons)
+        public MonthlyRequirementsOld GenerateRequirements(List<PersonOld> persons)
         {
             var monthRequirements = new int[Configuration.ScheduleDaysCount, Configuration.WorkingTimeLength];
             var difficulty = GetRandomDifficulty();
 
             foreach (var person in persons)
             {
-                var schedule = new Dictionary<int, IntervalsOld>(person.Schedule.DailySchedules);
+                var schedule = new Dictionary<int, Intervals<Interval>>(person.ScheduleOld.DailySchedules);
                 var sumHours = 0;
 
                 var daysList = schedule.Keys.ToList();
@@ -60,7 +60,7 @@ namespace ShiftScheduleGenerator
                 }
             }
 
-            var requirements = new MonthlyRequirements(ArrayToRequirements(monthRequirements));
+            var requirements = new MonthlyRequirementsOld(ArrayToRequirements(monthRequirements));
 
             if (difficulty != Difficulties.Medium)
             {
@@ -70,9 +70,9 @@ namespace ShiftScheduleGenerator
             return requirements;
         }
 
-        private static IDictionary<int, MonthlyRequirements.DailyRequirement> ArrayToRequirements(int[,] array)
+        private static IDictionary<int, MonthlyRequirementsOld.DailyRequirement> ArrayToRequirements(int[,] array)
         {
-            var requirement = new Dictionary<int, MonthlyRequirements.DailyRequirement>();
+            var requirement = new Dictionary<int, MonthlyRequirementsOld.DailyRequirement>();
 
             for (var i = 0; i < array.GetLength(0); i++)
             {
@@ -91,25 +91,25 @@ namespace ShiftScheduleGenerator
                     }
                 }
 
-                requirement.Add(i, new MonthlyRequirements.DailyRequirement(dailyRequirement));
+                requirement.Add(i, new MonthlyRequirementsOld.DailyRequirement(dailyRequirement));
             }
 
             return requirement;
         }
 
 
-        private void ChangeRequirementsDifficulty(MonthlyRequirements requirements, Difficulties difficulty)
+        private void ChangeRequirementsDifficulty(MonthlyRequirementsOld requirementsOld, Difficulties difficulty)
         {
             var ChangeRequirementProbability = 0.35;
 
-            var days = requirements.DaysToRequirements.Keys;
+            var days = requirementsOld.DaysToRequirements.Keys;
             foreach (var day in days)
             {
-                var hours = requirements.DaysToRequirements[day].HourToWorkers.Keys;
+                var hours = requirementsOld.DaysToRequirements[day].HourToWorkers.Keys;
                 foreach (var hour in hours)
                 {
                     if (Random.NextDouble() < ChangeRequirementProbability)
-                        requirements.DaysToRequirements[day].HourToWorkers[hour] +=
+                        requirementsOld.DaysToRequirements[day].HourToWorkers[hour] +=
                             difficulty == Difficulties.Unsolveable ? 1 : -1;
                 }
             }

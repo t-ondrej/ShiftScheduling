@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftScheduleAlgorithm", "ShiftScheduleAlgorithm\ShiftScheduleAlgorithm.csproj", "{FA2421DE-8B19-4BD8-A5B0-E8A44F9C6318}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftScheduleData", "ShiftScheduleData\ShiftScheduleData.csproj", "{39E0BADB-AB56-4913-BC09-EC023651BF8A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftScheduleDataAccess", "ShiftScheduleDataAccess\ShiftScheduleDataAccess.csproj", "{39E0BADB-AB56-4913-BC09-EC023651BF8A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftScheduleGenerator", "ShiftScheduleGenerator\ShiftScheduleGenerator.csproj", "{218949C2-D718-4E8C-B702-3B32109539CC}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftScheduleGenerator", "S
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftScheduleUtilities", "ShiftScheduleUtilities\ShiftScheduleUtilities.csproj", "{D9753E1B-7DE9-4B03-83E2-2971E9EAE96B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftScheduleLibrary", "ShiftScheduleLibrary\ShiftScheduleLibrary.csproj", "{5633CE9F-38CD-4BB1-903B-2B19631672CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,10 @@ Global
 		{D9753E1B-7DE9-4B03-83E2-2971E9EAE96B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9753E1B-7DE9-4B03-83E2-2971E9EAE96B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9753E1B-7DE9-4B03-83E2-2971E9EAE96B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5633CE9F-38CD-4BB1-903B-2B19631672CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5633CE9F-38CD-4BB1-903B-2B19631672CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5633CE9F-38CD-4BB1-903B-2B19631672CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5633CE9F-38CD-4BB1-903B-2B19631672CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

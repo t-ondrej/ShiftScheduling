@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ShiftScheduleData.Entities;
-using ShiftScheduleData.Entities.Helpers;
-using ShiftScheduleData.Entities.NewEntities.Helpers;
+using ShiftScheduleDataAccess.OldEntities;
+using ShiftScheduleLibrary.Utilities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 {
@@ -175,10 +174,10 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
     {
         public override ReportSeriousness Seriousness { get; }
 
-        public IntervalsOld IntervalsOld { get; }
+        public Intervals<Interval> IntervalsOld { get; }
         public int Day { get; }
 
-        public OverlappingIntervals(IntervalsOld intervalsOld, int day)
+        public OverlappingIntervals(Intervals<Interval> intervalsOld, int day)
         {
             Seriousness = ReportSeriousness.Error;
             IntervalsOld = intervalsOld;

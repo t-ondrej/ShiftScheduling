@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ShiftScheduleData.Entities;
+using ShiftScheduleDataAccess.OldEntities;
+using ShiftScheduleLibrary.Entities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 {
@@ -8,16 +9,19 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
     {
         public sealed class Input
         {
-            public IEnumerable<PersonOld> Persons { get; }
+            public IEnumerable<Person> Persons { get; }
 
-            public MonthlyRequirements MonthlyRequirements { get; }
+            public Requirements MonthlyRequirementsOld { get; }
+
+            public RequirementsFulfillingStats RequirementsFulfillingStats { get; }
 
             public AlgorithmConfiguration AlgorithmConfiguration { get; }
 
-            public Input(IEnumerable<PersonOld> persons, MonthlyRequirements monthlyRequirements, AlgorithmConfiguration algorithmConfiguration)
+            public Input(IEnumerable<Person> persons, Requirements monthlyRequirementsOld, RequirementsFulfillingStats requirementsFulfillingStats, AlgorithmConfiguration algorithmConfiguration)
             {
                 Persons = persons;
-                MonthlyRequirements = monthlyRequirements;
+                MonthlyRequirementsOld = monthlyRequirementsOld;
+                RequirementsFulfillingStats = requirementsFulfillingStats;
                 AlgorithmConfiguration = algorithmConfiguration;
             }
         }

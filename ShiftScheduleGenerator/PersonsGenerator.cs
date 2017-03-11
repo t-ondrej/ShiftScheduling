@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ShiftScheduleData.Entities;
-using ShiftScheduleData.Entities.Helpers;
-using ShiftScheduleData.Entities.NewEntities.Helpers;
+using ShiftScheduleDataAccess.OldEntities;
+using ShiftScheduleLibrary.Utilities;
 
 namespace ShiftScheduleGenerator
 {
@@ -42,9 +41,9 @@ namespace ShiftScheduleGenerator
             return new PersonOld(id, dailySchedules, maxHoursPerMonth);
         }
 
-        private Schedule GenerateDailySchedules()
+        private ScheduleOld GenerateDailySchedules()
         {
-            var dailySchedules = new Dictionary<int, IntervalsOld>();
+            var dailySchedules = new Dictionary<int, Intervals<Interval>>();
             var days = GenerateDays();
 
             foreach (var day in days)
@@ -52,10 +51,10 @@ namespace ShiftScheduleGenerator
                 var intervalCount = Random.Next(1, IntervalsPerDayMax + 1);
                 var intervals = GenerateIntervals(intervalCount, 0);
 
-                dailySchedules.Add(day, new IntervalsOld(intervals));
+                dailySchedules.Add(day, new Intervals<Interval>(intervals));
             }
 
-            return new Schedule(dailySchedules);
+            return new ScheduleOld(dailySchedules);
         }
 
         private List<Interval> GenerateIntervals(int intervalCount, int start)

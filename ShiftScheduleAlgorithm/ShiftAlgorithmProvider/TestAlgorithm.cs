@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ShiftScheduleAlgorithm.ShiftAlgorithmProvider.AlgorithmHelpers;
-using ShiftScheduleData.Entities;
-using ShiftScheduleData.Entities.Helpers;
-using ShiftScheduleData.Entities.NewEntities.Helpers;
+using ShiftScheduleDataAccess.OldEntities;
+using ShiftScheduleLibrary.Utilities;
 using ShiftScheduleUtilities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
@@ -58,7 +57,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
                 // We update scheduled state of the work
                 scheduledWork.Scheduled = true;
 
-                // Finally we update persons schedule
+                // Finally we update persons scheduleOld
                 var scheduledPerson = scheduledWork.ScheduledPerson;
                 var personsdayToHours = scheduledPerson.NumberOfWorkedUnitsPerDays;
                 var dayId = scheduledWork.DayId;
@@ -76,7 +75,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
         private static ResultingScheduleOld CreateResultingSchedule(TimeUnitsManager timeUnits)
         {
-            var dictionary = new Dictionary<PersonOld, Schedule>();
+            var dictionary = new Dictionary<PersonOld, ScheduleOld>();
 
             foreach (var schedulableWork in timeUnits.SchedulableWork.Where(work => work.Scheduled))
             {
@@ -85,7 +84,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
                 if (!dictionary.ContainsKey(person))
                 {
-                    dictionary.Add(person, new Schedule(new Dictionary<int, IntervalsOld>()));
+                    dictionary.Add(person, new ScheduleOld(new Dictionary<int, Intervals<Interval>>()));
                 }
 
                 var dailySchedules = dictionary[person].DailySchedules;
@@ -93,7 +92,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
                 if (!dailySchedules.ContainsKey(dayId))
                 {
-                    dailySchedules.Add(dayId, new IntervalsOld(new List<Interval>()));
+                    dailySchedules.Add(dayId, new Intervals<Interval>(new List<Interval>()));
                 }
 
                 dailySchedules[dayId].IntervalsList.Add(schedulableWork.Interval);
