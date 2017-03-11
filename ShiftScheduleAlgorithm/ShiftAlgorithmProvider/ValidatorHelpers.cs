@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using ShiftScheduleDataAccess.OldEntities;
 using ShiftScheduleLibrary.Utilities;
 
@@ -26,28 +28,55 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
     public class AlgorithmReport
     {
-        public List<MaxMonthlyWorkNotMet> MaxMonthlyWork { get; }
-        public List<MaxDailyWorkNotMet> MaxDailyWork { get; }
-        public List<WorkerPauseLengthNotMet> WorkerPauseLenth { get; }
-        public List<MaxConsecutiveWorkHoursNotMet> MaxConsecutiveWorkHours { get; }
-        public List<PersonScheduleRequirementsNotMet> PersonScheduleRequirements { get; }
-        public List<RequirementsAreNotMet> Requirements { get; }
-        public List<OverlappingIntervals> OverlappingIntervals { get; }
-        public List<ConsecutiveIntervals> ConsecutiveIntervals { get; }
+        private readonly IDictionary<Type, IList<Report>> _reportsDictionary;
 
         public AlgorithmReport()
         {
-            MaxMonthlyWork = new List<MaxMonthlyWorkNotMet>();
-            MaxDailyWork = new List<MaxDailyWorkNotMet>();
-            WorkerPauseLenth = new List<WorkerPauseLengthNotMet>();
-            MaxConsecutiveWorkHours = new List<MaxConsecutiveWorkHoursNotMet>();
-            PersonScheduleRequirements = new List<PersonScheduleRequirementsNotMet>();
-            Requirements = new List<RequirementsAreNotMet>();
-            OverlappingIntervals = new List<OverlappingIntervals>();
-            ConsecutiveIntervals = new List<ConsecutiveIntervals>();
+            _reportsDictionary = new Dictionary<Type, IList<Report>>();
         }
+
+        public IList<T> GetReports<T>() where T : Report
+        {
+            var type = typeof(T);
+
+            if (!_reportsDictionary.ContainsKey(type))
+                return null;
+
+            return (IList<T>) _reportsDictionary[type];
+        }
+
+        public void AddReport(Report report)
+        {
+            var type = report.GetType();
+
+            if (!_reportsDictionary.ContainsKey(type))
+                _reportsDictionary.Add(type, new List<Report>());
+
+            _reportsDictionary[type].Add(report);
+        }
+
+        //public List<MaxMonthlyWorkNotMet> MaxMonthlyWork { get; }
+        //public List<MaxDailyWorkNotMet> MaxDailyWork { get; }
+        //public List<WorkerPauseLengthNotMet> WorkerPauseLenth { get; }
+        //public List<MaxConsecutiveWorkHoursNotMet> MaxConsecutiveWorkHours { get; }
+        //public List<PersonScheduleRequirementsNotMet> PersonScheduleRequirements { get; }
+        //public List<RequirementsAreNotMet> Requirements { get; }
+        //public List<OverlappingIntervals> OverlappingIntervals { get; }
+        //public List<ConsecutiveIntervals> ConsecutiveIntervals { get; }
+
+        //public AlgorithmReport()
+        //{
+        //    MaxMonthlyWork = new List<MaxMonthlyWorkNotMet>();
+        //    MaxDailyWork = new List<MaxDailyWorkNotMet>();
+        //    WorkerPauseLenth = new List<WorkerPauseLengthNotMet>();
+        //    MaxConsecutiveWorkHours = new List<MaxConsecutiveWorkHoursNotMet>();
+        //    PersonScheduleRequirements = new List<PersonScheduleRequirementsNotMet>();
+        //    Requirements = new List<RequirementsAreNotMet>();
+        //    OverlappingIntervals = new List<OverlappingIntervals>();
+        //    ConsecutiveIntervals = new List<ConsecutiveIntervals>();
+        //}
     }
-    
+
     public class MaxMonthlyWorkNotMet : Report
     {
         public override ReportSeriousness Seriousness { get; }
@@ -196,13 +225,14 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
     /**
         For now won't be used, TODO: Rethink validation of inputs for intervalsOld (2-3) (4-5) and such
          */
+
     public class ConsecutiveIntervals : Report
     {
         public override ReportSeriousness Seriousness { get; }
 
         public Interval First { get; }
         public Interval Second { get; }
-        
+
         public ConsecutiveIntervals(Interval first, Interval second)
         {
             Seriousness = ReportSeriousness.Warning;

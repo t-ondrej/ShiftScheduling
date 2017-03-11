@@ -5,7 +5,7 @@ using ShiftScheduleDataAccess.OldEntities;
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 {   
     // TODO: Unit testing
-    internal class Validator
+    internal class ValidatorOld
     {
         public ShiftAlgorithm.Input AlgorithmInput { get; }
 
@@ -13,7 +13,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
         private readonly AlgorithmReport _resultAlgorithmReport;
 
-        public Validator(ShiftAlgorithm.Input algorithmInput, ResultingScheduleOld algorithmOutput)
+        public ValidatorOld(ShiftAlgorithm.Input algorithmInput, ResultingScheduleOld algorithmOutput)
         {
             AlgorithmInput = algorithmInput;
             AlgorithmOutput = algorithmOutput;
