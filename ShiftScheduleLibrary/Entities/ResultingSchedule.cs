@@ -45,8 +45,8 @@ namespace ShiftScheduleLibrary.Entities
 
             public new static ShiftInterval FromString(string s)
             {
-                var splited = s.Split(' ');
-                var interval = Interval.FromString(s);
+                var splited = s.Split('=');
+                var interval = Interval.FromString(splited[0]);
                 var type = EnumUtilities.ParseEnum<IntervalType>(splited[1]);
                 return new ShiftInterval(interval.Start, interval.End, type);
             }

@@ -4,7 +4,7 @@ using System.IO;
 using ShiftScheduleLibrary.Entities;
 using ShiftScheduleLibrary.Utilities;
 
-namespace ShiftScheduleDataAccess.FileDao
+namespace ShiftScheduleDataAccess.Dao.FileDao
 {
     internal class FilePersonDao : FileClient, IPersonDao
     {
@@ -42,10 +42,10 @@ namespace ShiftScheduleDataAccess.FileDao
                             var splited = line.Split(' ');
                             var dayId = int.Parse(splited[0]);
                             var interval = Interval.FromString(splited[1]);
-                            var leftTolerance = int.Parse(splited[3]);
-                            var rigthTolerance = int.Parse(splited[2]);
+                            var leftTolerance = int.Parse(splited[2]);
+                            var rightTolerance = int.Parse(splited[3]);
                             var shiftWeight = double.Parse(splited[4]);
-                            var availability = new Person.DailyAvailability(interval, leftTolerance, rigthTolerance, shiftWeight);
+                            var availability = new Person.DailyAvailability(interval, leftTolerance, rightTolerance, shiftWeight);
                             dictionary.Add(dayId, availability);
                         }
 

@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ShiftScheduleLibrary.Entities;
+using ShiftScheduleUtilities;
 
-namespace ShiftScheduleDataAccess.FileDao
+namespace ShiftScheduleDataAccess.Dao.FileDao
 {
     internal class FileRequirementsDao : FileClient, IRequirementsDao
     {
@@ -30,15 +31,7 @@ namespace ShiftScheduleDataAccess.FileDao
                     {
                         var splited = line.Split(' ');
                         var dayId = int.Parse(splited[0]);
-                        var dailyDictionary = new Dictionary<int, double>();
-                        var hours = splited[1].Split(',');
-
-                        for (var index = 0; index < hours.Length; index++)
-                        {
-                            var value = int.Parse(hours[index]);
-                            dailyDictionary.Add(index, value);
-                        }
-
+                        var dailyDictionary = splited.Skip(1).ToDictionary((s, i) => i, (s, i) => double.Parse(s));
                         dictionary.Add(dayId, new Requirements.DailyRequirement(dailyDictionary));
                     }
 
@@ -64,7 +57,7 @@ namespace ShiftScheduleDataAccess.FileDao
 
                     for (var i = 0; i <= maxHour; i++)
                     {
-                        stringBuilder.Append(hourToWorkers.ContainsKey(i) ? $"{hourToWorkers[i]}," : "0,");
+                        stringBuilder.Append(hourToWorkers.ContainsKey(i) ? $"{hourToWorkers[i]} " : "0 ");
                     }
 
                     var hoursString = stringBuilder.ToString().Substring(0, stringBuilder.Length - 1);

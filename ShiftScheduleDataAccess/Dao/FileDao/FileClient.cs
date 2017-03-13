@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace ShiftScheduleDataAccess.FileDao
+namespace ShiftScheduleDataAccess.Dao.FileDao
 {
     internal class FileClient
     {

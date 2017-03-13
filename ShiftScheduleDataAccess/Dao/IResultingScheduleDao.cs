@@ -1,6 +1,6 @@
 ﻿using ShiftScheduleLibrary.Entities;
 
-namespace ShiftScheduleDataAccess
+namespace ShiftScheduleDataAccess.Dao
 {
     public interface IResultingScheduleDao
     {

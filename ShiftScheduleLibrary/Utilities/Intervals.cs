@@ -36,6 +36,6 @@ namespace ShiftScheduleLibrary.Utilities
         public IEnumerator<T> GetEnumerator()
         {
             return IntervalsList.GetEnumerator();
-        }     
+        }
     }
 }

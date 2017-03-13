@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ShiftScheduleLibrary.Entities;
+using ShiftScheduleUtilities;
 
-namespace ShiftScheduleDataAccess.FileDao
+namespace ShiftScheduleDataAccess.Dao.FileDao
 {
     internal class FileRequirementsFulfillingStatsDao : FileClient, IRequirementsFulfillingStatsDao
     {
@@ -30,15 +31,14 @@ namespace ShiftScheduleDataAccess.FileDao
                         var dictionary = new Dictionary<int, double>();
                         var splited = line.Split(' ');
                         var personId = int.Parse(splited[0]);
-                        var stats = splited.Skip(1);
 
-                        foreach (var periodToStatsString in stats)
+                        splited.Skip(1).Iterate(periodToStatsString =>
                         {
-                            var splitedStats = periodToStatsString.Split(' ');
+                            var splitedStats = periodToStatsString.Split('=');
                             var pediodId = int.Parse(splitedStats[0]);
-                            var statsValue = double.Parse(splited[1]);
+                            var statsValue = double.Parse(splitedStats[1]);
                             dictionary.Add(pediodId, statsValue);
-                        }
+                        });
 
                         personsToStats.Add(personId, new RequirementsFulfillingStats.PersonStats(dictionary));
                     }

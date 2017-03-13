@@ -5,7 +5,7 @@ using System.Linq;
 using ShiftScheduleLibrary.Entities;
 using ShiftScheduleLibrary.Utilities;
 
-namespace ShiftScheduleDataAccess.FileDao
+namespace ShiftScheduleDataAccess.Dao.FileDao
 {
     internal class FileResultingScheduleDao : FileClient, IResultingScheduleDao
     {
@@ -65,7 +65,7 @@ namespace ShiftScheduleDataAccess.FileDao
                     foreach (var personSchedule in dailySchedule.PersonIdToDailySchedule)
                     {
                         var personId = personSchedule.Key;
-                        var intervals = personSchedule.Value.Select(interval => $"{interval}={interval.Type}");
+                        var intervals = personSchedule.Value.Select(interval => $"{interval}");
                         var intervalsString = string.Join(" ", intervals);
                         textWriter.WriteLine($"{personId} {intervalsString}");
                     }

@@ -43,17 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataAccessClient.cs" />
-    <Compile Include="FileDao\FileClient.cs" />
-    <Compile Include="FileDao\FolderConstants.cs" />
-    <Compile Include="FileDao\FilePersonDao.cs" />
-    <Compile Include="FileDao\FileRequirementsDao.cs" />
-    <Compile Include="FileDao\FileRequirementsFulfillingStatsDao.cs" />
-    <Compile Include="FileDao\FileResultingScheduleDao.cs" />
-    <Compile Include="IPersonDao.cs" />
-    <Compile Include="IRequirementsDao.cs" />
-    <Compile Include="IRequirementsFulfillingStatsDao.cs" />
-    <Compile Include="IResultingScheduleDao.cs" />
+    <Compile Include="Dao\DataAccessClient.cs" />
+    <Compile Include="Dao\FileDao\FileClient.cs" />
+    <Compile Include="Dao\FileDao\FolderConstants.cs" />
+    <Compile Include="Dao\FileDao\FilePersonDao.cs" />
+    <Compile Include="Dao\FileDao\FileRequirementsDao.cs" />
+    <Compile Include="Dao\FileDao\FileRequirementsFulfillingStatsDao.cs" />
+    <Compile Include="Dao\FileDao\FileResultingScheduleDao.cs" />
+    <Compile Include="Dao\IPersonDao.cs" />
+    <Compile Include="Dao\IRequirementsDao.cs" />
+    <Compile Include="Dao\IRequirementsFulfillingStatsDao.cs" />
+    <Compile Include="Dao\IResultingScheduleDao.cs" />
     <Compile Include="OldEntities\EntitiesPrinter.cs" />
     <Compile Include="OldEntities\ScheduleOld.cs" />
     <Compile Include="OldEntities\PersonOld.cs" />
