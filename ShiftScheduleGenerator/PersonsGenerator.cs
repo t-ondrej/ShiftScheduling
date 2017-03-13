@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ShiftScheduleDataAccess.OldEntities;
+using ShiftScheduleLibrary.Entities;
 using ShiftScheduleLibrary.Utilities;
 
 namespace ShiftScheduleGenerator
@@ -11,7 +11,7 @@ namespace ShiftScheduleGenerator
 
         private const double DayAssignmentProbability = 0.5;
 
-        private const int IntervalsPerDayMax = 5;
+        private const double ShiftWeightUnit = 0.25;
 
         public GeneratorConfiguration Configuration { get; }
 
@@ -20,9 +20,9 @@ namespace ShiftScheduleGenerator
             Configuration = configuration;
         }
 
-        public List<PersonOld> GeneratePersons()
+        public List<Person> GeneratePersons()
         {
-            var persons = new List<PersonOld>();
+            var persons = new List<Person>();
 
             for (var i = 0; i < Configuration.EmployeeCount; i++)
             {
@@ -33,48 +33,51 @@ namespace ShiftScheduleGenerator
             return persons;
         }
 
-        private PersonOld CreatePerson(int id)
+        private Person CreatePerson(int id)
         {
-            var dailySchedules = GenerateDailySchedules();
-            var maxHoursPerMonth = Configuration.WorkingTimePerMonthMax;
+            var dailyAvailabilities = GenerateDailyAvailabilities();
+            var maxWork = Random.Next(1, Configuration.WorkingTimePerMonthMax + 1);
 
-            return new PersonOld(id, dailySchedules, maxHoursPerMonth);
+            return new Person(id, maxWork, dailyAvailabilities);
         }
 
-        private ScheduleOld GenerateDailySchedules()
+        private IDictionary<int, Person.DailyAvailability> GenerateDailyAvailabilities()
         {
-            var dailySchedules = new Dictionary<int, Intervals<Interval>>();
+            var dailyAvailabilities = new Dictionary<int, Person.DailyAvailability>();
             var days = GenerateDays();
 
             foreach (var day in days)
             {
-                var intervalCount = Random.Next(1, IntervalsPerDayMax + 1);
-                var intervals = GenerateIntervals(intervalCount, 0);
-
-                dailySchedules.Add(day, new Intervals<Interval>(intervals));
+                var dailyAvailability = GenerateDailyAvailability();
+                dailyAvailabilities.Add(day, dailyAvailability);
             }
 
-            return new ScheduleOld(dailySchedules);
+            return dailyAvailabilities;
         }
 
-        private List<Interval> GenerateIntervals(int intervalCount, int start)
+        private Person.DailyAvailability GenerateDailyAvailability()
         {
-            var intervals = new List<Interval>();
+            var availability = GenerateInterval();
+            var leftTolerance = Random.Next(0, availability.Start + 1);
+            var rightTolerance = Random.Next(0, Configuration.WorkingTimeLength - availability.End + 1);
+            var shiftWeight = GenerateShiftWeight();
 
-            if (intervalCount == 0)
-                return intervals;
+            return new Person.DailyAvailability(availability, leftTolerance, rightTolerance, shiftWeight);
+        }
 
-            var end = Configuration.WorkingTimeLength - 2 * (intervalCount - 1);
+        private double GenerateShiftWeight()
+        {
+            var unitCount = (int) (Configuration.ShiftWeightMax / ShiftWeightUnit);
 
-            start = Random.Next(start, end);
-            end = Random.Next(start, end);
+            return Random.Next(0, unitCount + 1) * ShiftWeightUnit;
+        }
 
-            var interval = new Interval(start, end);
+        private Interval GenerateInterval()
+        {
+            var start = Random.Next(0, Configuration.WorkingTimePerMonthMax);
+            var end = Random.Next(start, Configuration.WorkingTimePerMonthMax);
 
-            intervals.Add(interval);
-            intervals.AddRange(GenerateIntervals(intervalCount - 1, end + 2));
-
-            return intervals;
+            return new Interval(start, end); 
         }
 
         private IEnumerable<int> GenerateDays()

@@ -14,8 +14,10 @@
 
         public int NumberOfSets { get; }
 
+        public double ShiftWeightMax { get; }
+
         public GeneratorConfiguration(int scheduleDaysCount, int workingTimeLength, int workingTimePerMonthMax,
-            int employeeCount, string folderName, int numberOfSets)
+            int employeeCount, string folderName, int numberOfSets, double shiftWeightMax)
         {
             ScheduleDaysCount = scheduleDaysCount;
             WorkingTimeLength = workingTimeLength;
@@ -23,6 +25,7 @@
             EmployeeCount = employeeCount;
             FolderName = folderName;
             NumberOfSets = numberOfSets;
+            ShiftWeightMax = shiftWeightMax;
         }
     }
 }

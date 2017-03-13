@@ -24,7 +24,8 @@ namespace ShiftScheduleGenerator
                         Convert.ToInt32(configuration["WorkingTimePerMonthMax"]),
                         Convert.ToInt32(configuration["EmployeeCount"]),
                         configuration["FolderName"],
-                        Convert.ToInt32(configuration["NumberOfSets"])
+                        Convert.ToInt32(configuration["NumberOfSets"]),
+                        Convert.ToDouble(configuration["ShiftWeightMax"])
                     )
                 );
 

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
-using ShiftScheduleDataAccess.OldEntities;
+using ShiftScheduleLibrary.Entities;
 using ShiftScheduleLibrary.Utilities;
 
 namespace ShiftScheduleGenerator
@@ -15,6 +16,8 @@ namespace ShiftScheduleGenerator
 
         private static readonly Random Random = new Random();
 
+        private const double ToleranceAssignmentProbability = 0.1;
+
         public GeneratorConfiguration Configuration { get; }
 
         public RequirementsGenerator(GeneratorConfiguration configuration)
@@ -22,45 +25,79 @@ namespace ShiftScheduleGenerator
             Configuration = configuration;
         }
 
-        public MonthlyRequirementsOld GenerateRequirements(List<PersonOld> persons)
+        public Requirements GenerateRequirements(List<Person> persons)
         {
-            var monthRequirements = new int[Configuration.ScheduleDaysCount, Configuration.WorkingTimeLength];
+            // Array: Days x Hours
+            var monthRequirements = new double[Configuration.ScheduleDaysCount, Configuration.WorkingTimeLength];
             var difficulty = GetRandomDifficulty();
 
+            // Person by person
             foreach (var person in persons)
             {
-                var schedule = new Dictionary<int, Intervals<Interval>>(person.ScheduleOld.DailySchedules);
-                var sumHours = 0;
+                var dailyAvailabilities = new Dictionary<int, Person.DailyAvailability>(person.DailyAvailabilities);
+                var workingTime = person.MaxWork;
 
-                var daysList = schedule.Keys.ToList();
+                var daysList = dailyAvailabilities.Keys.ToList();
 
+                // Day by day from person's availabilities
                 while (daysList.Count > 0)
                 {
+                    // Take random day
                     var randomIdx = Random.Next(daysList.Count);
-                    var randomSchedule = schedule.ElementAt(randomIdx);
+                    var element = dailyAvailabilities.ElementAt(randomIdx);
 
-                    var intervals = randomSchedule.Value.IntervalsList;
-                    var randomDay = randomSchedule.Key;
+                    var dailyAvailability = element.Value;
+                    var day = element.Key;                    
 
-                    foreach (var interval in intervals)
+                    // If person didn't exceed his MaxWorkHours
+                    if (workingTime > 0)
                     {
-
-                        if (sumHours + interval.Count <= Configuration.WorkingTimePerMonthMax)
+                        
+                        // Randomly take left/right tolerance or neither
+                        if (dailyAvailability.LeftTolerance > 0 && Random.NextDouble() < ToleranceAssignmentProbability)
                         {
-                            for (var j = interval.Start; j <= interval.End; j++)
+                            // Random tolerance length
+                            var increment = Math.Min(workingTime, Random.Next(1, dailyAvailability.LeftTolerance + 1));
+                            var toleranceStart = dailyAvailability.Availability.Start - increment;
+                            for (var hour = toleranceStart; hour < dailyAvailability.Availability.Start; hour++)
                             {
-                                monthRequirements[randomDay, j]++;
-                                sumHours++;
+                                monthRequirements[day, hour] += dailyAvailability.ShiftWeight;
+                                workingTime--;
                             }
                         }
-                    }
 
+                        if (dailyAvailability.RightTolerance > 0 && Random.NextDouble() < ToleranceAssignmentProbability)
+                        {
+                            var increment = Math.Min(workingTime, Random.Next(1, dailyAvailability.RightTolerance + 1));
+                            var toleranceEnd = dailyAvailability.Availability.End + increment;
+                            for (var hour = dailyAvailability.Availability.End + 1; hour <= toleranceEnd; hour++)
+                            {
+                                monthRequirements[day, hour] += dailyAvailability.ShiftWeight;
+                                workingTime--;
+                            }
+                        }
+
+                        // Hour by hour in the random day
+                        foreach (var hour in dailyAvailability.Availability)
+                        {
+                            if (workingTime >= 1)
+                            {
+                                monthRequirements[day, hour] += dailyAvailability.ShiftWeight;
+                                workingTime--;
+                            }
+                            else
+                                break;
+                        }
+
+                    }
+                    
+                    // Remove the day from list and person's daily availabilities
                     daysList.RemoveAt(randomIdx);
-                    schedule.Remove(randomDay);
+                    dailyAvailabilities.Remove(day);
                 }
             }
 
-            var requirements = new MonthlyRequirementsOld(ArrayToRequirements(monthRequirements));
+            var requirements = new Requirements(ArrayToRequirements(monthRequirements));
 
             if (difficulty != Difficulties.Medium)
             {
@@ -70,9 +107,9 @@ namespace ShiftScheduleGenerator
             return requirements;
         }
 
-        private static IDictionary<int, MonthlyRequirementsOld.DailyRequirement> ArrayToRequirements(int[,] array)
+        private static IDictionary<int, Requirements.DailyRequirement> ArrayToRequirements(double[,] array)
         {
-            var requirement = new Dictionary<int, MonthlyRequirementsOld.DailyRequirement>();
+            var requirement = new Dictionary<int, Requirements.DailyRequirement>();
 
             for (var i = 0; i < array.GetLength(0); i++)
             {
@@ -81,7 +118,7 @@ namespace ShiftScheduleGenerator
                     continue;
                 }
 
-                var dailyRequirement = new Dictionary<int, int>();
+                var dailyRequirement = new Dictionary<int, double>();
 
                 for (var j = 0; j < array.GetLength(1); j++)
                 {
@@ -91,25 +128,25 @@ namespace ShiftScheduleGenerator
                     }
                 }
 
-                requirement.Add(i, new MonthlyRequirementsOld.DailyRequirement(dailyRequirement));
+                requirement.Add(i, new Requirements.DailyRequirement(dailyRequirement));
             }
 
             return requirement;
         }
 
 
-        private void ChangeRequirementsDifficulty(MonthlyRequirementsOld requirementsOld, Difficulties difficulty)
+        private void ChangeRequirementsDifficulty(Requirements requirements, Difficulties difficulty)
         {
-            var ChangeRequirementProbability = 0.35;
+            var RequirementChangeProbability = 0.35;
 
-            var days = requirementsOld.DaysToRequirements.Keys;
+            var days = requirements.DaysToRequirements.Keys;
             foreach (var day in days)
             {
-                var hours = requirementsOld.DaysToRequirements[day].HourToWorkers.Keys;
+                var hours = requirements.DaysToRequirements[day].HourToWorkers.Keys;
                 foreach (var hour in hours)
                 {
-                    if (Random.NextDouble() < ChangeRequirementProbability)
-                        requirementsOld.DaysToRequirements[day].HourToWorkers[hour] +=
+                    if (Random.NextDouble() < RequirementChangeProbability)
+                        requirements.DaysToRequirements[day].HourToWorkers[hour] +=
                             difficulty == Difficulties.Unsolveable ? 1 : -1;
                 }
             }
@@ -125,7 +162,7 @@ namespace ShiftScheduleGenerator
             return difficultyIndex == 2 ? Difficulties.Medium : Difficulties.Unsolveable;
         }
 
-        private static bool IsArrayOfZeros(int[,] array, int index)
+        private static bool IsArrayOfZeros(double[,] array, int index)
         {
             for (var i = 0; i < array.GetLength(1); i++)
             {
