@@ -54,11 +54,6 @@
     <Compile Include="Dao\IRequirementsDao.cs" />
     <Compile Include="Dao\IRequirementsFulfillingStatsDao.cs" />
     <Compile Include="Dao\IResultingScheduleDao.cs" />
-    <Compile Include="OldEntities\EntitiesPrinter.cs" />
-    <Compile Include="OldEntities\ScheduleOld.cs" />
-    <Compile Include="OldEntities\PersonOld.cs" />
-    <Compile Include="OldEntities\MonthlyRequirementsOld.cs" />
-    <Compile Include="OldEntities\ResultingScheduleOld.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
