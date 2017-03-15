@@ -41,7 +41,7 @@ namespace ShiftScheduleGenerator.Generation
 
                 // Generate the data
                 var persons = _scheduleGenerator.GeneratePersons();
-                var requirements = _requirementsGenerator.Generate();
+                var requirements = _requirementsGenerator.Generate(persons);
 
                 // Save the data
                 persons.Iterate(person => dataAccessClient.PersonDao.SavePerson(person));
