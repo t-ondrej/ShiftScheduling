@@ -1,66 +1,49 @@
 ﻿using System;
-using ShiftScheduleDataAccess.OldEntities;
+using ShiftScheduleDataAccess.Dao;
 using ShiftScheduleUtilities;
 
 namespace ShiftScheduleDataAccess
 {
     internal class Program
     {
-        private const string ReadSetName = "TestData";
-        private const string PutSetName = "TestData/Output";
+        private static readonly DataAccessClient ClientRead = new DataAccessClient("../../Test/Read");
+        private static readonly DataAccessClient ClientSave = new DataAccessClient("../../Test/Save");
 
         private static void Main()
         {
-            Console.WriteLine("PersonOld dao test:\n");
+            ClientSave.InitializeWorkingFolder();
+            Console.WriteLine("Person dao test:\n");
             PersonDaoTest();
-            Console.WriteLine("MonthlyRequirementsOld dao test:\n");
+            Console.WriteLine("Requirements dao test:\n");
             RequirementsDaoTest();
-            Console.WriteLine("\nResulting scheduleOld dao test:\n");
+            Console.WriteLine("Resulting schedule dao test:\n");
             ResultingScheduleDaoTest();
-        }
-
-        private static void RequirementsDaoTest()
-        {
-            var requirementsDaoRead = new FileRequirementsDaoOld(PathUtilities.GetPathFromRelativeProjectPath(ReadSetName));
-            var requirementsDaoPut = new FileRequirementsDaoOld(PathUtilities.GetPathFromRelativeProjectPath(PutSetName));
-            var requirements = requirementsDaoRead.GetRequirements();
-
-            EntitiesPrinter.PrintRequirements(requirements, Console.Out);
-            requirementsDaoPut.SaveRequirements(requirements);
+            Console.WriteLine("Requirements fulfilling stats dao test:\n");
+            RequirementsFulfillingStatsDaoTest();
         }
 
         private static void PersonDaoTest()
         {
-            var personDaoRead = new FilePersonDaoOld(PathUtilities.GetPathFromRelativeProjectPath(ReadSetName));
-            var personDaoPut = new FilePersonDaoOld(PathUtilities.GetPathFromRelativeProjectPath(PutSetName));
-            var persons = personDaoRead.GetAllPersons().ToList();
+            var persons = ClientRead.PersonDao.GetAllPersons();
+            persons.Iterate(person => ClientSave.PersonDao.SavePerson(person));
+        }
 
-            foreach (var person in persons)
-            {
-                EntitiesPrinter.PrintPerson(person, Console.Out);
-                Console.WriteLine();
-            }
-
-            foreach (var person in persons)
-            {
-                personDaoPut.SavePerson(person);
-            }
+        private static void RequirementsDaoTest()
+        {
+            var requirements = ClientRead.RequirementsDao.GetRequirements();
+            ClientSave.RequirementsDao.SaveRequirements(requirements);
         }
 
         private static void ResultingScheduleDaoTest()
         {
-            var personDaoRead = new FilePersonDaoOld(PathUtilities.GetPathFromRelativeProjectPath(ReadSetName));
-            var persons = personDaoRead.GetAllPersons().ToList();
-            var dictionary = persons.ToDictionary(p => p, p => p.ScheduleOld);
-            var resultingSchedule = new ResultingScheduleOld(dictionary);
-            var resultingScheduleDao = new FileResultingScheduleDaoOld(PathUtilities.GetPathFromRelativeProjectPath(ReadSetName));
-            resultingScheduleDao.SaveResultingSchedule(resultingSchedule);
+            var resultingSchedule = ClientRead.ResultingScheduleDao.GetResultingSchedule();
+            ClientSave.ResultingScheduleDao.SaveResultingSchedule(resultingSchedule);
+        }
 
-            var reloadedSchedule = resultingScheduleDao.GetResultingSchedule(persons);
-            var resultingSchedulePut = new FileResultingScheduleDaoOld(PathUtilities.GetPathFromRelativeProjectPath(PutSetName));
-            resultingSchedulePut.SaveResultingSchedule(reloadedSchedule);
-
-            EntitiesPrinter.PrintResultingschedule(resultingSchedule, Console.Out);
+        private static void RequirementsFulfillingStatsDaoTest()
+        {
+            var requirementsFulfillingStats = ClientRead.RequirementsFulfillingStatsDao.GetRequirements();
+            ClientSave.RequirementsFulfillingStatsDao.SaveRequirements(requirementsFulfillingStats);
         }
     }
 }

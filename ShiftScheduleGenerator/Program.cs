@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
+using ShiftScheduleGenerator.Generation;
 using ShiftScheduleUtilities;
 
 namespace ShiftScheduleGenerator
@@ -10,27 +12,33 @@ namespace ShiftScheduleGenerator
         public static void Main(string[] args)
         {
             var settings = ConfigurationManager.AppSettings;
-            var generatedDataFolder = settings["generatedDataFolder"];
-            var configurationsFolder = settings["configurationsFolder"];
+            var generatedDataFolder = settings["GeneratedDataFolder"];
+            var configurationsFolder = settings["ConfigurationsFolder"];
+            var dataSetFolderName = settings["DataSetFolderName"];
 
             foreach (var configFile in Directory.EnumerateFiles(configurationsFolder, "*.config"))
             {
                 var generatorConfiguration = ConfigurationReader<GeneratorConfiguration>.ParseFile
                 (
                     configFile, configuration => new GeneratorConfiguration
-                    (
-                        Convert.ToInt32(configuration["ScheduleDaysCount"]),
-                        Convert.ToInt32(configuration["WorkingTimeLength"]),
-                        Convert.ToInt32(configuration["WorkingTimePerMonthMax"]),
-                        Convert.ToInt32(configuration["EmployeeCount"]),
-                        configuration["FolderName"],
-                        Convert.ToInt32(configuration["NumberOfSets"])
-                    )
+                    { 
+                        ScheduleDaysCount = Convert.ToInt32(configuration["ScheduleDaysCount"]),
+                        DayAssignmentDensity = Convert.ToDouble(configuration["DayAssignmentDensity"]),
+                        WorkingTimePerMonthMin = Convert.ToInt32(configuration["WorkingTimePerMonthMin"]),
+                        WorkingTimePerMonthMax = Convert.ToInt32(configuration["WorkingTimePerMonthMax"]),
+                        WorkingTimePerDay =  Convert.ToInt32(configuration["WorkingTimePerDay"]),
+                        NumberOfShiftWeightValues = Convert.ToInt32(configuration["NumberOfShiftWeightValues"]),
+                        EmployeeCount = Convert.ToInt32(configuration["EmployeeCount"]),
+                        NumberOfSets = Convert.ToInt32(configuration["NumberOfSets"]),
+                        DifficultyToFulfilRequirements = Convert.ToDouble(configuration["DifficultyToFulfilRequirements"])
+                    }
                 );
 
-                var workingFolder = Path.Combine(generatedDataFolder, generatorConfiguration.FolderName);
+                var folderName = Path.GetFileNameWithoutExtension(configFile);
+                Debug.Assert(folderName != null, "folderName != null");
+                var workingFolder = Path.Combine(generatedDataFolder, folderName);
                 Directory.CreateDirectory(workingFolder);
-                new Generator(generatorConfiguration, workingFolder).GenerateData();
+                new Generator(generatorConfiguration, workingFolder, dataSetFolderName).GenerateData();
             }
         }
     }
