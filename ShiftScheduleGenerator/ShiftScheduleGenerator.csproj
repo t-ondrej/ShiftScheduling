@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Generation\Difficulty.cs" />
     <Compile Include="Generation\Generator.cs" />
     <Compile Include="Generation\GeneratorConfiguration.cs" />
     <Compile Include="Program.cs" />
@@ -55,7 +56,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Configurations\Test2.config" />
-    <None Include="Configurations\Test1.config" />
+    <None Include="Configurations\Test1.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ShiftScheduleDataAccess\ShiftScheduleDataAccess.csproj">

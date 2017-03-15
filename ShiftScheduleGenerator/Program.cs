@@ -30,7 +30,9 @@ namespace ShiftScheduleGenerator
                         NumberOfShiftWeightValues = Convert.ToInt32(configuration["NumberOfShiftWeightValues"]),
                         EmployeeCount = Convert.ToInt32(configuration["EmployeeCount"]),
                         NumberOfSets = Convert.ToInt32(configuration["NumberOfSets"]),
-                        DifficultyToFulfilRequirements = Convert.ToDouble(configuration["DifficultyToFulfilRequirements"])
+                        DifficultyToFulfilRequirements = new Difficulty(configuration["DifficultyToFulfilRequirements"]),
+                        ToleranceAssignmentProbability = Convert.ToDouble(configuration["ToleranceAssignmentProbability"]),
+                        ToleranceUseProbability = Convert.ToDouble(configuration["ToleranceUseProbability"]),
                     }
                 );
 

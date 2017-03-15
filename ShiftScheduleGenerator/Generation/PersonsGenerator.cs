@@ -29,6 +29,19 @@ namespace ShiftScheduleGenerator.Generation
             return persons;
         }
 
+        public List<Person> GeneratePersons(int count)
+        {
+            var persons = new List<Person>();
+
+            for (var i = 0; i < count; i++)
+            {
+                var person = CreatePerson(i);
+                persons.Add(person);
+            }
+
+            return persons;
+        }
+
         private Person CreatePerson(int id)
         {
             var dailyAvailabilities = GenerateDailyAvailabilities();
@@ -54,8 +67,12 @@ namespace ShiftScheduleGenerator.Generation
         private Person.DailyAvailability GenerateDailyAvailability()
         {
             var availability = GenerateInterval();
-            var leftTolerance = Random.Next(0, availability.Start + 1);
-            var rightTolerance = Random.Next(0, Configuration.WorkingTimePerDay - availability.End + 1);
+
+            var leftTolerance = Random.NextDouble() < Configuration.ToleranceAssignmentProbability ? 
+                                    Random.Next(0, availability.Start + 1) : 0;
+            var rightTolerance = Random.NextDouble() < Configuration.ToleranceAssignmentProbability ? 
+                                    Random.Next(0, Configuration.WorkingTimePerDay - availability.End) : 0;
+
             var shiftWeight = GenerateShiftWeight();
 
             return new Person.DailyAvailability(availability, leftTolerance, rightTolerance, shiftWeight);

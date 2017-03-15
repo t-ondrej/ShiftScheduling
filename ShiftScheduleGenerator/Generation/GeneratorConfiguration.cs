@@ -18,6 +18,10 @@
 
         public int NumberOfSets { get; set; }
 
-        public double DifficultyToFulfilRequirements { get; set; }
+        public Difficulty DifficultyToFulfilRequirements { get; set; }
+
+        public double ToleranceAssignmentProbability { get; set; }
+
+        public double ToleranceUseProbability { get; set; }
     }
 }
