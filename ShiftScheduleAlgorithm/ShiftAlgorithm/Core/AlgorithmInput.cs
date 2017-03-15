@@ -3,7 +3,7 @@ using ShiftScheduleLibrary.Entities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Core
 {
-    internal sealed class AlgorithmInput
+    public sealed class AlgorithmInput
     {
         public IEnumerable<Person> Persons { get; }
 

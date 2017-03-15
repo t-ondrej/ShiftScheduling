@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftScheduleUtilities", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftScheduleLibrary", "ShiftScheduleLibrary\ShiftScheduleLibrary.csproj", "{5633CE9F-38CD-4BB1-903B-2B19631672CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftScheduleTest", "UnitTestProject2\ShiftScheduleTest.csproj", "{CC5CE947-9CE0-4230-87A7-BE628A51518A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{5633CE9F-38CD-4BB1-903B-2B19631672CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5633CE9F-38CD-4BB1-903B-2B19631672CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5633CE9F-38CD-4BB1-903B-2B19631672CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC5CE947-9CE0-4230-87A7-BE628A51518A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC5CE947-9CE0-4230-87A7-BE628A51518A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC5CE947-9CE0-4230-87A7-BE628A51518A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC5CE947-9CE0-4230-87A7-BE628A51518A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

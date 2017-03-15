@@ -63,7 +63,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ShiftScheduleDataAccess\ShiftScheduleDataAccess.csproj">
       <Project>{39e0badb-ab56-4913-bc09-ec023651bf8a}</Project>
-      <Name>ShiftScheduleData</Name>
+      <Name>ShiftScheduleDataAccess</Name>
     </ProjectReference>
     <ProjectReference Include="..\ShiftScheduleLibrary\ShiftScheduleLibrary.csproj">
       <Project>{5633CE9F-38CD-4BB1-903B-2B19631672CC}</Project>

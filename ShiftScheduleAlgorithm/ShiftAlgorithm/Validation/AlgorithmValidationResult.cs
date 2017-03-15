@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 {
-    public class AlgorithmReport
+    public class AlgorithmValidationResult
     {
         private readonly IDictionary<Type, IList<Report>> _reportsDictionary;
 
-        public AlgorithmReport()
+        public AlgorithmValidationResult()
         {
             _reportsDictionary = new Dictionary<Type, IList<Report>>();
         }

@@ -15,7 +15,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 
         public ResultingSchedule AlgorithmOutput { get; }
 
-        private readonly AlgorithmReport _resultAlgorithmReport;
+        private readonly AlgorithmValidationResult _resultAlgorithmValidationResult;
 
         private readonly IDictionary<int, Person> _idToPersons;
 
@@ -24,11 +24,11 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
         {
             AlgorithmInput = algorithmInput;
             AlgorithmOutput = algorithmOutput;
-            _resultAlgorithmReport = new AlgorithmReport();
+            _resultAlgorithmValidationResult = new AlgorithmValidationResult();
             _idToPersons = algorithmInput.Persons.ToDictionary(p => p.Id, p => p);
         }
 
-        public AlgorithmReport Validate()
+        public AlgorithmValidationResult Validate()
         {
             CheckMaxMonthlyWorkNotMet();
             CheckMaxDailyWorkNotMet();
@@ -37,7 +37,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
             CheckRequirementsAreNotMet();
             CheckOverlappingIntervals();
 
-            return _resultAlgorithmReport;
+            return _resultAlgorithmValidationResult;
         }
 
         public void IterateAlgorithmOutput(Action<Person, Intervals<ResultingSchedule.ShiftInterval>, int> action)
@@ -66,7 +66,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
                 var dailyWorkTime = schedule.GetLengthInTime();
 
                 if (dailyWorkTime > person.MaxWork)
-                    _resultAlgorithmReport.AddReport(new MaxDailyWorkNotMet(person, day));
+                    _resultAlgorithmValidationResult.AddReport(new MaxDailyWorkNotMet(person, day));
             });
         }
 
@@ -95,7 +95,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
             {
                 if (personToTime.Value != personToTime.Key.MaxWork)
                 {
-                    _resultAlgorithmReport.AddReport(new MaxMonthlyWorkNotMet(personToTime.Key));
+                    _resultAlgorithmValidationResult.AddReport(new MaxMonthlyWorkNotMet(personToTime.Key));
                 }
             }
         }
@@ -113,7 +113,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 
                     if (shiftInterval.Count > AlgorithmInput.AlgorithmConfiguration.MaxConsecutiveWorkHours)
                     {
-                        _resultAlgorithmReport.AddReport(new MaxConsecutiveWorkHoursNotMet(person, day));
+                        _resultAlgorithmValidationResult.AddReport(new MaxConsecutiveWorkHoursNotMet(person, day));
                     }
                 }
             });
@@ -151,7 +151,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
                 {
                     if (hourToWorkers.Value > 0)
                     {
-                        _resultAlgorithmReport.AddReport(new RequirementsAreNotMet(day, hourToWorkers.Key));
+                        _resultAlgorithmValidationResult.AddReport(new RequirementsAreNotMet(day, hourToWorkers.Key));
                     }
                 }
             }
@@ -178,7 +178,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
                         {
                             var reportIntervals = new Intervals<ResultingSchedule.ShiftInterval>(tempIntervals.ToList());
 
-                            _resultAlgorithmReport.AddReport(new OverlappingIntervals(reportIntervals, day));
+                            _resultAlgorithmValidationResult.AddReport(new OverlappingIntervals(reportIntervals, day));
 
                             overlappingIntervals = new HashSet<ResultingSchedule.ShiftInterval>();
                         }
