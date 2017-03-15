@@ -51,10 +51,10 @@
     <Compile Include="ShiftAlgorithmProvider\ShiftAlgorithm.cs" />
     <Compile Include="ShiftAlgorithmProvider\AlgorithmConfiguration.cs" />
     <Compile Include="ShiftAlgorithmProvider\TestAlgorithm.cs" />
-    <Compile Include="ShiftAlgorithmProvider\ValidatorOld.cs" />
+    <Compile Include="ShiftAlgorithmProvider\Validator\Validator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShiftAlgorithmProvider\ValidatorHelpers.cs" />
+    <Compile Include="ShiftAlgorithmProvider\Validator\ValidatorHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

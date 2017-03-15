@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ShiftScheduleDataAccess.OldEntities;
 using ShiftScheduleLibrary.Entities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
@@ -35,7 +34,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
                 AlgorithmInput = algorithmInput;
             }
 
-            public abstract ResultingScheduleOld CreateScheduleForPeople();
+            public abstract ResultingSchedule CreateScheduleForPeople();
         }
 
         public enum Strategy
@@ -43,7 +42,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
             Test
         }
 
-        public static ResultingScheduleOld ExecuteAlgorithm(Input algorithmInput, Strategy strategy)
+        public static ResultingSchedule ExecuteAlgorithm(Input algorithmInput, Strategy strategy)
         {
             Algorithm algorithm;
 
