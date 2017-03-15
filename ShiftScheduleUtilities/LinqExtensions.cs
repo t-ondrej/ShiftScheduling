@@ -7,15 +7,13 @@ namespace ShiftScheduleUtilities
     {
         #region MinBy
 
-        // http://stackoverflow.com/questions/914109/how-to-use-linq-to-select-object-with-minimum-or-maximum-property-value
-
-        public static TSource MinBy<TSource, TKey>(this IEnumerable<TSource> source,
+        public static IEnumerable<TSource> MinBy<TSource, TKey>(this IEnumerable<TSource> enumerable,
             Func<TSource, TKey> selector)
         {
-            return source.MinBy(selector, null);
+            return enumerable.MinBy(selector, null);
         }
 
-        public static TSource MinBy<TSource, TKey>(this IEnumerable<TSource> enumerable,
+        public static IEnumerable<TSource> MinBy<TSource, TKey>(this IEnumerable<TSource> enumerable,
             Func<TSource, TKey> selector, IComparer<TKey> comparer)
         {
             if (enumerable == null)
@@ -31,8 +29,7 @@ namespace ShiftScheduleUtilities
                 if (!sourceIterator.MoveNext())
                     throw new InvalidOperationException("Sequence contains no elements");
 
-                var min = sourceIterator.Current;
-                var minKey = selector(min);
+                var minKey = selector(sourceIterator.Current);
 
                 while (sourceIterator.MoveNext())
                 {
@@ -40,13 +37,19 @@ namespace ShiftScheduleUtilities
                     var candidateProjected = selector(candidate);
 
                     if (comparer.Compare(candidateProjected, minKey) < 0)
-                    {
-                        min = candidate;
                         minKey = candidateProjected;
-                    }
                 }
 
-                return min;
+                sourceIterator.Reset();
+
+                while (sourceIterator.MoveNext())
+                {
+                    var candidate = sourceIterator.Current;
+                    var candidateProjected = selector(candidate);
+
+                    if (comparer.Compare(candidateProjected, minKey) == 0)
+                        yield return candidate;
+                }
             }
         }
 
