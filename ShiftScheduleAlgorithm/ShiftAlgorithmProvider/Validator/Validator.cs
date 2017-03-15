@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ShiftScheduleDataAccess.OldEntities;
 using ShiftScheduleLibrary.Entities;
 using ShiftScheduleLibrary.Utilities;
 using static ShiftScheduleLibrary.Entities.ResultingSchedule;
@@ -74,6 +73,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
         {
             var personToMonthlyTime = new Dictionary<Person, int>();
 
+            // map persons montly work he got assigned
             IterateAlgorithmOutput((person, schedule, day) =>
             {
                 var dailyWorkTime = schedule.GetLengthInTime();
@@ -88,20 +88,17 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
                 }
             });
 
+            // check if the amount of work is corresponding to his demands
+            // must be equal, not more, not less
             foreach (var personToTime in personToMonthlyTime)
             {
-                if (personToTime.Value > personToTime.Key.MaxWork)
+                if (personToTime.Value != personToTime.Key.MaxWork)
                 {
                     _resultAlgorithmReport.AddReport(new MaxMonthlyWorkNotMet(personToTime.Key));
                 }
             }
         }
-
-        private void CheckWorkerPauseLengthNotMet()
-        {
-            throw new NotImplementedException();
-        }
-
+        
         private void CheckMaxConsecutiveWorkHoursNotMet()
         {
             IterateAlgorithmOutput((person, schedule, day) =>
@@ -123,59 +120,40 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
 
         private void CheckRequirementsAreNotMet()
         {
+            var tempRequirements = new Requirements(AlgorithmInput.MonthlyRequirementsOld.DaysToRequirements);
 
-            //var tempRequirements = new Requirements(AlgorithmInput.MonthlyRequirementsOld);
+            IterateAlgorithmOutput((person, schedule, day) =>
+            {
+                foreach (var shiftInterval in schedule)
+                {
+                    if (shiftInterval.Type == ShiftInterval.IntervalType.Pause)
+                    {
+                        continue;
+                    }
+                    foreach (var hour in shiftInterval)
+                    {
+                        var hourToWorkers = tempRequirements.DaysToRequirements[day].HourToWorkers;
+                        var shiftWeight = person.DailyAvailabilities[day].ShiftWeight;
 
-            //IterateAlgorithmOutput((person, schedule, day) =>
-            //{
-            //    foreach (var shiftInterval in schedule)
-            //    {
-            //        foreach (int hour in shiftInterval)
-            //        {
-            //            tempRequirements.DailySchedules[day].   
-            //        }
-            //    }
-            //});
-            //// var tempRequirements = new MonthlyRequirementsOld(AlgorithmInput.MonthlyRequirementsOld.DaysToRequirements);
+                        // substracts done work from each assigned requirement
+                        hourToWorkers[hour] -= shiftWeight;
+                    }
+                }
+            });
 
-            //foreach (var personAndMonthlySchedule in AlgorithmOutput.SchedulesForPeople)
-            //{
-            //    // which personOld it is is irrelevant for this
-            //    ScheduleOld personScheduleOld = personAndMonthlySchedule.Value;
-
-            //    foreach (var dayAndDailySchedule in personScheduleOld.DailySchedules)
-            //    {
-            //        //Intervals intervalsOld = dayAndDailySchedule.Value;
-
-            //foreach (var interval in intervalsOld)
-            //{
-            //    for (var i = interval.Start; i <= interval.End; i++)
-            //    {
-            //        // substracts a worker from monthlyRequirementsOld for each hour in the interval
-            //        tempRequirements.DaysToRequirements[i].HourToWorkers[i]--;
-            //    }
-            //}
-            //  }
-            //}
-
-            // check whether there's enough workers for each hour
-            // if there is enough workers, more or equal workers were substracted from hourly monthlyRequirementsOld 
-            //foreach (var dayAndRequirement in tempRequirements.DaysToRequirements)
-            //{
-            //    var day = dayAndRequirement.Key;
-            //    var dailyRequirement = dayAndRequirement.Value;
-
-            //    foreach (var hourAndWorkers in dailyRequirement.HourToWorkers)
-            //    {
-            //        var hour = hourAndWorkers.Value;
-            //        var workersCount = hourAndWorkers.Key;
-
-            //        if (workersCount > 0)
-            //        {
-            //            _resultAlgorithmReport.Requirements.Add(new RequirementsAreNotMet(day, hour));
-            //        }
-            //    }
-            //}
+            // if there is enough workers, more or equal worker shift weight were 
+            // substracted from hourly monthlyRequirementsOld 
+            foreach (var tempRequirement in tempRequirements.DaysToRequirements)
+            {
+                int day = tempRequirement.Key;
+                foreach (var hourToWorkers in tempRequirement.Value.HourToWorkers)
+                {
+                    if (hourToWorkers.Value > 0)
+                    {
+                        _resultAlgorithmReport.AddReport(new RequirementsAreNotMet(day, hourToWorkers.Key));
+                    }
+                }
+            }
         }
 
         private void CheckOverlappingIntervals()
@@ -208,5 +186,11 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithmProvider
                 }
             );
         }
+
+        private void CheckWorkerPauseLengthNotMet()
+        {
+            throw new NotImplementedException();
+        }
     }
+
 }
