@@ -240,4 +240,7 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
-*.txt
+
+#Generated data
+AlgorithmTesting/TestingData/*.txt
+ShiftScheduleDataAccess/Test
