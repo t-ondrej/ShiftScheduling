@@ -1,11 +1,12 @@
-﻿using ShiftScheduleLibrary.Entities;
+﻿using System.Collections.Generic;
+using ShiftScheduleLibrary.Entities;
 
 namespace ShiftScheduleDataAccess.Dao
 {
     public interface IResultingScheduleDao
     {
-        ResultingSchedule GetResultingSchedule();
+        IEnumerable<ResultingSchedule> GetResultingSchedules();
 
-        void SaveResultingSchedule(ResultingSchedule resultingScheduleOld);
+        void SaveResultingSchedule(ResultingSchedule resultingSchedule);
     }
 }

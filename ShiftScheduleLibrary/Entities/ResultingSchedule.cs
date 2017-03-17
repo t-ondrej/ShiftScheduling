@@ -5,12 +5,19 @@ namespace ShiftScheduleLibrary.Entities
 {
     public class ResultingSchedule
     {
-        public ResultingSchedule(IDictionary<int, DailySchedule> dailySchedules)
+        public IDictionary<int, DailySchedule> DailySchedules { get; }
+
+        public string Specification { get; set; }
+
+        public ResultingSchedule(IDictionary<int, DailySchedule> dailySchedules, string specification)
         {
             DailySchedules = dailySchedules;
+            Specification = specification;
         }
 
-        public IDictionary<int, DailySchedule> DailySchedules { get; }
+        public ResultingSchedule(IDictionary<int, DailySchedule> dailySchedules) : this(dailySchedules, null)
+        {
+        }
 
         public class DailySchedule
         {
@@ -21,5 +28,5 @@ namespace ShiftScheduleLibrary.Entities
                 PersonIdToDailySchedule = personIdToDailySchedule;
             }
         }
-        }
+    }
 }

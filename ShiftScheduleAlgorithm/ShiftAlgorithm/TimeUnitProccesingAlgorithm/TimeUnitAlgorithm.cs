@@ -1,8 +1,8 @@
-﻿using ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers;
+﻿using System.Collections.Generic;
+using ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers;
 using ShiftScheduleAlgorithm.ShiftAlgorithm.Core;
-using ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm.ScheduleChoosing;
-using ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm.TimeUnitChoosing;
 using ShiftScheduleLibrary.Entities;
+using ShiftScheduleLibrary.Utilities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
 {
@@ -10,15 +10,12 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
     {
         private TimeUnitsManager _timeUnitsManager;
 
-        private readonly TimeUnitChooser _timeUnitChooser;
+        private readonly TimeUnitStrategy _timeUnitStrategy;
 
-        private readonly ScheduleChooser _scheduleChooser;
-
-        public TimeUnitAlgorithm(AlgorithmInput algorithmInput, TimeUnitChooser timeUnitChooser,
-            ScheduleChooser scheduleChooser) : base(algorithmInput)
+        public TimeUnitAlgorithm(AlgorithmInput algorithmInput, TimeUnitStrategy timeUnitStrategy)
+            : base(algorithmInput)
         {
-            _timeUnitChooser = timeUnitChooser;
-            _scheduleChooser = scheduleChooser;
+            _timeUnitStrategy = timeUnitStrategy;
         }
 
         public override ResultingSchedule CreateScheduleForPeople()
@@ -28,7 +25,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
             while (true)
             {
                 // First we let the algoritm to find the time unit to be proccessed
-                var timeUnit = _timeUnitChooser.FindTimeUnitToBeProccessed();
+                var timeUnit = _timeUnitStrategy.TimeUnitChooser.FindTimeUnitToBeProccessed(_timeUnitsManager);
 
                 // If there's no such unit, we can celebrate. We're done
                 if (timeUnit == null)
@@ -36,7 +33,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
                     break;
                 }
 
-                var schedule = _scheduleChooser.FindScheduleToCoverUnit(timeUnit);
+                var schedule = _timeUnitStrategy.ScheduleChooser.FindScheduleToCoverUnit(_timeUnitsManager, timeUnit);
 
                 if (schedule == null)
                 {
@@ -46,15 +43,38 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
                 }
 
                 timeUnit.AssignSchedule(schedule);
-                // TODO: Some logic about scheduling, calling some entity methods
             }
+
+            _timeUnitStrategy.RemeaningPeopleChooser.AssignScheduleToRemainingPeople(_timeUnitsManager);
 
             return CreateResultingSchedule();
         }
 
-        private static ResultingSchedule CreateResultingSchedule()
+        private ResultingSchedule CreateResultingSchedule()
         {
-            return null;
+            var dailySchedules = new Dictionary<int, ResultingSchedule.DailySchedule>();
+
+            _timeUnitsManager.ScheduledPersons.ForEach(scheduledPerson =>
+            {
+                var assignedDays = scheduledPerson.AssignedDays;
+                var personId = scheduledPerson.Person.Id;
+
+                foreach (var scheduleForDay in assignedDays)
+                {
+                    var dayId = scheduleForDay.Key;
+                    var intervals = scheduleForDay.Value.Intervals;
+
+                    if (!dailySchedules.ContainsKey(dayId))
+                    {
+                        var personIdToIntervals = new Dictionary<int, Intervals<ShiftInterval>>();
+                        dailySchedules.Add(dayId, new ResultingSchedule.DailySchedule(personIdToIntervals));
+                    }
+
+                    dailySchedules[dayId].PersonIdToDailySchedule.Add(personId, intervals);
+                }
+            });
+
+            return new ResultingSchedule(dailySchedules);
         }
     }
 }

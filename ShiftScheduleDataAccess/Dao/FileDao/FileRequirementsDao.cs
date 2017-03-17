@@ -12,8 +12,7 @@ namespace ShiftScheduleDataAccess.Dao.FileDao
 
         public FileRequirementsDao(string folderPath) : base(folderPath)
         {
-            string fileName = $"{FolderConstants.RequirementsFileName}.{FolderConstants.FileExtensions}";
-            _requirementFilePath = Path.Combine(folderPath, fileName);
+            _requirementFilePath = Path.Combine(folderPath, FolderConstants.RequirementsFileName);
         }
 
         public Requirements GetRequirements()

@@ -2,10 +2,12 @@
 {
     public class AlgorithmConfiguration
     {
-        public int MaxDailyWork { get; set; } = 12;
+        public AlgorithmStrategy AlgorithmStrategy { get; set; }
 
-        public int WorkerPauseLength { get; set; } = 1;
+        public int MaxDailyWork { get; set; }
 
-        public int MaxConsecutiveWorkHours { get; set; } = 4;
+        public int WorkerPauseLength { get; set; }
+
+        public int MaxConsecutiveWorkHours { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ShiftScheduleDataAccess.Dao;
 using ShiftScheduleUtilities;
 
@@ -36,7 +37,7 @@ namespace ShiftScheduleDataAccess
 
         private static void ResultingScheduleDaoTest()
         {
-            var resultingSchedule = ClientRead.ResultingScheduleDao.GetResultingSchedule();
+            var resultingSchedule = ClientRead.ResultingScheduleDao.GetResultingSchedules().First();
             ClientSave.ResultingScheduleDao.SaveResultingSchedule(resultingSchedule);
         }
 

@@ -37,22 +37,18 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
                 .Max();
         }
 
-        private void CreateSchedulesForPersons()
+        private void CreateTimeUnits()
         {
-            ScheduledPersons.ForEach(person =>
+            AlgorithmInput.Requirements.DaysToRequirements.ForEach(pair =>
             {
-                AlgorithmInput.Requirements.DaysToRequirements.Keys.ForEach(dayId =>
+                var dayId = pair.Key;
+                var hoursToWorkers = pair.Value.HourToWorkers;
+                _dayIdToUnitsCount.Add(dayId, hoursToWorkers.Count);
+
+                pair.Value.HourToWorkers.ForEach((workers, unitId) =>
                 {
-                    var shiftWeight = person.ShiftWeights[dayId];
-                    var lengthOfDay = _dayIdToUnitsCount[dayId];
-
-                    var scheduleForDays = _intervalsGenerator.GetIntervalsWithLengthAtMost(lengthOfDay).Select
-                    (
-                        intervals => new ScheduleForDay(person, dayId, shiftWeight, intervals)
-                    );
-
-                    var schedulesForDay = new SchedulesForDay(person, dayId, scheduleForDays.ToList());
-                    person.AssignableSchedulesForDays.Add(dayId, schedulesForDay);
+                    var timeUnit = new TimeUnit(dayId, unitId, workers);
+                    AllTimeUnits.Add(timeUnit);
                 });
             });
         }
@@ -95,20 +91,25 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
             }
         }
 
-        private void CreateTimeUnits()
+        private void CreateSchedulesForPersons()
         {
-            AlgorithmInput.Requirements.DaysToRequirements.ForEach(pair =>
+            ScheduledPersons.ForEach(person =>
             {
-                var dayId = pair.Key;
-                var hoursToWorkers = pair.Value.HourToWorkers;
-                _dayIdToUnitsCount.Add(dayId, hoursToWorkers.Count);
-
-                pair.Value.HourToWorkers.ForEach((workers, unitId) =>
+                AlgorithmInput.Requirements.DaysToRequirements.Keys.ForEach(dayId =>
                 {
-                    var timeUnit = new TimeUnit(dayId, unitId, workers);
-                    AllTimeUnits.Add(timeUnit);
+                    var shiftWeight = person.ShiftWeights[dayId];
+                    var lengthOfDay = _dayIdToUnitsCount[dayId];
+
+                    var scheduleForDays = _intervalsGenerator.GetIntervalsWithLengthAtMost(lengthOfDay).Select
+                    (
+                        intervals => new ScheduleForDay(person, dayId, shiftWeight, intervals)
+                    );
+
+                    var schedulesForDay = new SchedulesForDay(person, dayId, scheduleForDays.ToList());
+                    person.AssignableSchedulesForDays.Add(dayId, schedulesForDay);
                 });
             });
         }
+
     }
 }

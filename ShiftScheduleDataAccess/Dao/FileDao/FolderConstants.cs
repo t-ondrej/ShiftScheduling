@@ -2,10 +2,11 @@
 {
     internal static class FolderConstants
     {
-        public const string RequirementsFileName = "requirements";
-        public const string ResultingScheduleFileName = "result";
-        public const string RequirementsFulfillingStatsFileName = "statistics";
-        public const string FileExtensions = "txt";
+        public const string Extension = ".txt";
+        public const string RequirementsFileName = "requirements" + Extension;
+        public const string ResultingSchedulePreffix = "result_";
+        public const string ResultingScheduleFilesPattern = ResultingSchedulePreffix + "*" + Extension;
+        public const string RequirementsFulfillingStatsFileName = "statistics" + Extension;
         public const string OutputFolderName = "Output";
     }
 }

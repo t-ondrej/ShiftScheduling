@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,8 +47,14 @@
     <Compile Include="ShiftAlgorithm\AlgorithmHelpers\IntervalsGenerator.cs" />
     <Compile Include="ShiftAlgorithm\AlgorithmHelpers\ScheduleForDay.cs" />
     <Compile Include="ShiftAlgorithm\AlgorithmHelpers\SchedulesForDay.cs" />
-    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\ScheduleChoosing\ScheduleChooser.cs" />
-    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\TimeUnitChoosing\TimeUnitChooser.cs" />
+    <Compile Include="ShiftAlgorithm\Core\AlgorithmStrategy.cs" />
+    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\RandomRemainingPeopleChooser.cs" />
+    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\RandomScheduleChooser.cs" />
+    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\RandomTimeUnitChooser.cs" />
+    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\IRemeaningPeopleChooser.cs" />
+    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\IScheduleChooser.cs" />
+    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\ITimeUnitChooser.cs" />
+    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\TimeUnitStrategy.cs" />
     <Compile Include="ShiftAlgorithm\Validation\AlgorithmValidationResult.cs" />
     <Compile Include="ShiftAlgorithm\Validation\Reports\ConsecutiveIntervals.cs" />
     <Compile Include="ShiftAlgorithm\Validation\Reports\MaxConsecutiveWorkHoursNotMet.cs" />

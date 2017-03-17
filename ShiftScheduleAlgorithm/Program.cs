@@ -1,5 +1,11 @@
 ﻿using System;
-using ShiftScheduleLibrary.Utilities;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Linq;
+using ShiftScheduleAlgorithm.ShiftAlgorithm.Core;
+using ShiftScheduleDataAccess.Dao;
+using ShiftScheduleUtilities;
 
 namespace ShiftScheduleAlgorithm
 {
@@ -7,17 +13,56 @@ namespace ShiftScheduleAlgorithm
     {
         private static void Main()
         {
-            Interval i1 = new Interval(1, 5);
-            string s1 = i1.ToString();
+            var settings = ConfigurationManager.AppSettings;
 
-            Interval i2 = new ShiftInterval(1, 5, ShiftInterval.IntervalType.Work);
-            string s2 = i2.ToString();
+            // We get all the algorithm configurations
+            var configurationsFolder = settings["ConfigurationsFolder"];
+            var configFiles = GetConfigurationsWithNames(configurationsFolder);
 
-            ShiftInterval i3 = new ShiftInterval(2, 4, ShiftInterval.IntervalType.Pause);
-            string s3 = i3.ToString();
+            // We get all data access clients
+            var testingDataFolder = settings["TestingDataFolder"];
+            var dataAccessClients = GetDataAccessClients(testingDataFolder).ToList();
 
-            Console.WriteLine($"{s1}\n{s2}\n{s3}");
-            Console.WriteLine($"{Interval.FromString(s1)}\n{Interval.FromString(s2)}\n{ShiftInterval.FromString(s3)}");
+            foreach (var fileNameToConfig in configFiles)
+            {
+                var configFileName = fileNameToConfig.Key;
+                var algorithmConfiguration = fileNameToConfig.Value;
+
+                foreach (var dataAccessClient in dataAccessClients)
+                {
+                    var persons = dataAccessClient.PersonDao.GetAllPersons();
+                    var requirements = dataAccessClient.RequirementsDao.GetRequirements();
+                    var algorithmInput = new AlgorithmInput(persons, requirements, null, algorithmConfiguration);
+                    var result = AlgorithmProvider.ExecuteAlgorithm(algorithmInput);
+                    result.Specification = configFileName;
+                    dataAccessClient.ResultingScheduleDao.SaveResultingSchedule(result);
+                }
+            }
+        }
+
+        private static IDictionary<string, AlgorithmConfiguration> GetConfigurationsWithNames(string folder)
+        {
+            return Directory.EnumerateFiles(folder, "*.config").ToDictionary
+            (
+                Path.GetFileNameWithoutExtension,
+                configFile => ConfigurationReader<AlgorithmConfiguration>.ParseFile
+                (
+                    configFile, configuration => new AlgorithmConfiguration
+                    {
+                        AlgorithmStrategy = AlgorithmProvider.ParseStrategy(configuration["AlgorithmStrategy"]),
+                        MaxDailyWork = Convert.ToInt32(configuration["MaxDailyWork"]),
+                        MaxConsecutiveWorkHours = Convert.ToInt32(configuration["MaxConsecutiveWorkHours"]),
+                        WorkerPauseLength = Convert.ToInt32(configuration["WorkerPauseLength"])
+                    }
+                )
+            );
+        }
+
+        private static IEnumerable<DataAccessClient> GetDataAccessClients(string testingDataFolder)
+        {
+            return Directory.EnumerateDirectories(testingDataFolder)
+                .SelectMany(Directory.EnumerateDirectories)
+                .Select(directory => new DataAccessClient(directory));
         }
     }
 }

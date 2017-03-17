@@ -4,57 +4,71 @@ using System.IO;
 using System.Linq;
 using ShiftScheduleLibrary.Entities;
 using ShiftScheduleLibrary.Utilities;
+using static ShiftScheduleDataAccess.Dao.FileDao.FolderConstants;
 
 namespace ShiftScheduleDataAccess.Dao.FileDao
 {
     internal class FileResultingScheduleDao : FileClient, IResultingScheduleDao
     {
-        private readonly string _resultingScheduleFilePath;
-
         public FileResultingScheduleDao(string folderPath) : base(folderPath)
         {
-            string fileName = $"{FolderConstants.ResultingScheduleFileName}.{FolderConstants.FileExtensions}";
-            _resultingScheduleFilePath = Path.Combine(folderPath, fileName);
         }
 
-        public ResultingSchedule GetResultingSchedule()
+        public IEnumerable<ResultingSchedule> GetResultingSchedules()
         {
-            using (var textReader = GetTextReader(_resultingScheduleFilePath))
+            var resultFiles = Directory.EnumerateFiles(FolderPath, ResultingScheduleFilesPattern);
+            var result = new List<ResultingSchedule>();
+
+            foreach (var resultFile in resultFiles)
             {
-                try
+                var specification = ExtractSpecification(resultFile);
+
+                using (var textReader = GetTextReader(resultFile))
                 {
-                    string line;
-                    var dailyShedules = new Dictionary<int, ResultingSchedule.DailySchedule>();
-
-                    while ((line = textReader.ReadLine()) != null)
+                    try
                     {
-                        var dayId = int.Parse(line);
-                        var scheduleForPersons = new Dictionary<int, Intervals<ShiftInterval>>();
+                        string line;
+                        var dailyShedules = new Dictionary<int, ResultingSchedule.DailySchedule>();
 
-                        while ((line = textReader.ReadLine()) != null && line != "")
+                        while ((line = textReader.ReadLine()) != null)
                         {
-                            var splited = line.Split(' ');
-                            var personId = int.Parse(splited[0]);
-                            var intervals = splited.Skip(1).Select(ShiftInterval.FromString).ToList();
-                            scheduleForPersons.Add(personId, new Intervals<ShiftInterval>(intervals));
+                            var dayId = int.Parse(line);
+                            var scheduleForPersons = new Dictionary<int, Intervals<ShiftInterval>>();
+
+                            while ((line = textReader.ReadLine()) != null && line != "")
+                            {
+                                var splited = line.Split(' ');
+                                var personId = int.Parse(splited[0]);
+                                var intervals = splited.Skip(1).Select(ShiftInterval.FromString).ToList();
+                                scheduleForPersons.Add(personId, new Intervals<ShiftInterval>(intervals));
+                            }
+
+                            var dailySchedule = new ResultingSchedule.DailySchedule(scheduleForPersons);
+                            dailyShedules.Add(dayId, dailySchedule);
                         }
 
-                        var dailySchedule = new ResultingSchedule.DailySchedule(scheduleForPersons);
-                        dailyShedules.Add(dayId, dailySchedule);
-                    }
 
-                    return new ResultingSchedule(dailyShedules);
-                }
-                catch
-                {
-                    throw new Exception($"Unable to parse file: {_resultingScheduleFilePath}");
+                        result.Add(new ResultingSchedule(dailyShedules, specification));
+                    }
+                    catch
+                    {
+                        throw new Exception($"Unable to parse file: {resultFile}");
+                    }
                 }
             }
+
+            return result;
         }
 
         public void SaveResultingSchedule(ResultingSchedule resultingSchedule)
         {
-            using (var textWriter = GetTextWriter(_resultingScheduleFilePath))
+            if (resultingSchedule.Specification == null)
+                throw new Exception("Specification must be set before saving the result.");
+
+            var fileName = $"{ResultingSchedulePreffix}{resultingSchedule.Specification}{Extension}";
+            var filePath = Path.Combine(FolderPath, fileName);
+
+            using (var textWriter = GetTextWriter(filePath))
             {
                 foreach (var dayTodailySchedule in resultingSchedule.DailySchedules)
                 {
@@ -73,6 +87,13 @@ namespace ShiftScheduleDataAccess.Dao.FileDao
                     textWriter.WriteLine();
                 }
             }
+        }
+
+        private static string ExtractSpecification(string resultFile)
+        {
+            var fileName = Path.GetFileNameWithoutExtension(resultFile);
+            var preffixLength = ResultingSchedulePreffix.Length;
+            return fileName?.Substring(preffixLength);
         }
     }
 }

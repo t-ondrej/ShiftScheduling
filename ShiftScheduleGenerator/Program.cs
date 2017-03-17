@@ -9,7 +9,7 @@ namespace ShiftScheduleGenerator
 {
     public class Program
     {
-        public static void Main(string[] args)
+        private static void Main()
         {
             var settings = ConfigurationManager.AppSettings;
             var generatedDataFolder = settings["GeneratedDataFolder"];
@@ -32,7 +32,7 @@ namespace ShiftScheduleGenerator
                         NumberOfSets = Convert.ToInt32(configuration["NumberOfSets"]),
                         DifficultyToFulfilRequirements = new Difficulty(configuration["DifficultyToFulfilRequirements"]),
                         ToleranceAssignmentProbability = Convert.ToDouble(configuration["ToleranceAssignmentProbability"]),
-                        ToleranceUseProbability = Convert.ToDouble(configuration["ToleranceUseProbability"]),
+                        ToleranceUseProbability = Convert.ToDouble(configuration["ToleranceUseProbability"])
                     }
                 );
 

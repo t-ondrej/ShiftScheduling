@@ -20,7 +20,6 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 
         private readonly IDictionary<int, Person> _idToPersons;
 
-
         public Validator(AlgorithmInput algorithmInput, ResultingSchedule algorithmOutput)
         {
             AlgorithmInput = algorithmInput;
@@ -163,32 +162,31 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
         private void CheckOverlappingIntervals()
         {
             IterateAlgorithmOutput((person, schedule, day) =>
+            {
+                var tempIntervals = new Intervals<ShiftInterval>(schedule.IntervalsList);
+                tempIntervals.SortByStart();
+
+                var previousInterval = new ShiftInterval(-1, -1, 0);
+                var overlappingIntervals = new HashSet<ShiftInterval>();
+
+                foreach (var interval in tempIntervals)
                 {
-                    var tempIntervals = new Intervals<ShiftInterval>(schedule.IntervalsList);
-                    tempIntervals.SortByStart();
-
-                    var previousInterval = new ShiftInterval(-1, -1, 0);
-                    var overlappingIntervals = new HashSet<ShiftInterval>();
-
-                    foreach (var interval in tempIntervals)
+                    if (interval.Overlaps(previousInterval))
                     {
-                        if (interval.Overlaps(previousInterval))
-                        {
-                            overlappingIntervals.Add(previousInterval);
-                            overlappingIntervals.Add(interval);
-                        }
-                        else
-                        {
-                            var reportIntervals = new Intervals<ShiftInterval>(tempIntervals.ToList());
-
-                            _resultAlgorithmValidationResult.AddReport(new OverlappingIntervals(reportIntervals, day));
-
-                            overlappingIntervals = new HashSet<ShiftInterval>();
-                        }
-                        previousInterval = interval;
+                        overlappingIntervals.Add(previousInterval);
+                        overlappingIntervals.Add(interval);
                     }
+                    else
+                    {
+                        var reportIntervals = new Intervals<ShiftInterval>(tempIntervals.ToList());
+
+                        _resultAlgorithmValidationResult.AddReport(new OverlappingIntervals(reportIntervals, day));
+
+                        overlappingIntervals = new HashSet<ShiftInterval>();
+                    }
+                    previousInterval = interval;
                 }
-            );
+            });
         }
 
         private void CheckWorkerPauseLengthNotMet()
