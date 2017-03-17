@@ -25,7 +25,7 @@ namespace ShiftScheduleDataAccess
         private static void PersonDaoTest()
         {
             var persons = ClientRead.PersonDao.GetAllPersons();
-            persons.Iterate(person => ClientSave.PersonDao.SavePerson(person));
+            persons.ForEach(person => ClientSave.PersonDao.SavePerson(person));
         }
 
         private static void RequirementsDaoTest()

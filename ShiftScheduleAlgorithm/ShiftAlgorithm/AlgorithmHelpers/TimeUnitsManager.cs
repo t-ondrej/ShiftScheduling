@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ShiftScheduleAlgorithm.ShiftAlgorithm.Core;
-using ShiftScheduleLibrary.Utilities;
+using ShiftScheduleUtilities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 {
@@ -11,82 +12,103 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 
         public List<TimeUnit> AllTimeUnits { get; }
 
-        public List<ScheduledPerson> ScheduledPersons { get; private set; }
+        public List<ScheduledPerson> ScheduledPersons { get; }
 
-        public List<SchedulableWork> SchedulableWork { get; private set; }
+        private readonly IntervalsGenerator _intervalsGenerator;
 
-        private readonly IDictionary<int, IDictionary<int, TimeUnit>> _requiredDaysToUnits;
+        private readonly IDictionary<int, int> _dayIdToUnitsCount;
 
         public TimeUnitsManager(AlgorithmInput algorithmInput)
         {
             AlgorithmInput = algorithmInput;
-            _requiredDaysToUnits = new Dictionary<int, IDictionary<int, TimeUnit>>();
             AllTimeUnits = new List<TimeUnit>();
-            FillMap();
+            ScheduledPersons = new List<ScheduledPerson>();
+            _intervalsGenerator = new IntervalsGenerator(MaxNumberOfHours(), AlgorithmInput.AlgorithmConfiguration);
+            _dayIdToUnitsCount = new Dictionary<int, int>();
+            CreateTimeUnits();
+            CreateScheduledPersons();
+            CreateSchedulesForPersons();
         }
 
-        private void FillMap()
+        private int MaxNumberOfHours()
         {
-            ScheduledPersons = AlgorithmInput.Persons.Select(person => new ScheduledPerson(person)).ToList();
+            return AlgorithmInput.Requirements.DaysToRequirements.Values
+                .Select(requirement => requirement.HourToWorkers.Count)
+                .Max();
+        }
 
-            SchedulableWork = ScheduledPersons.SelectMany
-            (
-                person => person.Person.DailyAvailabilities.Keys.Select
-                (
-                    dayId => new SchedulableWork(person, dayId)
-                )
-            ).ToList();
-
-            foreach (var dayId in AlgorithmInput.Requirements.DaysToRequirements.Keys)
+        private void CreateSchedulesForPersons()
+        {
+            ScheduledPersons.ForEach(person =>
             {
-                _requiredDaysToUnits.Add(dayId, new Dictionary<int, TimeUnit>());
-            }
-
-            foreach (var schedulableWork in SchedulableWork)
-            {
-                var dayId = schedulableWork.DayId;
-
-                if (!_requiredDaysToUnits.ContainsKey(dayId))
+                AlgorithmInput.Requirements.DaysToRequirements.Keys.ForEach(dayId =>
                 {
-                    // TODO: Someone has scheduled work for a day that has no requirements. We should log it
-                    continue;
+                    var shiftWeight = person.ShiftWeights[dayId];
+                    var lengthOfDay = _dayIdToUnitsCount[dayId];
+
+                    var scheduleForDays = _intervalsGenerator.GetIntervalsWithLengthAtMost(lengthOfDay).Select
+                    (
+                        intervals => new ScheduleForDay(person, dayId, shiftWeight, intervals)
+                    );
+
+                    var schedulesForDay = new SchedulesForDay(person, dayId, scheduleForDays.ToList());
+                    person.AssignableSchedulesForDays.Add(dayId, schedulesForDay);
+                });
+            });
+        }
+
+        private void CreateScheduledPersons()
+        {
+            AlgorithmInput.Persons.Select(person =>
+            {
+                var shiftWeights = new Dictionary<int, double>();
+
+                foreach (var personDailyAvailability in person.DailyAvailabilities)
+                {
+                    var dayId = personDailyAvailability.Key;
+
+                    if (!_dayIdToUnitsCount.ContainsKey(dayId))
+                    {
+                        Console.WriteLine("Someone has scheduled a work to a day without requirements");
+                    }
                 }
 
-                var unitIdToUnit = _requiredDaysToUnits[schedulableWork.DayId];
+                return new ScheduledPerson(person, person.MaxWork, shiftWeights);
+            }).ForEach(person => ScheduledPersons.Add(person));
 
-                foreach (var unitOfDay in schedulableWork.DailyAvailability.Availability)
-                {
-                    var dailyRequirement = AlgorithmInput.Requirements.DaysToRequirements[dayId].HourToWorkers;
+            AddShiftWeights();
+        }
 
-                    if (!dailyRequirement.ContainsKey(unitOfDay))
-                    {
-                        // TODO: Someone has scheduled work for a time unit that has no requirements. We should log it
-                        continue;
-                    }
+        private void AddShiftWeights()
+        {
+            foreach (var scheduledPerson in ScheduledPersons)
+            {
+                var shiftWeights = scheduledPerson.ShiftWeights;
 
-                    var requiredWork = dailyRequirement[unitOfDay];
+                scheduledPerson.Person.DailyAvailabilities
+                    .ForEach(pair => shiftWeights.Add(pair.Key, pair.Value.ShiftWeight));
 
-                    TimeUnit timeUnit;
+                var shiftedDays = _dayIdToUnitsCount.Keys;
 
-                    if (unitIdToUnit.ContainsKey(unitOfDay))
-                    {
-                        timeUnit = unitIdToUnit[unitOfDay];
-                    }
-                    else
-                    {
-                        timeUnit = new TimeUnit(dayId, unitOfDay, requiredWork);
-                        AllTimeUnits.Add(timeUnit);
-                        unitIdToUnit.Add(unitOfDay, timeUnit);
-                    }
-
-                    timeUnit.PersonIdToPotentionalWork.Add(schedulableWork.ScheduledPerson.Person.Id, schedulableWork);
-                }
+                _dayIdToUnitsCount.Keys.Where(dayId => !shiftedDays.Contains(dayId))
+                    .ForEach(dayId => shiftWeights.Add(dayId, 1));
             }
         }
 
-        public IEnumerable<TimeUnit> GetTimeUnits(int dayId, Interval interval)
+        private void CreateTimeUnits()
         {
-            return _requiredDaysToUnits[dayId].Where(pair => interval.Contains(pair.Key)).Select(pair => pair.Value);
+            AlgorithmInput.Requirements.DaysToRequirements.ForEach(pair =>
+            {
+                var dayId = pair.Key;
+                var hoursToWorkers = pair.Value.HourToWorkers;
+                _dayIdToUnitsCount.Add(dayId, hoursToWorkers.Count);
+
+                pair.Value.HourToWorkers.ForEach((workers, unitId) =>
+                {
+                    var timeUnit = new TimeUnit(dayId, unitId, workers);
+                    AllTimeUnits.Add(timeUnit);
+                });
+            });
         }
     }
 }

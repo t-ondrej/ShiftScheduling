@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using ShiftScheduleLibrary.Entities;
 using ShiftScheduleLibrary.Utilities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation.Reports
@@ -8,10 +7,10 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation.Reports
     {
         public override Seriousness ReportSeriousness { get; }
 
-        public Intervals<ResultingSchedule.ShiftInterval> Intervals { get; }
+        public Intervals<ShiftInterval> Intervals { get; }
         public int Day { get; }
 
-        public OverlappingIntervals(Intervals<ResultingSchedule.ShiftInterval> intervals, int day)
+        public OverlappingIntervals(Intervals<ShiftInterval> intervals, int day)
         {
             ReportSeriousness = Seriousness.Error;
             Intervals = intervals;

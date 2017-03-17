@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ShiftScheduleUtilities
 {
@@ -57,12 +58,12 @@ namespace ShiftScheduleUtilities
 
         #region Iterating
 
-        public static void Iterate<T>(this IEnumerable<T> enumerable, Action<T> action)
+        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
-            enumerable.Iterate((arg, index) => action(arg));
+            enumerable.ForEach((arg, index) => action(arg));
         }
 
-        public static void Iterate<T>(this IEnumerable<T> enumerable, Action<T, int> action)
+        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T, int> action)
         {
             if (enumerable == null)
                 throw new ArgumentNullException(nameof(enumerable));
@@ -90,7 +91,7 @@ namespace ShiftScheduleUtilities
         {
             var result = new Dictionary<TKey, TValue>();
 
-            enumerable.Iterate((element, index) =>
+            enumerable.ForEach((element, index) =>
             {
                 var key = keyFunc(element, index);
                 var value = valueFunc(element, index);
@@ -98,6 +99,17 @@ namespace ShiftScheduleUtilities
             });
 
             return result;
+        }
+
+        public static void RemoveAll<TKey, TValue>(this IDictionary<TKey, TValue> dictionary,
+            Func<KeyValuePair<TKey, TValue>, bool> predicate)
+        {
+            var keys = dictionary.Where(predicate).ToList();
+
+            foreach (var key in keys)
+            {
+                dictionary.Remove(key);
+            }
         }
     }
 }

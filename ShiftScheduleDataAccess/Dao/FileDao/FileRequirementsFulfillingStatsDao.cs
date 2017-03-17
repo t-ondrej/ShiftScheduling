@@ -32,7 +32,7 @@ namespace ShiftScheduleDataAccess.Dao.FileDao
                         var splited = line.Split(' ');
                         var personId = int.Parse(splited[0]);
 
-                        splited.Skip(1).Iterate(periodToStatsString =>
+                        splited.Skip(1).ForEach(periodToStatsString =>
                         {
                             var splitedStats = periodToStatsString.Split('=');
                             var pediodId = int.Parse(splitedStats[0]);

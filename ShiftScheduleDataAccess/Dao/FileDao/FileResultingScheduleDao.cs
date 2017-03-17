@@ -29,14 +29,14 @@ namespace ShiftScheduleDataAccess.Dao.FileDao
                     while ((line = textReader.ReadLine()) != null)
                     {
                         var dayId = int.Parse(line);
-                        var scheduleForPersons = new Dictionary<int, Intervals<ResultingSchedule.ShiftInterval>>();
+                        var scheduleForPersons = new Dictionary<int, Intervals<ShiftInterval>>();
 
                         while ((line = textReader.ReadLine()) != null && line != "")
                         {
                             var splited = line.Split(' ');
                             var personId = int.Parse(splited[0]);
-                            var intervals = splited.Skip(1).Select(ResultingSchedule.ShiftInterval.FromString).ToList();
-                            scheduleForPersons.Add(personId, new Intervals<ResultingSchedule.ShiftInterval>(intervals));
+                            var intervals = splited.Skip(1).Select(ShiftInterval.FromString).ToList();
+                            scheduleForPersons.Add(personId, new Intervals<ShiftInterval>(intervals));
                         }
 
                         var dailySchedule = new ResultingSchedule.DailySchedule(scheduleForPersons);

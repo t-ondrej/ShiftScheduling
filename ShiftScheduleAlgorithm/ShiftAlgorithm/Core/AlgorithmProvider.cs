@@ -1,4 +1,5 @@
 ﻿using System;
+using ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm;
 using ShiftScheduleLibrary.Entities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Core
@@ -7,7 +8,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Core
     {
         public enum Strategy
         {
-            Test
+            TimeUnitStrategy
         }
 
         public static ResultingSchedule ExecuteAlgorithm(AlgorithmInput algorithmInput, Strategy strategy)
@@ -16,8 +17,8 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Core
 
             switch (strategy)
             {
-                case Strategy.Test:
-                    algorithm = new TestAlgorithm(algorithmInput);
+                case Strategy.TimeUnitStrategy:
+                    algorithm = new TimeUnitAlgorithm(algorithmInput, null, null);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(strategy), strategy, null);

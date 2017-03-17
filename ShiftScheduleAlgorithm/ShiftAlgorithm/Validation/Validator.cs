@@ -5,6 +5,7 @@ using ShiftScheduleAlgorithm.ShiftAlgorithm.Core;
 using ShiftScheduleAlgorithm.ShiftAlgorithm.Validation.Reports;
 using ShiftScheduleLibrary.Entities;
 using ShiftScheduleLibrary.Utilities;
+using ShiftScheduleUtilities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 {
@@ -40,7 +41,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
             return _resultAlgorithmValidationResult;
         }
 
-        public void IterateAlgorithmOutput(Action<Person, Intervals<ResultingSchedule.ShiftInterval>, int> action)
+        public void IterateAlgorithmOutput(Action<Person, Intervals<ShiftInterval>, int> action)
         {
             foreach (var dayToSchedule in AlgorithmOutput.DailySchedules)
             {
@@ -54,7 +55,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
             }
         }
 
-        public void IterateAlgorithmOutput(Action<Person, Intervals<ResultingSchedule.ShiftInterval>> action)
+        public void IterateAlgorithmOutput(Action<Person, Intervals<ShiftInterval>> action)
         {
             IterateAlgorithmOutput((person, intervals, day) => action(person, intervals));
         }
@@ -99,17 +100,17 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
                 }
             }
         }
-        
+
         private void CheckMaxConsecutiveWorkHoursNotMet()
         {
             IterateAlgorithmOutput((person, schedule, day) =>
             {
-                var tempIntervals = new Intervals<ResultingSchedule.ShiftInterval>(schedule.IntervalsList);
-                Intervals<ResultingSchedule.ShiftInterval>.MergeAndSort(tempIntervals);
+                var tempIntervals = new Intervals<ShiftInterval>(schedule.IntervalsList);
+                Intervals<ShiftInterval>.MergeAndSort(tempIntervals);
 
                 foreach (var shiftInterval in schedule.IntervalsList)
                 {
-                    if (shiftInterval.Type == ResultingSchedule.ShiftInterval.IntervalType.Pause) continue;
+                    if (shiftInterval.Type == ShiftInterval.IntervalType.Pause) continue;
 
                     if (shiftInterval.Count > AlgorithmInput.AlgorithmConfiguration.MaxConsecutiveWorkHours)
                     {
@@ -127,7 +128,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
             {
                 foreach (var shiftInterval in schedule)
                 {
-                    if (shiftInterval.Type == ResultingSchedule.ShiftInterval.IntervalType.Pause)
+                    if (shiftInterval.Type == ShiftInterval.IntervalType.Pause)
                     {
                         continue;
                     }
@@ -147,13 +148,15 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
             foreach (var tempRequirement in tempRequirements.DaysToRequirements)
             {
                 int day = tempRequirement.Key;
-                foreach (var hourToWorkers in tempRequirement.Value.HourToWorkers)
+                IList<double> hourToWorkers = tempRequirement.Value.HourToWorkers;
+
+                hourToWorkers.ForEach((workers, hour) =>
                 {
-                    if (hourToWorkers.Value > 0)
+                    if (workers > 0)
                     {
-                        _resultAlgorithmValidationResult.AddReport(new RequirementsAreNotMet(day, hourToWorkers.Key));
+                        _resultAlgorithmValidationResult.AddReport(new RequirementsAreNotMet(day, hour));
                     }
-                }
+                });
             }
         }
 
@@ -161,11 +164,11 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
         {
             IterateAlgorithmOutput((person, schedule, day) =>
                 {
-                    var tempIntervals = new Intervals<ResultingSchedule.ShiftInterval>(schedule.IntervalsList);
+                    var tempIntervals = new Intervals<ShiftInterval>(schedule.IntervalsList);
                     tempIntervals.SortByStart();
 
-                    var previousInterval = new ResultingSchedule.ShiftInterval(-1, -1, 0);
-                    var overlappingIntervals = new HashSet<ResultingSchedule.ShiftInterval>();
+                    var previousInterval = new ShiftInterval(-1, -1, 0);
+                    var overlappingIntervals = new HashSet<ShiftInterval>();
 
                     foreach (var interval in tempIntervals)
                     {
@@ -176,11 +179,11 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
                         }
                         else
                         {
-                            var reportIntervals = new Intervals<ResultingSchedule.ShiftInterval>(tempIntervals.ToList());
+                            var reportIntervals = new Intervals<ShiftInterval>(tempIntervals.ToList());
 
                             _resultAlgorithmValidationResult.AddReport(new OverlappingIntervals(reportIntervals, day));
 
-                            overlappingIntervals = new HashSet<ResultingSchedule.ShiftInterval>();
+                            overlappingIntervals = new HashSet<ShiftInterval>();
                         }
                         previousInterval = interval;
                     }
@@ -193,5 +196,4 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
             throw new NotImplementedException();
         }
     }
-
 }

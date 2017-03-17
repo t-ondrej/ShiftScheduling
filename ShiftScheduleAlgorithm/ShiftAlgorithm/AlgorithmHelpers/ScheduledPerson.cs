@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ShiftScheduleLibrary.Entities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
@@ -7,24 +8,51 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
     {
         public Person Person { get; }
 
-        public IDictionary<int, int> NumberOfWorkedUnitsPerDays { get; }
+        public IDictionary<int, SchedulesForDay> AssignableSchedulesForDays { get; }
 
-        public int NumberOfAssignedUnits { get; private set; }
+        public IDictionary<int, ScheduleForDay> AssignedDays { get; }
 
-        public ScheduledPerson(Person person)
+        public IDictionary<int, double> ShiftWeights { get; }
+
+        public int TotalWorkForMonth { get; }
+
+        public int CurrentWorkForMonth { get; private set; }
+
+        public int CurrentWorkLeft => TotalWorkForMonth - CurrentWorkForMonth;
+
+        public ScheduledPerson(Person person, int totalWorkForMonth, IDictionary<int, double> shiftWeights)
         {
             Person = person;
-            NumberOfWorkedUnitsPerDays = new Dictionary<int, int>();
+            TotalWorkForMonth = totalWorkForMonth;
+            ShiftWeights = shiftWeights;
+            AssignableSchedulesForDays = new Dictionary<int, SchedulesForDay>();
+            AssignedDays = new Dictionary<int, ScheduleForDay>();
         }
 
-        public void AddWorkForDay(int dayId, int numberOfTimeUnits)
+        public void Assign(ScheduleForDay scheduleForDay)
         {
-            if (!NumberOfWorkedUnitsPerDays.ContainsKey(dayId))
-                NumberOfWorkedUnitsPerDays.Add(dayId, numberOfTimeUnits);
-            else
-                NumberOfWorkedUnitsPerDays[dayId] += numberOfTimeUnits;
+            var dayId = scheduleForDay.DayId;
 
-            NumberOfAssignedUnits += numberOfTimeUnits;
+            if (AssignedDays.ContainsKey(dayId))
+                throw new InvalidOperationException();
+
+            var workAmountToBeAdded = scheduleForDay.GetTotalWork();
+
+            if (workAmountToBeAdded + CurrentWorkForMonth > TotalWorkForMonth)
+                throw new InvalidOperationException();
+
+            AssignedDays.Add(scheduleForDay.DayId, scheduleForDay);
+            AssignableSchedulesForDays.Remove(dayId);
+            CurrentWorkForMonth += workAmountToBeAdded;
+            ResolveUnassignableSchedules();
+        }
+
+        private void ResolveUnassignableSchedules()
+        {
+            foreach (var schedulesForDay in AssignableSchedulesForDays.Values)
+            {
+                schedulesForDay.Schedules.RemoveAll(schedule => schedule.GetTotalWork() > CurrentWorkLeft);
+            }
         }
     }
 }

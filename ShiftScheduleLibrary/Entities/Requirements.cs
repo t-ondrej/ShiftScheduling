@@ -13,9 +13,9 @@ namespace ShiftScheduleLibrary.Entities
 
         public class DailyRequirement
         {
-            public IDictionary<int, double> HourToWorkers { get; }
+            public IList<double> HourToWorkers { get; }
 
-            public DailyRequirement(IDictionary<int, double> hourToWorkers)
+            public DailyRequirement(IList<double> hourToWorkers)
             {
                 HourToWorkers = hourToWorkers;
             }
