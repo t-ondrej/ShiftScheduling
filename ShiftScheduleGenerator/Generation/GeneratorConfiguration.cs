@@ -23,5 +23,7 @@
         public double ToleranceAssignmentProbability { get; set; }
 
         public double ToleranceUseProbability { get; set; }
+
+        public int PastPeriodCount { get; set; }
     }
 }

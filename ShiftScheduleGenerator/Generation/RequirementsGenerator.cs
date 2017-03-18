@@ -16,14 +16,15 @@ namespace ShiftScheduleGenerator.Generation
             Configuration = configuration;
         }
 
-        public Requirements Generate(List<Person> persons)
+        public Requirements GenerateRequirements(List<Person> persons)
         {
+
             switch (Configuration.DifficultyToFulfilRequirements.DifficutyPossilibity)
             {
                 case Difficulty.Possilibity.Possible:
-                    return GenerateRequirements(persons);
+                    return GeneratePossibleRequirements(persons);
                 case Difficulty.Possilibity.Maybe:
-                    return GenerateRandomRequirements();
+                    return GenerateRandomRequirements(persons);
                 case Difficulty.Possilibity.Impossible:
                     return GenerateImpossibleRequirements(persons);
                 default:
@@ -31,7 +32,7 @@ namespace ShiftScheduleGenerator.Generation
             }
         }
 
-        private Requirements GenerateRequirements(List<Person> persons)
+        private Requirements GeneratePossibleRequirements(List<Person> persons)
         {
             // Array: Days x Hours
             var timeSpanRequirements = new double[Configuration.ScheduleDaysCount, Configuration.WorkingTimePerDay];
@@ -108,38 +109,30 @@ namespace ShiftScheduleGenerator.Generation
             return new Requirements(ArrayToRequirements(timeSpanRequirements));
         }
 
-        private Requirements GenerateRandomRequirements()
+        private Requirements GenerateRandomRequirements(List<Person> persons)
         {
-            var persons = new PersonsGenerator(Configuration).GeneratePersons(Configuration.EmployeeCount * (2 / 3));
+            var requirements = GenerateMaxRequirements(persons);
+            MakeRequirementsRandom(requirements);
 
-            return GenerateRequirements(persons);
+            return requirements;
         }
 
         private Requirements GenerateImpossibleRequirements(List<Person> persons)
         {
             var requirements = GenerateMaxRequirements(persons);
 
+            // Save the maximum number of workers required in a random day and random hour
             var randomDay = Random.Next(0, requirements.DaysToRequirements.Keys.ToList().Count);
             var randomHour = Random.Next(0, requirements.DaysToRequirements[randomDay].HourToWorkers.Count);
+            var maxWorkerCountRequirement = requirements.DaysToRequirements[randomDay].HourToWorkers[randomHour];
 
-            requirements.DaysToRequirements[randomDay].HourToWorkers[randomHour] += 1;
+            MakeRequirementsRandom(requirements);
 
-            foreach (var day in requirements.DaysToRequirements.Keys)
-            {
-                var hoursToWorkers = requirements.DaysToRequirements[day].HourToWorkers;
-
-                for (int hour = 0; hour < hoursToWorkers.Count; hour++)
-                {
-                    if (day == randomDay && hour == randomHour)
-                        continue;
-
-                    requirements.DaysToRequirements[day].HourToWorkers[hour] -=
-                        Random.Next(0, (int) requirements.DaysToRequirements[day].HourToWorkers[hour]);
-                }
-            }
+            requirements.DaysToRequirements[randomDay].HourToWorkers[randomHour] = maxWorkerCountRequirement + 1;
 
             return requirements;
         }
+
 
         private Requirements GenerateMaxRequirements(List<Person> persons)
         {
@@ -163,6 +156,20 @@ namespace ShiftScheduleGenerator.Generation
             }
 
             return new Requirements(ArrayToRequirements(timeSpanRequirements));
+        }
+
+        private Requirements MakeRequirementsRandom(Requirements requirements)
+        {
+            foreach (var day in requirements.DaysToRequirements.Keys)
+            {
+                var hoursToWorkers = requirements.DaysToRequirements[day].HourToWorkers;
+
+                for (int hour = 0; hour < hoursToWorkers.Count; hour++)
+                    requirements.DaysToRequirements[day].HourToWorkers[hour] -=
+                        Random.Next(0, (int)requirements.DaysToRequirements[day].HourToWorkers[hour] + 1);
+            }
+
+            return requirements;
         }
 
         private static IDictionary<int, Requirements.DailyRequirement> ArrayToRequirements(double[,] array)

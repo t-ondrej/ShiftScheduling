@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generation\Difficulty.cs" />
+    <Compile Include="Generation\FulfilingStatsGenerator.cs" />
     <Compile Include="Generation\Generator.cs" />
     <Compile Include="Generation\GeneratorConfiguration.cs" />
     <Compile Include="Program.cs" />

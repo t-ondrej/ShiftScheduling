@@ -11,9 +11,12 @@ namespace ShiftScheduleGenerator.Generation
 
         public GeneratorConfiguration Configuration { get; }
 
+        public IEnumerable<int> WorkingDays { get;  } 
+
         public PersonsGenerator(GeneratorConfiguration configuration)
         {
             Configuration = configuration;
+            WorkingDays = GenerateWorkingDays();
         }
 
         public List<Person> GeneratePersons()
@@ -21,19 +24,6 @@ namespace ShiftScheduleGenerator.Generation
             var persons = new List<Person>();
 
             for (var i = 0; i < Configuration.EmployeeCount; i++)
-            {
-                var person = CreatePerson(i);
-                persons.Add(person);
-            }
-
-            return persons;
-        }
-
-        public List<Person> GeneratePersons(int count)
-        {
-            var persons = new List<Person>();
-
-            for (var i = 0; i < count; i++)
             {
                 var person = CreatePerson(i);
                 persons.Add(person);
@@ -53,9 +43,8 @@ namespace ShiftScheduleGenerator.Generation
         private IDictionary<int, Person.DailyAvailability> GenerateDailyAvailabilities()
         {
             var dailyAvailabilities = new Dictionary<int, Person.DailyAvailability>();
-            var days = GenerateDays();
 
-            foreach (var day in days)
+            foreach (var day in WorkingDays)
             {
                 var dailyAvailability = GenerateDailyAvailability();
                 dailyAvailabilities.Add(day, dailyAvailability);
@@ -92,7 +81,7 @@ namespace ShiftScheduleGenerator.Generation
             return new Interval(start, end);
         }
 
-        private IEnumerable<int> GenerateDays()
+        private IEnumerable<int> GenerateWorkingDays()
         {
             var days = new List<int>();
 

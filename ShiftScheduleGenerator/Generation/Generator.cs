@@ -12,6 +12,8 @@ namespace ShiftScheduleGenerator.Generation
 
         private readonly RequirementsGenerator _requirementsGenerator;
 
+        private readonly FulfilingStatsGenerator _fulfilingStatsGenerator;
+
         private readonly string _workingFolder;
 
         private readonly string _dataSetFolderName;
@@ -23,6 +25,7 @@ namespace ShiftScheduleGenerator.Generation
             Configuration = configuration;
             _scheduleGenerator = new PersonsGenerator(Configuration);
             _requirementsGenerator = new RequirementsGenerator(Configuration);
+            _fulfilingStatsGenerator = new FulfilingStatsGenerator(Configuration);
         }
 
         public void GenerateData()
@@ -41,11 +44,13 @@ namespace ShiftScheduleGenerator.Generation
 
                 // Generate the data
                 var persons = _scheduleGenerator.GeneratePersons();
-                var requirements = _requirementsGenerator.Generate(persons);
+                var requirements = _requirementsGenerator.GenerateRequirements(persons);
+                var fulfillingStats = _fulfilingStatsGenerator.GenerateFulfillingStats(persons);
 
                 // Save the data
                 LinqExtensions.ForEach(persons, person => dataAccessClient.PersonDao.SavePerson(person));
                 dataAccessClient.RequirementsDao.SaveRequirements(requirements);
+                dataAccessClient.RequirementsFulfillingStatsDao.SaveRequirements(fulfillingStats);
             }
         }
     }

@@ -32,7 +32,8 @@ namespace ShiftScheduleGenerator
                         NumberOfSets = Convert.ToInt32(configuration["NumberOfSets"]),
                         DifficultyToFulfilRequirements = new Difficulty(configuration["DifficultyToFulfilRequirements"]),
                         ToleranceAssignmentProbability = Convert.ToDouble(configuration["ToleranceAssignmentProbability"]),
-                        ToleranceUseProbability = Convert.ToDouble(configuration["ToleranceUseProbability"])
+                        ToleranceUseProbability = Convert.ToDouble(configuration["ToleranceUseProbability"]),
+                        PastPeriodCount = Convert.ToInt32(configuration["PastPeriodCount"])
                     }
                 );
 
