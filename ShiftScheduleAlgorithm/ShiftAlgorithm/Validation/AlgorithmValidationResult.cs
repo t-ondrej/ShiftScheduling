@@ -29,5 +29,22 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 
             _reportsDictionary[type].Add(report);
         }
+
+        public string GetMessage()
+        {
+            var message = "----------------------------------\n\n";
+
+            foreach (var typeToReports in _reportsDictionary)
+            {
+                message = string.Concat(message, $"{typeToReports.Key.Name} :");
+
+                message = typeToReports.Value.Aggregate(message,
+                    (current, report) => string.Concat(current, $"\n{report.GetReportMessage()}"));
+
+                message = string.Concat(message, "\n\n----------------------------------\n\n");
+            }
+
+            return message;
+        }
     }
 }

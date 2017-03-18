@@ -33,7 +33,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
         /// <summary>
         /// Gets or setsif we can theoretically assign workers so that they can fulfil the unit.
         /// </summary>
-        public bool Fulfillable { get; set; }
+        public bool Fulfillable { get; set; } = true;
 
         /// <summary>
         /// Gets the current schedules assigned to the unit.

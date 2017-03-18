@@ -7,15 +7,15 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 {
     internal class IntervalsGenerator
     {
-        public int MaxLength { get; }
+        public int MaxNumberExclusively { get; }
 
         public AlgorithmConfiguration AlgorithmConfiguration { get; }
 
         private readonly IDictionary<int, IList<Intervals<ShiftInterval>>> _intervalLengthToIntervals;
 
-        public IntervalsGenerator(int maxLength, AlgorithmConfiguration algorithmConfiguration)
+        public IntervalsGenerator(int maxNumberExclusively, AlgorithmConfiguration algorithmConfiguration)
         {
-            MaxLength = maxLength;
+            MaxNumberExclusively = maxNumberExclusively;
             AlgorithmConfiguration = algorithmConfiguration;
             _intervalLengthToIntervals = new Dictionary<int, IList<Intervals<ShiftInterval>>>();
             GenerateIntervals();
@@ -23,9 +23,9 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 
         private void GenerateIntervals()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < MaxNumberExclusively; i++)
             {
-                for (int j = i; j < 10; j++)
+                for (int j = i; j < MaxNumberExclusively; j++)
                 {
                     var work = ShiftInterval.IntervalType.Work;
                     var inteval = new ShiftInterval(i, j, work);

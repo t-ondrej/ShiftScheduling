@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Diagnostics;
 using System.Linq;
 using ShiftScheduleDataAccess.Dao;
 using ShiftScheduleUtilities;
@@ -13,13 +13,13 @@ namespace ShiftScheduleDataAccess
         private static void Main()
         {
             ClientSave.InitializeWorkingFolder();
-            Console.WriteLine("Person dao test:\n");
+            Debug.WriteLine("Person dao test:\n");
             PersonDaoTest();
-            Console.WriteLine("Requirements dao test:\n");
+            Debug.WriteLine("Requirements dao test:\n");
             RequirementsDaoTest();
-            Console.WriteLine("Resulting schedule dao test:\n");
+            Debug.WriteLine("Resulting schedule dao test:\n");
             ResultingScheduleDaoTest();
-            Console.WriteLine("Requirements fulfilling stats dao test:\n");
+            Debug.WriteLine("Requirements fulfilling stats dao test:\n");
             RequirementsFulfillingStatsDaoTest();
         }
 
