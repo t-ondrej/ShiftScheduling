@@ -244,3 +244,4 @@ ModelManifest.xml
 #Generated data
 AlgorithmTesting/TestingData/*.txt
 ShiftScheduleDataAccess/Test
+/AlgorithmTesting/TestingData

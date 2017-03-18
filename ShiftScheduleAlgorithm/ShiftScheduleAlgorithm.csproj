@@ -51,7 +51,7 @@
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\RandomRemainingPeopleChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\RandomScheduleChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\RandomTimeUnitChooser.cs" />
-    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\IRemeaningPeopleChooser.cs" />
+    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\IRemainingPeopleChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\IScheduleChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\ITimeUnitChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\TimeUnitStrategy.cs" />

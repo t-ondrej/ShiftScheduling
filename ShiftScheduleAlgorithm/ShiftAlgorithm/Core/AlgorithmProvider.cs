@@ -54,19 +54,18 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Core
                     throw new Exception("Unknown schedule chooser.");
             }
 
-            IRemeaningPeopleChooser remeaningPeopleChooser;
+            IRemainingPeopleChooser remainingPeopleChooser;
 
             switch (array[2])
             {
                 case "RandomRemainingPeopleChooser":
-                    remeaningPeopleChooser = new RandomRemainingPeopleChooser();
+                    remainingPeopleChooser = new RandomRemainingPeopleChooser();
                     break;
                 default:
                     throw new Exception("Unknown random remaining people chooser.");
             }
-
-
-            return new TimeUnitStrategy(timeUnitChooser, scheduleChooser, remeaningPeopleChooser);
+            
+            return new TimeUnitStrategy(timeUnitChooser, scheduleChooser, remainingPeopleChooser);
         }
 
         public static ResultingSchedule ExecuteAlgorithm(AlgorithmInput algorithmInput)

@@ -21,7 +21,8 @@ namespace ShiftScheduleAlgorithm
 
             // We get all data access clients
             var testingDataFolder = settings["TestingDataFolder"];
-            var dataAccessClients = GetDataAccessClients(testingDataFolder).ToList();
+            var testingDataSets = settings["TestingDataSets"];
+            var dataAccessClients = GetDataAccessClients(testingDataFolder, testingDataSets).ToList();
 
             foreach (var fileNameToConfig in configFiles)
             {
@@ -58,9 +59,9 @@ namespace ShiftScheduleAlgorithm
             );
         }
 
-        private static IEnumerable<DataAccessClient> GetDataAccessClients(string testingDataFolder)
+        private static IEnumerable<DataAccessClient> GetDataAccessClients(string folder, string pattern)
         {
-            return Directory.EnumerateDirectories(testingDataFolder)
+            return Directory.EnumerateDirectories(folder, pattern)
                 .SelectMany(Directory.EnumerateDirectories)
                 .Select(directory => new DataAccessClient(directory));
         }

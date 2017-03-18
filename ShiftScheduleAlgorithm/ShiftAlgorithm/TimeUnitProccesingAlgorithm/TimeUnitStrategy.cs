@@ -8,14 +8,14 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
 
         public IScheduleChooser ScheduleChooser { get; }
 
-        public IRemeaningPeopleChooser RemeaningPeopleChooser { get; }
+        public IRemainingPeopleChooser RemainingPeopleChooser { get; }
 
         public TimeUnitStrategy(ITimeUnitChooser timeUnitChooser, IScheduleChooser scheduleChooser,
-            IRemeaningPeopleChooser remeaningPeopleChooser)
+            IRemainingPeopleChooser remainingPeopleChooser)
         {
             TimeUnitChooser = timeUnitChooser;
             ScheduleChooser = scheduleChooser;
-            RemeaningPeopleChooser = remeaningPeopleChooser;
+            RemainingPeopleChooser = remainingPeopleChooser;
         }
     }
 }

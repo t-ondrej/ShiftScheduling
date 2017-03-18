@@ -7,7 +7,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm.Impl
     {
         public TimeUnit FindTimeUnitToBeProccessed(TimeUnitsManager timeUnitsManager)
         {
-            throw new NotImplementedException();
+            return timeUnitsManager.AllTimeUnits.Find(unit => !unit.Fulfilled && unit.Fulfillable);
         }
     }
 }

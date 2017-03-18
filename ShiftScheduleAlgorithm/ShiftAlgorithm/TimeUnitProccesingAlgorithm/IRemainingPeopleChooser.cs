@@ -2,7 +2,7 @@
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
 {
-    internal interface IRemeaningPeopleChooser
+    internal interface IRemainingPeopleChooser
     {
         void AssignScheduleToRemainingPeople(TimeUnitsManager timeUnitsManager);
     }
