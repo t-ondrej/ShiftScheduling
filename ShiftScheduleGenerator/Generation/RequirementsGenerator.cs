@@ -158,7 +158,7 @@ namespace ShiftScheduleGenerator.Generation
             return new Requirements(ArrayToRequirements(timeSpanRequirements));
         }
 
-        private Requirements MakeRequirementsRandom(Requirements requirements)
+        private void MakeRequirementsRandom(Requirements requirements)
         {
             foreach (var day in requirements.DaysToRequirements.Keys)
             {
@@ -168,8 +168,6 @@ namespace ShiftScheduleGenerator.Generation
                     requirements.DaysToRequirements[day].HourToWorkers[hour] -=
                         Random.Next(0, (int)requirements.DaysToRequirements[day].HourToWorkers[hour] + 1);
             }
-
-            return requirements;
         }
 
         private static IDictionary<int, Requirements.DailyRequirement> ArrayToRequirements(double[,] array)

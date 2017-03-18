@@ -27,7 +27,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Core
             }
         }
 
-        private static AlgorithmStrategy ParseTimeUnitStrategy(string[] array)
+        private static TimeUnitStrategy ParseTimeUnitStrategy(string[] array)
         {
             if (array.Length != 3)
                 return null;

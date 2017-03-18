@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using ShiftScheduleDataAccess.Dao;
-using ShiftScheduleUtilities;
 
 namespace ShiftScheduleGenerator.Generation
 {
@@ -48,7 +47,7 @@ namespace ShiftScheduleGenerator.Generation
                 var fulfillingStats = _fulfilingStatsGenerator.GenerateFulfillingStats(persons);
 
                 // Save the data
-                LinqExtensions.ForEach(persons, person => dataAccessClient.PersonDao.SavePerson(person));
+                persons.ForEach(person => dataAccessClient.PersonDao.SavePerson(person));
                 dataAccessClient.RequirementsDao.SaveRequirements(requirements);
                 dataAccessClient.RequirementsFulfillingStatsDao.SaveRequirements(fulfillingStats);
             }

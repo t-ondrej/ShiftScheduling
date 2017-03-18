@@ -5,7 +5,7 @@ using static ShiftScheduleLibrary.Entities.RequirementsFulfillingStats;
 
 namespace ShiftScheduleGenerator.Generation
 {
-    class FulfilingStatsGenerator
+    internal class FulfilingStatsGenerator
     {
         private static readonly Random Random = new Random();
 

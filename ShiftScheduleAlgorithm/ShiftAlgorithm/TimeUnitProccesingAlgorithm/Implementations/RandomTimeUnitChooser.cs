@@ -1,5 +1,4 @@
-﻿using System;
-using ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers;
+﻿using ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm.Implementations
 {

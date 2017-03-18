@@ -21,7 +21,6 @@ namespace ShiftScheduleGenerator.Generation
 
         public Difficulty(string stringValue)
         {
-
             if (!double.TryParse(stringValue, out double value))
                 throw new ArgumentException("Unparsable difficulty value");
 
