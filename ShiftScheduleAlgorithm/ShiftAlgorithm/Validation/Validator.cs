@@ -10,13 +10,13 @@ using ShiftScheduleUtilities;
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 {
     // TODO: Unit testing
-    internal class Validator
+    public class Validator
     {
         public AlgorithmInput AlgorithmInput { get; }
 
         public ResultingSchedule AlgorithmOutput { get; }
 
-        private readonly AlgorithmValidationResult _resultAlgorithmValidationResult;
+        private readonly AlgorithmValidationResult _algorithmValidationResult;
 
         private readonly IDictionary<int, Person> _idToPersons;
 
@@ -24,7 +24,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
         {
             AlgorithmInput = algorithmInput;
             AlgorithmOutput = algorithmOutput;
-            _resultAlgorithmValidationResult = new AlgorithmValidationResult();
+            _algorithmValidationResult = new AlgorithmValidationResult();
             _idToPersons = algorithmInput.Persons.ToDictionary(p => p.Id, p => p);
         }
 
@@ -32,12 +32,12 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
         {
             CheckMaxMonthlyWorkNotMet();
             CheckMaxDailyWorkNotMet();
-            CheckWorkerPauseLengthNotMet();
             CheckMaxConsecutiveWorkHoursNotMet();
             CheckRequirementsAreNotMet();
             CheckOverlappingIntervals();
+            CheckPauseScheduling();
 
-            return _resultAlgorithmValidationResult;
+            return _algorithmValidationResult;
         }
 
         public void IterateAlgorithmOutput(Action<Person, Intervals<ShiftInterval>, int> action)
@@ -66,7 +66,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
                 var dailyWorkTime = schedule.GetLengthInTime();
 
                 if (dailyWorkTime > person.MaxWork)
-                    _resultAlgorithmValidationResult.AddReport(new MaxDailyWorkNotMet(person, day));
+                    _algorithmValidationResult.AddReport(new MaxDailyWorkNotMet(person, day));
             });
         }
 
@@ -95,7 +95,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
             {
                 if (personToTime.Value != personToTime.Key.MaxWork)
                 {
-                    _resultAlgorithmValidationResult.AddReport(new MaxMonthlyWorkNotMet(personToTime.Key));
+                    _algorithmValidationResult.AddReport(new MaxMonthlyWorkNotMet(personToTime.Key));
                 }
             }
         }
@@ -113,7 +113,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 
                     if (shiftInterval.Count > AlgorithmInput.AlgorithmConfiguration.MaxConsecutiveWorkHours)
                     {
-                        _resultAlgorithmValidationResult.AddReport(new MaxConsecutiveWorkHoursNotMet(person, day));
+                        _algorithmValidationResult.AddReport(new MaxConsecutiveWorkHoursNotMet(person, day));
                     }
                 }
             });
@@ -153,7 +153,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
                 {
                     if (workers > 0)
                     {
-                        _resultAlgorithmValidationResult.AddReport(new RequirementsAreNotMet(day, hour));
+                        _algorithmValidationResult.AddReport(new RequirementsAreNotMet(day, hour));
                     }
                 });
             }
@@ -180,7 +180,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
                     {
                         var reportIntervals = new Intervals<ShiftInterval>(tempIntervals.ToList());
 
-                        _resultAlgorithmValidationResult.AddReport(new OverlappingIntervals(reportIntervals, day));
+                        _algorithmValidationResult.AddReport(new OverlappingIntervals(reportIntervals, day));
 
                         overlappingIntervals = new HashSet<ShiftInterval>();
                     }
@@ -189,9 +189,73 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
             });
         }
 
-        private void CheckWorkerPauseLengthNotMet()
+        private void CheckPauseScheduling()
         {
-            throw new NotImplementedException();
+            IterateAlgorithmOutput((person, schedule, day) =>
+            {
+                var intervals = new Intervals<ShiftInterval>(schedule.IntervalsList);
+                intervals.SortByStart();
+
+                switch (intervals.IntervalsList.Count)
+                {
+                    case 0:
+                        // do nothing
+                        break;
+                    case 1:
+                        if (IsPause(intervals.IntervalsList[0]))
+                        {
+                            _algorithmValidationResult.AddReport(new ImproperPauseScheduling(person, day));
+                        }
+                        break;
+                    case 2:
+                        if (IsPause(intervals.IntervalsList[0]) || IsPause(intervals.IntervalsList[1]))
+                        {
+                            _algorithmValidationResult.AddReport(new ImproperPauseScheduling(person, day));
+                        }
+                        break;
+                    case 3:
+                        ShiftInterval middleInterval = intervals.IntervalsList[1];
+
+                        if (IsPause(intervals.IntervalsList[0]) || IsPause(intervals.IntervalsList[2]))
+                        {
+                            _algorithmValidationResult.AddReport(new ImproperPauseScheduling(person, day));
+                        }
+
+                        if (IsWork(middleInterval))
+                        {
+                            if (intervals.GetLengthInTime() >
+                                AlgorithmInput.AlgorithmConfiguration.MaxConsecutiveWorkHours)
+                            {
+                                _algorithmValidationResult.AddReport(new ImproperPauseScheduling(person, day));
+                            }
+                        }
+
+                        if (IsPause(middleInterval))
+                        {
+                            if (intervals.GetLengthInTime() <
+                                AlgorithmInput.AlgorithmConfiguration.MaxConsecutiveWorkHours)
+                            {
+                                _algorithmValidationResult.AddReport(new UnnecessaryPauseScheduling(person, day));
+                            }
+
+                            if (middleInterval.Count != AlgorithmInput.AlgorithmConfiguration.WorkerPauseLength)
+                            {
+                                _algorithmValidationResult.AddReport(new WorkerPauseLengthNotMet(person, day));
+                            }
+                        }
+                        break;
+                }
+            });
+        }
+
+        private static bool IsPause(ShiftInterval interval)
+        {
+            return interval.Type == ShiftInterval.IntervalType.Pause;
+        }
+
+        private static bool IsWork(ShiftInterval interval)
+        {
+            return interval.Type == ShiftInterval.IntervalType.Work;
         }
     }
 }

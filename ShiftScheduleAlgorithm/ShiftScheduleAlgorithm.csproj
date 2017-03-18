@@ -57,11 +57,13 @@
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\TimeUnitStrategy.cs" />
     <Compile Include="ShiftAlgorithm\Validation\AlgorithmValidationResult.cs" />
     <Compile Include="ShiftAlgorithm\Validation\Reports\ConsecutiveIntervals.cs" />
+    <Compile Include="ShiftAlgorithm\Validation\Reports\ImproperPauseScheduling.cs" />
     <Compile Include="ShiftAlgorithm\Validation\Reports\MaxConsecutiveWorkHoursNotMet.cs" />
     <Compile Include="ShiftAlgorithm\Validation\Reports\MaxDailyWorkNotMet.cs" />
     <Compile Include="ShiftAlgorithm\Validation\Reports\MaxMonthlyWorkNotMet.cs" />
     <Compile Include="ShiftAlgorithm\Validation\Reports\OverlappingIntervals.cs" />
     <Compile Include="ShiftAlgorithm\Validation\Reports\RequirementsAreNotMet.cs" />
+    <Compile Include="ShiftAlgorithm\Validation\Reports\UnnecessaryPauseScheduling.cs" />
     <Compile Include="ShiftAlgorithm\Validation\Validator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
