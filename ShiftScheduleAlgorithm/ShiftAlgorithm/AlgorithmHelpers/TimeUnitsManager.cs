@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ShiftScheduleAlgorithm.ShiftAlgorithm.Core;
 using ShiftScheduleUtilities;
@@ -23,7 +24,8 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
             AlgorithmInput = algorithmInput;
             AllTimeUnits = new List<TimeUnit>();
             ScheduledPersons = new List<ScheduledPerson>();
-            _intervalsGenerator = new IntervalsGenerator(MaxNumberOfHours(), AlgorithmInput.AlgorithmConfiguration);
+            var maxNumberOfHours = MaxNumberOfHours();
+            _intervalsGenerator = new IntervalsGenerator(maxNumberOfHours, AlgorithmInput.AlgorithmConfiguration);
             _dayIdToUnitsCount = new Dictionary<int, int>();
             CreateTimeUnits();
             CreateScheduledPersons();
@@ -84,7 +86,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
                 scheduledPerson.Person.DailyAvailabilities
                     .ForEach(pair => shiftWeights.Add(pair.Key, pair.Value.ShiftWeight));
 
-                var shiftedDays = _dayIdToUnitsCount.Keys;
+                var shiftedDays = shiftWeights.Keys;
 
                 _dayIdToUnitsCount.Keys.Where(dayId => !shiftedDays.Contains(dayId))
                     .ForEach(dayId => shiftWeights.Add(dayId, 1));
@@ -107,6 +109,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 
                     var schedulesForDay = new SchedulesForDay(person, dayId, scheduleForDays.ToList());
                     person.AssignableSchedulesForDays.Add(dayId, schedulesForDay);
+                    Debug.WriteLine($"Adding day = {dayId} to person {person.Person.Id}");
                 });
             });
         }
