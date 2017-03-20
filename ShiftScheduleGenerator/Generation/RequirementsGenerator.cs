@@ -18,7 +18,6 @@ namespace ShiftScheduleGenerator.Generation
 
         public Requirements GenerateRequirements(List<Person> persons)
         {
-
             switch (Configuration.DifficultyToFulfilRequirements.DifficutyPossilibity)
             {
                 case Difficulty.Possilibity.Possible:

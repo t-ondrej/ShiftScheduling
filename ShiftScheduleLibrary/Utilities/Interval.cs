@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ShiftScheduleLibrary.Utilities
 {
-    public class Interval : IEnumerable<int>
+    public class Interval : IEnumerable<int>, IEquatable<Interval>
     {
         public static readonly Comparer<Interval> ComparerByStart;
 
@@ -59,6 +59,13 @@ namespace ShiftScheduleLibrary.Utilities
             var start = int.Parse(values[0]);
             var end = int.Parse(values[1]);
             return new Interval(start, end);
+        }
+
+        public bool Equals(Interval other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Start == other.Start && End == other.End;
         }
 
         public override bool Equals(object obj)

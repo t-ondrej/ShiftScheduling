@@ -12,10 +12,9 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
 
         private readonly TimeUnitStrategy _timeUnitStrategy;
 
-        public TimeUnitAlgorithm(AlgorithmInput algorithmInput, TimeUnitStrategy timeUnitStrategy)
-            : base(algorithmInput)
+        public TimeUnitAlgorithm(AlgorithmInput algorithmInput): base(algorithmInput)
         {
-            _timeUnitStrategy = timeUnitStrategy;
+            _timeUnitStrategy = algorithmInput.AlgorithmConfiguration.AlgorithmStrategy as TimeUnitStrategy;
         }
 
         public override ResultingSchedule CreateScheduleForPeople()

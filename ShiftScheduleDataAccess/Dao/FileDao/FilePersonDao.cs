@@ -20,9 +20,7 @@ namespace ShiftScheduleDataAccess.Dao.FileDao
             {
                 var fileName = Path.GetFileNameWithoutExtension(file);
 
-                int id;
-
-                if (!int.TryParse(fileName, out id))
+                if (!int.TryParse(fileName, out int id))
                     continue;
 
                 using (var textReader = GetTextReader(file))

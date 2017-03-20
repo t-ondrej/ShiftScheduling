@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ShiftScheduleLibrary.Utilities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 {
@@ -20,7 +21,8 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 
         public IEnumerable<ScheduleForDay> GetSchedulesThatCoverTimeUnit(int timeUnit)
         {
-            return Schedules.Where(schedule => schedule.Intervals.Any(interval => interval.Contains(timeUnit)));
+            return Schedules.Where(schedule => schedule.Intervals.Any(interval =>
+                interval.Contains(timeUnit) && interval.Type == ShiftInterval.IntervalType.Work));
         }
     }
 }
