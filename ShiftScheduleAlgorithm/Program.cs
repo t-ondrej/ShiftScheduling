@@ -34,7 +34,7 @@ namespace ShiftScheduleAlgorithm
                     var persons = dataAccessClient.PersonDao.GetAllPersons();
                     var requirements = dataAccessClient.RequirementsDao.GetRequirements();
                     var algorithmInput = new AlgorithmInput(persons, requirements, null, algorithmConfiguration);
-                    var result = AlgorithmStrategyFactory.ExecuteAlgorithm(algorithmInput);
+                    var result = AlgorithmExecutor.ExecuteAlgorithm(algorithmInput);
                     result.Specification = configFileName;
                     dataAccessClient.ResultingScheduleDao.SaveResultingSchedule(result);
                 }
