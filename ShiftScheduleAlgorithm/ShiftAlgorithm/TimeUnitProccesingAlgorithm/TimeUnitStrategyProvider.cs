@@ -32,8 +32,8 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
             if (classNames.Length != 3)
                 return null;
 
-            var scheduleChooserType = ScheduleChoosers.GetIfExists(classNames[0]);
-            var timeUnitChooserType = TimeUnitChoosers.GetIfExists(classNames[1]);
+            var timeUnitChooserType = TimeUnitChoosers.GetIfExists(classNames[0]);
+            var scheduleChooserType = ScheduleChoosers.GetIfExists(classNames[1]);
             var remaningPeopleChooserType = RemainingPeopleChoosers.GetIfExists(classNames[2]);
 
             if (scheduleChooserType == null || timeUnitChooserType == null || remaningPeopleChooserType == null)
