@@ -111,5 +111,10 @@ namespace ShiftScheduleUtilities
                 dictionary.Remove(key);
             }
         }
+
+        public static TValue GetIfExists<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
+        {
+            return !dictionary.ContainsKey(key) ? default(TValue) : dictionary[key];
+        }
     }
 }

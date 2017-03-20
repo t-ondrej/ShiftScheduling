@@ -34,7 +34,7 @@ namespace ShiftScheduleAlgorithm
                     var persons = dataAccessClient.PersonDao.GetAllPersons();
                     var requirements = dataAccessClient.RequirementsDao.GetRequirements();
                     var algorithmInput = new AlgorithmInput(persons, requirements, null, algorithmConfiguration);
-                    var result = AlgorithmProvider.ExecuteAlgorithm(algorithmInput);
+                    var result = AlgorithmFactory.ExecuteAlgorithm(algorithmInput);
                     result.Specification = configFileName;
                     dataAccessClient.ResultingScheduleDao.SaveResultingSchedule(result);
                 }
@@ -50,7 +50,7 @@ namespace ShiftScheduleAlgorithm
                 (
                     configFile, configuration => new AlgorithmConfiguration
                     {
-                        AlgorithmStrategy = AlgorithmProvider.ParseStrategy(configuration["AlgorithmStrategy"]),
+                        AlgorithmStrategy = AlgorithmFactory.ParseStrategy(configuration["AlgorithmStrategy"]),
                         MaxDailyWork = Convert.ToInt32(configuration["MaxDailyWork"]),
                         MaxConsecutiveWorkHours = Convert.ToInt32(configuration["MaxConsecutiveWorkHours"]),
                         WorkerPauseLength = Convert.ToInt32(configuration["WorkerPauseLength"])

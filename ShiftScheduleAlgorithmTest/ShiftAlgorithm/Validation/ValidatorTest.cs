@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ShiftScheduleAlgorithm.ShiftAlgorithm.Core;
 using ShiftScheduleAlgorithm.ShiftAlgorithm.Validation;

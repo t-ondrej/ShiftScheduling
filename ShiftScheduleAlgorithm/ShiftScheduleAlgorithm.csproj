@@ -48,12 +48,14 @@
     <Compile Include="ShiftAlgorithm\AlgorithmHelpers\ScheduleForDay.cs" />
     <Compile Include="ShiftAlgorithm\AlgorithmHelpers\SchedulesForDay.cs" />
     <Compile Include="ShiftAlgorithm\Core\AlgorithmStrategy.cs" />
+    <Compile Include="ShiftAlgorithm\Core\IAlgorithmStrategyProvider.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\RandomRemainingPeopleChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\RandomScheduleChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\RandomTimeUnitChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\IRemainingPeopleChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\IScheduleChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\ITimeUnitChooser.cs" />
+    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\TimeUnitStrategyProvider.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\TimeUnitStrategy.cs" />
     <Compile Include="ShiftAlgorithm\Validation\AlgorithmValidationResult.cs" />
     <Compile Include="ShiftAlgorithm\Validation\Reports\ConsecutiveIntervals.cs" />
@@ -74,7 +76,7 @@
     <Compile Include="ShiftAlgorithm\Core\Algorithm.cs" />
     <Compile Include="ShiftAlgorithm\Core\AlgorithmConfiguration.cs" />
     <Compile Include="ShiftAlgorithm\Core\AlgorithmInput.cs" />
-    <Compile Include="ShiftAlgorithm\Core\AlgorithmProvider.cs" />
+    <Compile Include="ShiftAlgorithm\Core\AlgorithmFactory.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\TimeUnitAlgorithm.cs" />
     <Compile Include="ShiftAlgorithm\Validation\Reports\WorkerPauseLengthNotMet.cs" />
   </ItemGroup>
