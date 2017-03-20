@@ -63,7 +63,7 @@ namespace ShiftScheduleDataAccess.Dao.FileDao
 
         public void SavePerson(Person person)
         {
-            string fileName = $"{person.Id}.{FolderConstants.Extension}";
+            string fileName = $"{person.Id}{FolderConstants.Extension}";
             var path = Path.Combine(FolderPath, fileName);
 
             using (var textWriter = GetTextWriter(path))
