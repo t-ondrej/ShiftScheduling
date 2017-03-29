@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 {
@@ -32,19 +33,20 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 
         public string GetMessage()
         {
-            var message = "----------------------------------\n\n";
+            var sb = new StringBuilder();
+            sb.Append("----------------------------------\n\n");
 
             foreach (var typeToReports in _reportsDictionary)
             {
-                message = string.Concat(message, $"{typeToReports.Key.Name} :");
+                sb.Append($"{typeToReports.Key.Name} :\n");
 
-                message = typeToReports.Value.Aggregate(message,
-                    (current, report) => string.Concat(current, $"\n{report.GetReportMessage()}"));
-
-                message = string.Concat(message, "\n\n----------------------------------\n\n");
+                typeToReports.Value.Aggregate(sb,
+                    (current, report) => sb.Append($"\n{report.GetReportMessage()}"));
+                
+                sb.Append("\n\n----------------------------------\n\n");
             }
 
-            return message;
+            return sb.ToString();
         }
     }
 }

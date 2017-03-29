@@ -29,5 +29,25 @@ namespace ShiftScheduleLibrary.Utilities
             var type = EnumUtilities.ParseEnum<IntervalType>(splited[1]);
             return new ShiftInterval(interval.Start, interval.End, type);
         }
+
+        protected bool Equals(ShiftInterval other)
+        {
+            return base.Equals(other) && Type == other.Type;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((ShiftInterval) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (base.GetHashCode() * 397) ^ (int) Type;
+            }
+        }
     }
 }

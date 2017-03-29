@@ -67,8 +67,8 @@ namespace ShiftScheduleLibrary.Utilities
         // TODO: rework for generic use
         public static Intervals<ShiftInterval> MergeAndSort(Intervals<ShiftInterval> intervals)
         {
-            var resultIntervals = new Intervals<ShiftInterval>(intervals.IntervalsList);
-            var tempIntervals = new Intervals<ShiftInterval>(intervals.IntervalsList);
+            var resultIntervals = new Intervals<ShiftInterval>(new List<ShiftInterval>(intervals.IntervalsList));
+            var tempIntervals = new Intervals<ShiftInterval>(new List<ShiftInterval>(intervals.IntervalsList));
             var previousInterval = new ShiftInterval(-1, -1, ShiftInterval.IntervalType.Work);
 
             tempIntervals.SortByStart();

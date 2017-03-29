@@ -104,7 +104,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
         {
             IterateAlgorithmOutput((person, schedule, day) =>
             {
-                var tempIntervals = new Intervals<ShiftInterval>(schedule.IntervalsList);
+                var tempIntervals = new Intervals<ShiftInterval>(new List<ShiftInterval>(schedule.IntervalsList));
                 Intervals<ShiftInterval>.MergeAndSort(tempIntervals);
 
                 foreach (var shiftInterval in schedule.IntervalsList)
@@ -121,7 +121,9 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 
         private void CheckRequirementsAreNotMet()
         {
-            var tempRequirements = new Requirements(AlgorithmInput.Requirements.DaysToRequirements);
+            var tempRequirements = new Requirements(
+                new Dictionary<int, Requirements.DailyRequirement>(
+                    AlgorithmInput.Requirements.DaysToRequirements));
 
             IterateAlgorithmOutput((person, schedule, day) =>
             {
@@ -136,6 +138,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
                         var hourToWorkers = tempRequirements.DaysToRequirements[day].HourToWorkers;
                         var shiftWeight = person.DailyAvailabilities[day].ShiftWeight;
 
+                        // TODO: validate whether there's longer output than input
                         // substracts done work from each assigned requirement
                         hourToWorkers[hour] -= shiftWeight;
                     }
@@ -163,7 +166,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
         {
             IterateAlgorithmOutput((person, schedule, day) =>
             {
-                var tempIntervals = new Intervals<ShiftInterval>(schedule.IntervalsList);
+                var tempIntervals = new Intervals<ShiftInterval>(new List<ShiftInterval>(schedule.IntervalsList));
                 tempIntervals.SortByStart();
 
                 var previousInterval = new ShiftInterval(-1, -1, 0);
@@ -175,14 +178,17 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
                     {
                         overlappingIntervals.Add(previousInterval);
                         overlappingIntervals.Add(interval);
-                    }
+                    } 
                     else
                     {
-                        var reportIntervals = new Intervals<ShiftInterval>(tempIntervals.ToList());
+                        if (overlappingIntervals.Count != 0)
+                        {
+                            var reportIntervals = new Intervals<ShiftInterval>(tempIntervals.IntervalsList);
 
-                        _algorithmValidationResult.AddReport(new OverlappingIntervals(reportIntervals, day));
+                            _algorithmValidationResult.AddReport(new OverlappingIntervals(reportIntervals, day));
 
-                        overlappingIntervals = new HashSet<ShiftInterval>();
+                            overlappingIntervals = new HashSet<ShiftInterval>();
+                        }
                     }
                     previousInterval = interval;
                 }
