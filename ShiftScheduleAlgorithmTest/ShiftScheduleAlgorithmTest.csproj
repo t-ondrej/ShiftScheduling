@@ -51,6 +51,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ShiftAlgorithm\AlgorithmHelpers\IntervalsGeneratorTest.cs" />
     <Compile Include="ShiftAlgorithm\Validation\ValidatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,6 +1,9 @@
-﻿namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Core
+﻿using System;
+
+namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Core
 {
-    public class AlgorithmStrategy
+    public abstract class AlgorithmStrategy
     {
+        public abstract Type GetAlgorithmType();
     }
 }

@@ -1,4 +1,5 @@
-﻿using ShiftScheduleAlgorithm.ShiftAlgorithm.Core;
+﻿using System;
+using ShiftScheduleAlgorithm.ShiftAlgorithm.Core;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
 {
@@ -16,6 +17,11 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
             TimeUnitChooser = timeUnitChooser;
             ScheduleChooser = scheduleChooser;
             RemainingPeopleChooser = remainingPeopleChooser;
+        }
+
+        public override Type GetAlgorithmType()
+        {
+            return typeof(TimeUnitAlgorithm);
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ShiftScheduleLibrary.Utilities
 {
-    public class Interval : IEnumerable<int>
+    public class Interval : IEnumerable<int>, IEquatable<Interval>
     {
         public static readonly Comparer<Interval> ComparerByStart;
 

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm;
-using ShiftScheduleLibrary.Entities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Core
 {
-    internal static class AlgorithmFactory
+    internal static class AlgorithmStrategyFactory
     {
         private static readonly IDictionary<string, Type> ProvidersDictionary = new Dictionary<string, Type>
         {
@@ -33,26 +32,6 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Core
             var algorithmProvider = Activator.CreateInstance(type) as IAlgorithmStrategyProvider;
 
             return algorithmProvider?.GetAlgorithm(otherArgs);
-        }
-
-        public static ResultingSchedule ExecuteAlgorithm(AlgorithmInput algorithmInput)
-        {
-            if (algorithmInput == null)
-                throw new ArgumentNullException(nameof(algorithmInput));
-
-            var strategy = algorithmInput.AlgorithmConfiguration.AlgorithmStrategy;
-            Algorithm algorithm = null;
-
-            if (strategy is TimeUnitStrategy timeUnitStrategy)
-            {
-                algorithm = new TimeUnitAlgorithm(algorithmInput, timeUnitStrategy);
-            }
-            // Here will come the other strategies if we code any
-
-            if (algorithm == null)
-                throw new NotImplementedException();
-
-            return algorithm.CreateScheduleForPeople();
         }
     }
 }
