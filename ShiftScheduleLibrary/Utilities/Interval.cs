@@ -30,7 +30,7 @@ namespace ShiftScheduleLibrary.Utilities
 
         public static bool AreOverlapping(Interval interval1, Interval interval2)
         {
-            return Math.Min(interval1.End, interval2.End) <= Math.Max(interval1.Start, interval2.Start);
+            return Math.Min(interval1.End, interval2.End) >= Math.Max(interval1.Start, interval2.Start);
         }
 
         public bool Overlaps(Interval interval)
@@ -61,7 +61,7 @@ namespace ShiftScheduleLibrary.Utilities
             return new Interval(start, end);
         }
 
-        protected bool Equals(Interval other)
+        public bool Equals(Interval other)
         {
             return Start == other.Start && End == other.End;
         }

@@ -23,7 +23,7 @@ namespace ShiftScheduleLibrary.Utilities
             IntervalsList.Sort(Interval.ComparerByEnd);
         }
 
-        public int GetLengthInTime()
+        public int GetLength()
         {
             return IntervalsList.Sum(interval => interval.Count);
         }
@@ -35,12 +35,23 @@ namespace ShiftScheduleLibrary.Utilities
         {
             return IntervalsList.Any(subInterval.IsSubinterval);
         }
+        
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return IntervalsList.GetEnumerator();
+        }
+
 
         public static Intervals<Interval> MergeAndSort(Intervals<Interval> intervals)
         {
             var resultIntervals = new Intervals<Interval>(intervals.IntervalsList);
             var tempIntervals = new Intervals<Interval>(intervals.IntervalsList);
-            var previousInterval = new Interval(-1, -1);
+            var previousInterval = new Interval(-2, -2);
 
             tempIntervals.SortByStart();
 
@@ -69,7 +80,7 @@ namespace ShiftScheduleLibrary.Utilities
         {
             var resultIntervals = new Intervals<ShiftInterval>(new List<ShiftInterval>(intervals.IntervalsList));
             var tempIntervals = new Intervals<ShiftInterval>(new List<ShiftInterval>(intervals.IntervalsList));
-            var previousInterval = new ShiftInterval(-1, -1, ShiftInterval.IntervalType.Work);
+            var previousInterval = new ShiftInterval(-2, -2, ShiftInterval.IntervalType.Work);
 
             tempIntervals.SortByStart();
 
@@ -91,16 +102,6 @@ namespace ShiftScheduleLibrary.Utilities
 
             resultIntervals.SortByStart();
             return resultIntervals;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return IntervalsList.GetEnumerator();
         }
     }
 }

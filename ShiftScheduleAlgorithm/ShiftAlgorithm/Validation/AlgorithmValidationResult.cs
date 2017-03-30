@@ -31,6 +31,19 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
             _reportsDictionary[type].Add(report);
         }
 
+        //public string GetMessage<T>() where T : Report
+        //{
+        //    var reports = GetReports<T>();
+
+        //    var sb = new StringBuilder();
+        //    sb.Append("----------------------------------\n\n");
+        //    foreach (var report in reports)
+        //    {
+        //        sb.Append(typeof(T) + "\n\n");
+
+        //    }
+        //    return null;
+        //}
         public string GetMessage()
         {
             var sb = new StringBuilder();
@@ -38,7 +51,13 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 
             foreach (var typeToReports in _reportsDictionary)
             {
-                sb.Append($"{typeToReports.Key.Name} :\n");
+                if (typeToReports.Value.Count < 1)
+                {
+                    continue;
+                }
+
+                sb.Append($"{typeToReports.Key.Name} :\n\n" +
+                          $"Seriousness: {typeToReports.Value[0].ReportSeriousness}\n");
 
                 typeToReports.Value.Aggregate(sb,
                     (current, report) => sb.Append($"\n{report.GetReportMessage()}"));

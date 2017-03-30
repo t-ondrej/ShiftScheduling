@@ -22,7 +22,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation.Reports
             var message = Intervals.Aggregate("Intervals ",
                 (current, interval) => current + $"({interval.Start}, {interval.End}) ");
 
-            return $"{message}overlap on day {Day}";
+            return $"{message} overlap on day {Day} and create a chance of other errors on this day";
         }
     }
 }

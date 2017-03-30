@@ -63,9 +63,9 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
         {
             IterateAlgorithmOutput((person, schedule, day) =>
             {
-                var dailyWorkTime = schedule.GetLengthInTime();
-
-                if (dailyWorkTime > person.MaxWork)
+                var dailyWorkTime = schedule.GetLength();
+                
+                if (dailyWorkTime > AlgorithmInput.AlgorithmConfiguration.MaxDailyWork)
                     _algorithmValidationResult.AddReport(new MaxDailyWorkNotMet(person, day));
             });
         }
@@ -77,7 +77,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
             // map persons montly work he got assigned
             IterateAlgorithmOutput((person, schedule, day) =>
             {
-                var dailyWorkTime = schedule.GetLengthInTime();
+                var dailyWorkTime = schedule.GetLength();
 
                 if (!personToMonthlyTime.ContainsKey(person))
                 {
@@ -104,10 +104,9 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
         {
             IterateAlgorithmOutput((person, schedule, day) =>
             {
-                var tempIntervals = new Intervals<ShiftInterval>(new List<ShiftInterval>(schedule.IntervalsList));
-                Intervals<ShiftInterval>.MergeAndSort(tempIntervals);
+                var tempIntervals  = Intervals<ShiftInterval>.MergeAndSort(schedule);
 
-                foreach (var shiftInterval in schedule.IntervalsList)
+                foreach (var shiftInterval in tempIntervals)
                 {
                     if (shiftInterval.Type == ShiftInterval.IntervalType.Pause) continue;
 
@@ -146,7 +145,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
             });
 
             // if there is enough workers, more or equal worker shift weight were 
-            // substracted from hourly monthlyRequirementsOld 
+            // substracted from hourly monthlyRequirements
             foreach (var tempRequirement in tempRequirements.DaysToRequirements)
             {
                 int day = tempRequirement.Key;
@@ -181,9 +180,9 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
                     } 
                     else
                     {
-                        if (overlappingIntervals.Count != 0)
+                        if (overlappingIntervals.Count > 0)
                         {
-                            var reportIntervals = new Intervals<ShiftInterval>(tempIntervals.IntervalsList);
+                            var reportIntervals = new Intervals<ShiftInterval>(overlappingIntervals.ToList());
 
                             _algorithmValidationResult.AddReport(new OverlappingIntervals(reportIntervals, day));
 
@@ -229,7 +228,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 
                         if (IsWork(middleInterval))
                         {
-                            if (intervals.GetLengthInTime() >
+                            if (intervals.GetLength() >
                                 AlgorithmInput.AlgorithmConfiguration.MaxConsecutiveWorkHours)
                             {
                                 _algorithmValidationResult.AddReport(new ImproperPauseScheduling(person, day));
@@ -238,7 +237,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 
                         if (IsPause(middleInterval))
                         {
-                            if (intervals.GetLengthInTime() <
+                            if (intervals.GetLength() <
                                 AlgorithmInput.AlgorithmConfiguration.MaxConsecutiveWorkHours)
                             {
                                 _algorithmValidationResult.AddReport(new UnnecessaryPauseScheduling(person, day));

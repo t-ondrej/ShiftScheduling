@@ -37,7 +37,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 
         public int GetTotalWork()
         {
-            return Intervals.GetLengthInTime();
+            return Intervals.GetLength();
         }
     }
 }

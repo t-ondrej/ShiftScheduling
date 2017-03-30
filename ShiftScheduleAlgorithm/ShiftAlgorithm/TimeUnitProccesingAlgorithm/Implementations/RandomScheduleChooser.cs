@@ -20,7 +20,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm.Impl
                 select assignableSchedules[dayId].GetSchedulesThatCoverTimeUnit(unitId).ToList()
                 into possibleUnits
                 where possibleUnits.Any()
-                select possibleUnits.MinBy(schedule => -schedule.Intervals.GetLengthInTime()).First()
+                select possibleUnits.MinBy(schedule => -schedule.Intervals.GetLength()).First()
             ).FirstOrDefault();
         }
     }
