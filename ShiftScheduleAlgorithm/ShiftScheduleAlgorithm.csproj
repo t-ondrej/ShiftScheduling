@@ -50,6 +50,8 @@
     <Compile Include="ShiftAlgorithm\Core\AlgorithmExecutor.cs" />
     <Compile Include="ShiftAlgorithm\Core\AlgorithmStrategy.cs" />
     <Compile Include="ShiftAlgorithm\Core\IAlgorithmStrategyProvider.cs" />
+    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\AcuteTimeUnitChooser.cs" />
+    <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\ProductiveScheduleChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\RandomRemainingPeopleChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\RandomScheduleChooser.cs" />
     <Compile Include="ShiftAlgorithm\TimeUnitProccesingAlgorithm\Implementations\RandomTimeUnitChooser.cs" />

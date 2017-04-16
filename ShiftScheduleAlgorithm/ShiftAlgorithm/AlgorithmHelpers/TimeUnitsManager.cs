@@ -49,7 +49,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 
                 pair.Value.HourToWorkers.ForEach((workers, unitId) =>
                 {
-                    var timeUnit = new TimeUnit(dayId, unitId, workers);
+                    var timeUnit = new TimeUnit(dayId, unitId, workers, ComputeAcuteness(dayId, unitId));
                     AllTimeUnits.Add(timeUnit);
                 });
             });
@@ -112,6 +112,17 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
                     Debug.WriteLine($"Adding day = {dayId} to person {person.Person.Id}");
                 });
             });
+        }
+
+        private double ComputeAcuteness(int dayId, int unitId)
+        {
+            var shiftWeightsSum = 0d;
+
+            ScheduledPersons.Where(person => person.ShiftWeights.ContainsKey(dayId))
+                .ForEach(person => shiftWeightsSum += person.ShiftWeights[dayId]);
+
+
+            return shiftWeightsSum / AlgorithmInput.Requirements.DaysToRequirements[dayId].HourToWorkers[unitId];
         }
 
     }

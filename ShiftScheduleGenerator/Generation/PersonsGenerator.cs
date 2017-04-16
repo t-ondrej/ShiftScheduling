@@ -70,7 +70,7 @@ namespace ShiftScheduleGenerator.Generation
         private double GenerateShiftWeight()
         {
             var unitCount = Configuration.NumberOfShiftWeightValues;
-            return (double) Random.Next(0, unitCount + 1) / unitCount;
+            return (double) Random.Next(1, unitCount + 1) / unitCount;
         }
 
         private Interval GenerateInterval()

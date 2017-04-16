@@ -20,6 +20,8 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
         /// </summary>
         public double RequiredWorkAmount { get; }
 
+        public double Acuteness { get; }
+
         /// <summary>
         /// Gets the total sum of the current amount of the work that we have already assigned.
         /// </summary>
@@ -46,11 +48,12 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
         /// <param name="dayId">The id of the day</param>
         /// <param name="unitOfDay">The id of the part of the day</param>
         /// <param name="requiredWorkAmount">The amount of work from requirements</param>
-        public TimeUnit(int dayId, int unitOfDay, double requiredWorkAmount)
+        public TimeUnit(int dayId, int unitOfDay, double requiredWorkAmount, double acuteness)
         {
             DayId = dayId;
             UnitOfDay = unitOfDay;
             RequiredWorkAmount = requiredWorkAmount;
+            Acuteness = acuteness;
             CurrentSchedules = new List<ScheduleForDay>();
         }
 

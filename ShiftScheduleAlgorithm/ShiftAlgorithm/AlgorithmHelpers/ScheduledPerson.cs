@@ -42,7 +42,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
                 throw new InvalidOperationException();
 
             AssignedDays.Add(scheduleForDay.DayId, scheduleForDay);
-            AssignableSchedulesForDays.Remove(dayId);
+        //  AssignableSchedulesForDays.Remove(dayId);
             CurrentWorkForMonth += workAmountToBeAdded;
             ResolveUnassignableSchedules();
         }
@@ -52,6 +52,9 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
             foreach (var schedulesForDay in AssignableSchedulesForDays.Values)
             {
                 schedulesForDay.Schedules.RemoveAll(schedule => schedule.GetTotalWork() > CurrentWorkLeft);
+
+                if (schedulesForDay.Schedules.Count == 0)
+                    AssignableSchedulesForDays.Remove(schedulesForDay.DayId);
             }
         }
     }
