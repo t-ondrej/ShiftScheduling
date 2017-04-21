@@ -116,11 +116,8 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 
         private double ComputeAcuteness(int dayId, int unitId)
         {
-            var shiftWeightsSum = 0d;
-
-            ScheduledPersons.Where(person => person.ShiftWeights.ContainsKey(dayId))
-                .ForEach(person => shiftWeightsSum += person.ShiftWeights[dayId]);
-
+            var shiftWeightsSum = AlgorithmInput.Persons.Where(person => person.DailyAvailabilities.ContainsKey(dayId))
+                .Sum(person => person.DailyAvailabilities[dayId].ShiftWeight);
 
             return shiftWeightsSum / AlgorithmInput.Requirements.DaysToRequirements[dayId].HourToWorkers[unitId];
         }

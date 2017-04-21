@@ -38,7 +38,7 @@ namespace ShiftScheduleUtilities
                     var candidateProjected = selector(candidate);
 
                     if (comparer.Compare(candidateProjected, minKey) < 0)
-                        minKey = candidateProjected;
+                         minKey = candidateProjected;
                 }
 
                 sourceIterator.Reset();

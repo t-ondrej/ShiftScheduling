@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ShiftScheduleLibrary.Entities;
+using ShiftScheduleUtilities;
+using System.Linq;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 {
@@ -33,15 +35,19 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
         {
             var dayId = scheduleForDay.DayId;
 
-            if (AssignedDays.ContainsKey(dayId))
-                throw new InvalidOperationException();
+         //   if (AssignedDays.ContainsKey(dayId))
+         //       throw new InvalidOperationException();
 
             var workAmountToBeAdded = scheduleForDay.GetTotalWork();
 
             if (workAmountToBeAdded + CurrentWorkForMonth > TotalWorkForMonth)
                 throw new InvalidOperationException();
 
-            AssignedDays.Add(scheduleForDay.DayId, scheduleForDay);
+            if (AssignedDays.ContainsKey(dayId))           
+                AssignedDays[dayId] = scheduleForDay;
+            else
+                AssignedDays.Add(dayId, scheduleForDay);
+
         //  AssignableSchedulesForDays.Remove(dayId);
             CurrentWorkForMonth += workAmountToBeAdded;
             ResolveUnassignableSchedules();
@@ -51,11 +57,18 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
         {
             foreach (var schedulesForDay in AssignableSchedulesForDays.Values)
             {
-                schedulesForDay.Schedules.RemoveAll(schedule => schedule.GetTotalWork() > CurrentWorkLeft);
+                if (AssignedDays.ContainsKey(schedulesForDay.DayId))
+                {
+                    var assignedSchedule = AssignedDays[schedulesForDay.DayId];
+                    schedulesForDay.Schedules.RemoveAll(schedule => schedule.GetTotalWork() <= assignedSchedule.GetTotalWork() 
+                                || (!schedule.Intervals.ContainsSubInterval(assignedSchedule.Intervals.First())
+                                        && !schedule.Intervals.ContainsSubInterval(assignedSchedule.Intervals.Last())));
+                }
 
-                if (schedulesForDay.Schedules.Count == 0)
-                    AssignableSchedulesForDays.Remove(schedulesForDay.DayId);
+                schedulesForDay.Schedules.RemoveAll(schedule => schedule.GetTotalWork() > CurrentWorkLeft);
             }
+            
+            AssignableSchedulesForDays.RemoveAll(schedule => schedule.Value.Schedules.Count == 0);
         }
     }
 }

@@ -12,12 +12,14 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
     {
         private static readonly IDictionary<string, Type> ScheduleChoosers = new Dictionary<string, Type>
         {
-            {"RandomScheduleChooser", typeof(RandomScheduleChooser)}
+            {"RandomScheduleChooser", typeof(RandomScheduleChooser)},
+            {"ProductiveScheduleChooser", typeof(ProductiveScheduleChooser)}
         };
 
         private static readonly IDictionary<string, Type> TimeUnitChoosers = new Dictionary<string, Type>
         {
-            {"RandomTimeUnitChooser", typeof(RandomTimeUnitChooser)}
+            {"RandomTimeUnitChooser", typeof(RandomTimeUnitChooser)},
+            {"AcuteTimeUnitChooser", typeof(AcuteTimeUnitChooser)}
         };
 
         private static readonly IDictionary<string, Type> RemainingPeopleChoosers = new Dictionary<string, Type>
