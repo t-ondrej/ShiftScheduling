@@ -38,7 +38,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
             var start = scheduleForDay.Intervals.First().Start;
             var end = scheduleForDay.Intervals.Last().End;
 
-            // Assign the scheduleForDay for the all timeUnits it covers
+            // Assign the scheduleForDay to the all timeUnits it covers
             for (var unit = start; unit <= end; unit++)
             {
                 var timeUnit = AllTimeUnits.Find(t => t.DayId == dayId && t.UnitOfDay == unit);
