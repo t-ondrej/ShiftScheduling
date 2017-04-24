@@ -9,7 +9,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm.Impl
         public TimeUnit FindTimeUnitToBeProccessed(TimeUnitsManager timeUnitsManager)
         {
             return timeUnitsManager.AllTimeUnits
-                   .Where(timeUnit => !timeUnit.Fulfilled && timeUnit.Fulfillable)
+                   .Where(timeUnit => timeUnit.Acuteness > 0 && !timeUnit.Fulfilled && timeUnit.Fulfillable)
                    .OrderBy(timeUnit => timeUnit.Acuteness)
                    .FirstOrDefault();
         }

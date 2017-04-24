@@ -64,8 +64,35 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
         public void AssignSchedule(ScheduleForDay scheduleForDay)
         {
             Debug.Assert(scheduleForDay.DayId == DayId);
-            var workAmount = scheduleForDay.GetShiftWeightForUnit(UnitOfDay);
-            SumOfCurrentWorkAmount += workAmount;
+            ScheduleForDay foo = null;       
+
+            // Take the person whom the scheduleForDay belongs to
+            var person = scheduleForDay.ScheduledPerson.Person;
+            // Iterate through all schedules that were assigned to the TimeUnit
+            foreach (var currSchedule in CurrentSchedules)
+            {
+                // If the person already works during the timeUnit
+                if (currSchedule.ScheduledPerson.Person.Id == person.Id)
+                {
+                    foo = currSchedule;
+                    break;
+                }                   
+            }
+
+            // If the person doesn't works during the timeUnit
+            if (foo == null)
+            {
+                // Add his workAmount to the sum 
+                var workAmount = scheduleForDay.GetShiftWeightForUnit(UnitOfDay);
+                SumOfCurrentWorkAmount += workAmount;
+            }
+            else
+                // Remove the old schedule since it will be replaced by the new one
+                CurrentSchedules.Remove(foo);
+
+            // Assign the new schedule to the TimeUnit
+            CurrentSchedules.Add(scheduleForDay);
+            // Assign the schedule to person
             scheduleForDay.ScheduledPerson.Assign(scheduleForDay);
         }
     }
