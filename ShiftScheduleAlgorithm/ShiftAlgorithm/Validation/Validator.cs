@@ -76,7 +76,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
 
             // map persons montly work he got assigned
             IterateAlgorithmOutput((person, schedule, day) =>
-            {
+            {              
                 var dailyWorkTime = schedule.GetLength();
 
                 if (!personToMonthlyTime.ContainsKey(person))

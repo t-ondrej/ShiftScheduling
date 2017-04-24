@@ -3,6 +3,7 @@ using ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers;
 using ShiftScheduleAlgorithm.ShiftAlgorithm.Core;
 using ShiftScheduleLibrary.Entities;
 using ShiftScheduleLibrary.Utilities;
+using System.Diagnostics;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
 {
@@ -41,7 +42,8 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
                     continue;
                 }
 
-                timeUnit.AssignSchedule(schedule);
+                // Assign schedule to the all TimeUnits it covers
+                _timeUnitsManager.AssignScheduleToTimeUnits(schedule);
             }
 
             _timeUnitStrategy.RemainingPeopleChooser.AssignScheduleToRemainingPeople(_timeUnitsManager);
@@ -72,6 +74,8 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
                     dailySchedules[dayId].PersonIdToDailySchedule.Add(personId, intervals);
                 }
             });
+
+            _timeUnitsManager.ScheduledPersons.ForEach(person => Debug.WriteLine($"Person {person.Person.Id} works {person.CurrentWorkForMonth}"));
 
             return new ResultingSchedule(dailySchedules);
         }

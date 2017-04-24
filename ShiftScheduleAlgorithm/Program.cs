@@ -6,6 +6,8 @@ using System.Linq;
 using ShiftScheduleAlgorithm.ShiftAlgorithm.Core;
 using ShiftScheduleDataAccess.Dao;
 using ShiftScheduleUtilities;
+using ShiftScheduleAlgorithm.ShiftAlgorithm.Validation;
+using System.Diagnostics;
 
 namespace ShiftScheduleAlgorithm
 {
@@ -37,6 +39,11 @@ namespace ShiftScheduleAlgorithm
                     var result = AlgorithmExecutor.ExecuteAlgorithm(algorithmInput);
                     result.Specification = configFileName;
                     dataAccessClient.ResultingScheduleDao.SaveResultingSchedule(result);
+
+                    var validator = new Validator(algorithmInput, result);
+                    var validationOutput = validator.Validate();
+                    var msg = validationOutput.GetMessage();
+                    Debug.WriteLine(msg);
                 }
             }
         }

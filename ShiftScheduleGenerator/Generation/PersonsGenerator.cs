@@ -11,7 +11,7 @@ namespace ShiftScheduleGenerator.Generation
 
         public GeneratorConfiguration Configuration { get; }
 
-        public IEnumerable<int> WorkingDays { get;  } 
+        public List<int> WorkingDays { get;  } 
 
         public PersonsGenerator(GeneratorConfiguration configuration)
         {
@@ -25,7 +25,7 @@ namespace ShiftScheduleGenerator.Generation
 
             for (var i = 0; i < Configuration.EmployeeCount; i++)
             {
-                var person = CreatePerson(i);
+                var person = CreatePerson(i);              
                 persons.Add(person);
             }
 
@@ -43,34 +43,41 @@ namespace ShiftScheduleGenerator.Generation
         private IDictionary<int, Person.DailyAvailability> GenerateDailyAvailabilities()
         {
             var dailyAvailabilities = new Dictionary<int, Person.DailyAvailability>();
+            var shiftWeights = GenerateShiftWeights();
 
-            foreach (var day in WorkingDays)
-            {
-                var dailyAvailability = GenerateDailyAvailability();
+            WorkingDays.ForEach(day => {
+                var dailyAvailability = GenerateDailyAvailability(shiftWeights[day]);
                 dailyAvailabilities.Add(day, dailyAvailability);
-            }
+            });
 
             return dailyAvailabilities;
         }
 
-        private Person.DailyAvailability GenerateDailyAvailability()
+        private Person.DailyAvailability GenerateDailyAvailability(double shiftWeight)
         {
             var availability = GenerateInterval();
 
-            var leftTolerance = Random.NextDouble() < Configuration.ToleranceAssignmentProbability ? 
-                                    Random.Next(0, availability.Start + 1) : 0;
-            var rightTolerance = Random.NextDouble() < Configuration.ToleranceAssignmentProbability ? 
-                                    Random.Next(0, Configuration.WorkingTimePerDay - availability.End) : 0;
+            var leftTolerance = Random.NextDouble() < Configuration.ToleranceAssignmentProbability 
+                ? Random.Next(0, availability.Start + 1) 
+                : 0;
 
-            var shiftWeight = GenerateShiftWeight();
+            var rightTolerance = Random.NextDouble() < Configuration.ToleranceAssignmentProbability 
+                ? Random.Next(0, Configuration.WorkingTimePerDay - availability.End) 
+                : 0;
 
             return new Person.DailyAvailability(availability, leftTolerance, rightTolerance, shiftWeight);
         }
 
-        private double GenerateShiftWeight()
+        private IDictionary<int, double> GenerateShiftWeights()
         {
-            var unitCount = Configuration.NumberOfShiftWeightValues;
-            return (double) Random.Next(1, unitCount + 1) / unitCount;
+            var shiftWeights = new Dictionary<int, double>();
+
+            WorkingDays.ForEach(day => {
+                var unitCount = Configuration.NumberOfShiftWeightValues;
+                shiftWeights.Add(day, (double)Random.Next(1, unitCount + 1) / unitCount);
+            });
+        
+            return shiftWeights;
         }
 
         private Interval GenerateInterval()
@@ -81,18 +88,14 @@ namespace ShiftScheduleGenerator.Generation
             return new Interval(start, end);
         }
 
-        private IEnumerable<int> GenerateWorkingDays()
+        private List<int> GenerateWorkingDays()
         {
             var days = new List<int>();
 
-            for (var i = 0; i < Configuration.ScheduleDaysCount; i++)
-            {
-                if (Random.NextDouble() < Configuration.DayAssignmentDensity)
-                {
+            for (var i = 0; i < Configuration.ScheduleDaysCount; i++)           
+                if (Random.NextDouble() < Configuration.DayAssignmentDensity)               
                     days.Add(i);
-                }
-            }
-
+                         
             return days;
         }
     }

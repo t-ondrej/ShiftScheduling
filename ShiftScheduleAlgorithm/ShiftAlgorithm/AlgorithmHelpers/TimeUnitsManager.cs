@@ -32,6 +32,20 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
             CreateSchedulesForPersons();
         }
 
+        public void AssignScheduleToTimeUnits(ScheduleForDay scheduleForDay)
+        {
+            var dayId = scheduleForDay.DayId;
+            var start = scheduleForDay.Intervals.First().Start;
+            var end = scheduleForDay.Intervals.Last().End;
+
+            // Assign the scheduleForDay to the all timeUnits it covers
+            for (var unit = start; unit <= end; unit++)
+            {
+                var timeUnit = AllTimeUnits.Find(t => t.DayId == dayId && t.UnitOfDay == unit);
+                timeUnit.AssignSchedule(scheduleForDay);
+            }
+        }
+
         private int MaxNumberOfHours()
         {
             return AlgorithmInput.Requirements.DaysToRequirements.Values
@@ -49,7 +63,8 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 
                 pair.Value.HourToWorkers.ForEach((workers, unitId) =>
                 {
-                    var timeUnit = new TimeUnit(dayId, unitId, workers, ComputeAcuteness(dayId, unitId));
+                    var acuteness = ComputeAcuteness(dayId, unitId);
+                    var timeUnit = new TimeUnit(dayId, unitId, workers, acuteness);
                     AllTimeUnits.Add(timeUnit);
                 });
             });
@@ -116,13 +131,16 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 
         private double ComputeAcuteness(int dayId, int unitId)
         {
-            var shiftWeightsSum = 0d;
+            var shiftWeightsSum = AlgorithmInput.Persons
+                .Where(person => person.DailyAvailabilities[dayId].Availability.Start - person.DailyAvailabilities[dayId].LeftTolerance <= unitId
+                        && person.DailyAvailabilities[dayId].Availability.End + person.DailyAvailabilities[dayId].RightTolerance >= unitId)
+                .Sum(person => person.DailyAvailabilities[dayId].ShiftWeight);
 
-            ScheduledPersons.Where(person => person.ShiftWeights.ContainsKey(dayId))
-                .ForEach(person => shiftWeightsSum += person.ShiftWeights[dayId]);
+            var workersRequirement = AlgorithmInput.Requirements.DaysToRequirements[dayId].HourToWorkers[unitId];
 
-
-            return shiftWeightsSum / AlgorithmInput.Requirements.DaysToRequirements[dayId].HourToWorkers[unitId];
+            return workersRequirement > 0 
+                ? shiftWeightsSum / workersRequirement 
+                : -1;
         }
 
     }
