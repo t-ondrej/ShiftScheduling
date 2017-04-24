@@ -2,6 +2,7 @@
 using System.Linq;
 using ShiftScheduleAlgorithm.ShiftAlgorithm.Core;
 using ShiftScheduleLibrary.Utilities;
+using ShiftScheduleUtilities;
 
 namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
 {
@@ -93,6 +94,14 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
             return _intervalLengthToIntervals.ContainsKey(i)
                 ? _intervalLengthToIntervals[i]
                 : new List<Intervals<ShiftInterval>>();
+        }
+
+        public IEnumerable<Intervals<ShiftInterval>> GetIntervalsWithinBoundaries(int start, int end)
+        {
+            return _intervalLengthToIntervals.Values
+                       .SelectMany(value => value.Where(intervals => intervals.IntervalsList.First().Start >= start
+                                                           && intervals.IntervalsList.Last().End <= end)
+                                                 .Select(intervals => intervals));
         }
     }
 }
