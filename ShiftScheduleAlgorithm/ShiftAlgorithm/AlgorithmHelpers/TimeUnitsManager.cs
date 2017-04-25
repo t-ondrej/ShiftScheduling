@@ -117,7 +117,12 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
                     var shiftWeight = person.ShiftWeights[dayId];
                     var lengthOfDay = _dayIdToUnitsCount[dayId];
 
-                    var scheduleForDays = _intervalsGenerator.GetIntervalsWithLengthAtMost(lengthOfDay).Select
+                    var personDailyAvailability = person.Person.DailyAvailabilities[dayId];
+
+                    var personsWorkingDayStart = personDailyAvailability.Availability.Start - personDailyAvailability.LeftTolerance;
+                    var personsWorkingDayEnd = personDailyAvailability.Availability.End + personDailyAvailability.RightTolerance;
+
+                    var scheduleForDays = _intervalsGenerator.GetIntervalsWithinBoundaries(personsWorkingDayStart, personsWorkingDayEnd).Select
                     (
                         intervals => new ScheduleForDay(person, dayId, shiftWeight, intervals)
                     );
