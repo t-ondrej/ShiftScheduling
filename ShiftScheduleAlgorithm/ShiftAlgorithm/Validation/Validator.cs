@@ -155,7 +155,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation
                 {
                     if (workers > 0)
                     {
-                        _algorithmValidationResult.AddReport(new RequirementsAreNotMet(day, hour));
+                        _algorithmValidationResult.AddReport(new RequirementsAreNotMet(day, hour, workers));
                     }
                 });
             }

@@ -43,7 +43,8 @@ namespace ShiftScheduleAlgorithm
                     var validator = new Validator(algorithmInput, result);
                     var validationOutput = validator.Validate();
                     var msg = validationOutput.GetMessage();
-                    Debug.WriteLine(msg);
+                    Debug.WriteLine($"Working folder:  {dataAccessClient.WorkingFolder} | Report: {msg}");
+                    
                 }
             }
         }

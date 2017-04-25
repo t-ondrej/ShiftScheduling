@@ -20,6 +20,9 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers
         /// </summary>
         public double RequiredWorkAmount { get; }
 
+        /// <summary>
+        /// Gets the ratio of sum of all worker's shiftweight, that can work during the TimeUnit, to Requirements for the TimeUnit
+        /// </summary>
         public double Acuteness { get; }
 
         /// <summary>

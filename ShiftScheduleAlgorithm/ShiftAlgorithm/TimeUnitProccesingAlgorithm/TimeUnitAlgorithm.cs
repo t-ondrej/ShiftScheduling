@@ -75,7 +75,8 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
                 }
             });
 
-            _timeUnitsManager.ScheduledPersons.ForEach(person => Debug.WriteLine($"Person {person.Person.Id} works {person.CurrentWorkForMonth}"));
+            _timeUnitsManager.ScheduledPersons.ForEach(person => Debug.WriteLine($"Person {person.Person.Id} " +
+                    $"works {person.CurrentWorkForMonth} hours out of {person.TotalWorkForMonth}"));
 
             return new ResultingSchedule(dailySchedules);
         }
