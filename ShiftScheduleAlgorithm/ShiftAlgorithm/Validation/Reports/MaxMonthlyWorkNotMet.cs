@@ -16,7 +16,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.Validation.Reports
 
         public override string GetReportMessage()
         {
-            return $"Person {Person.Id} works more than he can in a month";
+            return $"Person {Person.Id} doesn't work the required amount during this month";
         }
     }
 }
