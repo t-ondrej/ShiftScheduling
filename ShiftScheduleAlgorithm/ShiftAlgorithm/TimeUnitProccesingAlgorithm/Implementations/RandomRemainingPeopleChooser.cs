@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using ShiftScheduleAlgorithm.ShiftAlgorithm.AlgorithmHelpers;
 using ShiftScheduleAlgorithm.ShiftAlgorithm.Core;
@@ -16,67 +17,70 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm.Impl
 
             foreach (var scheduledPerson in timeUnitsManager.ScheduledPersons)
             {
-                while (scheduledPerson.CurrentWorkLeft > 0)
+                if (scheduledPerson.CurrentWorkLeft <= 0) continue;
+
+                var dailyAvailibilities = scheduledPerson.Person.DailyAvailabilities;
+
+                foreach (var dayToSchedule in scheduledPerson.AssignedDays)
                 {
-                    var dailyAvailibilities = scheduledPerson.Person.DailyAvailabilities;
+                    if (!dailyAvailibilities.ContainsKey(dayToSchedule.Key)) continue;
 
-                    foreach (var dayToSchedule in scheduledPerson.AssignedDays)
-                    {
-                        if (!dailyAvailibilities.ContainsKey(dayToSchedule.Key)) continue;
-                        
-                        var assignedIntervals = dayToSchedule.Value.Intervals;
+                    var assignedIntervals = dayToSchedule.Value.Intervals;
 
-                        if (assignedIntervals.Count() >= algorithmConfiguration.MaxDailyWork) continue;
+                    if (assignedIntervals.Count() >= algorithmConfiguration.MaxDailyWork) continue;
 
-                        var availibleInterval = dailyAvailibilities[dayToSchedule.Key].Availability;
+                    var availibleInterval = dailyAvailibilities[dayToSchedule.Key].Availability;
 
-                        var sortedIntervals = new Intervals<ShiftInterval>(assignedIntervals.IntervalsList);
+                    var sortedIntervals = new Intervals<ShiftInterval>(assignedIntervals.IntervalsList);
 
-                        sortedIntervals.SortByStart();
+                    sortedIntervals.SortByStart();
 
-                        // Prolongation of the first work interval for this day
+                    // Prolongation of the first work interval for this day
 
-                        ShiftInterval firstInterval = sortedIntervals.IntervalsList[0];
+                    ShiftInterval firstInterval = sortedIntervals.IntervalsList[0];
 
-                        if (firstInterval.Count >= consecutiveWork) continue;
+                    if (firstInterval.Count >= consecutiveWork) continue;
 
-                        int maxProlongation = Math.Max(consecutiveWork - firstInterval.Count,
-                            algorithmConfiguration.MaxDailyWork - assignedIntervals.Count());
+                    int maxProlongation = Math.Max(consecutiveWork - firstInterval.Count,
+                        algorithmConfiguration.MaxDailyWork - assignedIntervals.Count());
 
-                        int bestNewStart = Math.Min(availibleInterval.Start, firstInterval.Start);
+                    int bestNewStart = Math.Min(availibleInterval.Start, firstInterval.Start);
 
-                        int newStart = Math.Max(bestNewStart, firstInterval.Start - maxProlongation);
+                    int newStart = Math.Max(bestNewStart, firstInterval.Start - maxProlongation);
 
-                        var newShiftInterval = new ShiftInterval(newStart, firstInterval.End, firstInterval.Type);
+                    var newShiftInterval = new ShiftInterval(newStart, firstInterval.End, firstInterval.Type);
 
-                        assignedIntervals.IntervalsList.Remove(firstInterval);
-                        assignedIntervals.IntervalsList.Add(newShiftInterval);
+                    Debug.WriteLine($"Prolonging the beginning interval {firstInterval.ToString()} to {newShiftInterval.ToString()}");
 
-                        // Prolongation of the last work interval for this day
+                    assignedIntervals.IntervalsList.Remove(firstInterval);
+                    assignedIntervals.IntervalsList.Add(newShiftInterval);
 
-                        ShiftInterval lastInterval = sortedIntervals.IntervalsList[assignedIntervals.Count() - 1];
+                    // Prolongation of the last work interval for this day
 
-                        if (assignedIntervals.Count() >= algorithmConfiguration.MaxDailyWork) continue;
+                    ShiftInterval lastInterval = sortedIntervals.IntervalsList[assignedIntervals.Count() - 1];
 
-                        if (lastInterval.Count >= consecutiveWork) continue;
-                        
-                        // best new end of last interval without the consideration of 
-                        // algorithm configuration
-                        var bestNewEnd = Math.Max(availibleInterval.End, lastInterval.End);
+                    if (assignedIntervals.Count() >= algorithmConfiguration.MaxDailyWork) continue;
 
-                        // taking algorithm configuration into account
-                        // max consecutive daily work and max daily work cannot be violated
+                    if (lastInterval.Count >= consecutiveWork) continue;
 
-                        maxProlongation = Math.Max(consecutiveWork - lastInterval.Count,
-                            algorithmConfiguration.MaxDailyWork - assignedIntervals.Count());
+                    // best new end of last interval without the consideration of 
+                    // algorithm configuration
+                    var bestNewEnd = Math.Max(availibleInterval.End, lastInterval.End);
 
-                        var newEnd = Math.Min(bestNewEnd, lastInterval.End + maxProlongation);
+                    // taking algorithm configuration into account
+                    // max consecutive daily work and max daily work cannot be violated
 
-                        newShiftInterval = new ShiftInterval(lastInterval.Start, newEnd, lastInterval.Type);
+                    maxProlongation = Math.Max(consecutiveWork - lastInterval.Count,
+                        algorithmConfiguration.MaxDailyWork - assignedIntervals.Count());
 
-                        assignedIntervals.IntervalsList.Remove(lastInterval);
-                        assignedIntervals.IntervalsList.Add(newShiftInterval);
-                    }
+                    var newEnd = Math.Min(bestNewEnd, lastInterval.End + maxProlongation);
+
+                    newShiftInterval = new ShiftInterval(lastInterval.Start, newEnd, lastInterval.Type);
+
+                    Debug.WriteLine($"Prolonging the ending interval {lastInterval.ToString()} to {newShiftInterval.ToString()}");
+
+                    assignedIntervals.IntervalsList.Remove(lastInterval);
+                    assignedIntervals.IntervalsList.Add(newShiftInterval);
                 }
             }
         }

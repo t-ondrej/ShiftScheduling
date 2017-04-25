@@ -50,7 +50,7 @@ namespace ShiftScheduleLibrary.Utilities
 
         public override string ToString()
         {
-            return $"{Start}-{End}";
+            return $"({Start}, {End})";
         }
 
        public static Interval FromString(string s)
