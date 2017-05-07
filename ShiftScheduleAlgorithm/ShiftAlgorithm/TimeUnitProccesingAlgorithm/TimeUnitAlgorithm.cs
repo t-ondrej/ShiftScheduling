@@ -46,7 +46,7 @@ namespace ShiftScheduleAlgorithm.ShiftAlgorithm.TimeUnitProccesingAlgorithm
                 _timeUnitsManager.AssignScheduleToTimeUnits(schedule);
             }
 
-            _timeUnitStrategy.RemainingPeopleChooser.AssignScheduleToRemainingPeople(_timeUnitsManager);
+          //  _timeUnitStrategy.RemainingPeopleChooser.AssignScheduleToRemainingPeople(_timeUnitsManager);
 
             return CreateResultingSchedule();
         }
